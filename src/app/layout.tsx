@@ -1,11 +1,35 @@
 import "@/styles/globals.css";
 
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
+import localFont from "next/font/local";
+
+import { TRPCReactProvider } from "@/trpc/react";
 import { headers } from "next/headers";
 import { cache } from "react";
-import { TRPCReactProvider } from "@/trpc/react";
 
-const inter = Inter({
+const fontspring = localFont({
+  src: [
+    {
+      path: "../../fonts/Fontspring-DEMO-theseasons-reg.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../fonts/Fontspring-DEMO-theseasons-lt.woff",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "../../fonts/Fontspring-DEMO-theseasons-bd.woff",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-fontspring",
+});
+
+const poppins = Poppins({
+  weight: ["300", "400", "500", "600"],
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -21,12 +45,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   const getHeaders = cache(async () => headers());
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider  headersPromise={getHeaders()}>{children}</TRPCReactProvider>
+      <body className={`font-sans ${poppins.variable} ${fontspring.variable}`}>
+        <TRPCReactProvider headersPromise={getHeaders()}>
+          {children}
+        </TRPCReactProvider>
       </body>
     </html>
   );
