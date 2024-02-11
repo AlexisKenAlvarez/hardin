@@ -53,7 +53,8 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        brown: "#76422C"
+        brown: "#76422C",
+        bg: "#F4EFE4"
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],

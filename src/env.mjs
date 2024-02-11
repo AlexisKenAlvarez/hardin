@@ -16,7 +16,7 @@ export const env = createEnv({
    */
   server: {
     POSTGRES_URL: z.string().min(1),
-    SUPABASE_ROLE_KEY: z.string(),
+    SUPABASE_SERVICE_ROLE_KEY: z.string(),
   },
   /**
    * Specify your client-side environment variables schema here.
@@ -36,7 +36,7 @@ export const env = createEnv({
     POSTGRES_URL: process.env.POSTGRES_URL,
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    SUPABASE_ROLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_ROLE_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
   },
   skipValidation:
     !!process.env.CI ||

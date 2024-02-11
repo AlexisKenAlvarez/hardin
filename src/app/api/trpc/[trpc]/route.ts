@@ -20,6 +20,8 @@ function setCorsHeaders(res: Response) {
   res.headers.set("Access-Control-Allow-Headers", "*");
 }
 
+
+
 export function OPTIONS() {
   const response = new Response(null, {
     status: 204,
@@ -33,7 +35,7 @@ const handler = async (req: NextRequest) => {
     { cookies },
     {
       supabaseUrl: env.NEXT_PUBLIC_SUPABASE_URL,
-      supabaseKey: env.SUPABASE_ROLE_KEY,
+      supabaseKey: env.SUPABASE_SERVICE_ROLE_KEY,
     },
   );
 

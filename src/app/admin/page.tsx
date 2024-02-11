@@ -1,20 +1,26 @@
-import AdminLogin from "@/components/AdminLogin";
-import Image from "next/image";
+import AdminDashboard from "@/components/admin/AdminDashboard";
+import AdminLogin from "@/components/admin/AdminLogin";
+import { api } from "@/trpc/server";
+import { redirect } from "next/navigation";
 
-const page = () => {
+export const dynamic = "force-dynamic"
+
+const page = async () => {
+  const session = await api.auth.getSession.query();
+  // console.log("🚀 ~ page ~ session:", session)
+  const products = await api.products.getCategories.query()
+  console.log("🚀 ~ page ~ products:", products)
+
+  if (
+    session.data.session &&
+    session.data.session.user.email !== "alexisken1432@gmail.com"
+  )
+    redirect("/");
+
   return (
     <section className="relative min-h-screen w-full">
-      <Image
-        src="/background.webp"
-        alt="Background"
-        width={1500}
-        height={1500}
-        className="absolute left-0 top-0 h-full w-full object-cover object-bottom"
-      />
-      {/* <h1 className="text-black text-5xl relative z-10">Hello</h1> */}
-      <div className="relative w-full h-screen flex items-center flex-col justify-center">
-        <AdminLogin />
-      </div>
+      <AdminLogin session={session} />
+      <AdminDashboard session={session} />
     </section>
   );
 };

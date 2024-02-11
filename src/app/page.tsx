@@ -1,9 +1,9 @@
-import Test from "@/components/test";
+
 
 const page = () => {
   return (
     <div>
-      <Test />
+
     </div>
   );
 };

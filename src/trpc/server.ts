@@ -21,7 +21,7 @@ const createContext = cache(async () => {
   const supabase = createServerComponentClient<Database>({ cookies },
     {
       supabaseUrl: env.NEXT_PUBLIC_SUPABASE_URL,
-      supabaseKey: env.SUPABASE_ROLE_KEY,
+      supabaseKey: env.SUPABASE_SERVICE_ROLE_KEY,
     },);
 
   return createTRPCContext({
