@@ -1,13 +1,13 @@
-import type { TRPCErrorResponse } from "@trpc/server/rpc";
-import { cache } from "react";
-import { cookies, headers } from "next/headers";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { createTRPCProxyClient , loggerLink, TRPCClientError } from "@trpc/client";
+import { TRPCClientError, createTRPCProxyClient, loggerLink } from "@trpc/client";
 import { callProcedure } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
+import type { TRPCErrorResponse } from "@trpc/server/rpc";
+import { headers } from "next/headers";
+import { cache } from "react";
 import SuperJSON from "superjson";
 
 import { appRouter, createTRPCContext } from "@/server/api";
+import { createClient } from "@supabase/supabase-js";
 import { env } from "../env.mjs";
 import type { Database } from "@/lib/database.types";
 /**
@@ -18,11 +18,8 @@ const createContext = cache(async () => {
   const heads = new Headers(headers());
   heads.set("x-trpc-source", "rsc");
 
-  const supabase = createServerComponentClient<Database>({ cookies },
-    {
-      supabaseUrl: env.NEXT_PUBLIC_SUPABASE_URL,
-      supabaseKey: env.SUPABASE_SERVICE_ROLE_KEY,
-    },);
+
+  const supabase = createClient<Database>(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
 
   return createTRPCContext({
     supabase,

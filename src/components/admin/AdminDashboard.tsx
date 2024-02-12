@@ -1,9 +1,8 @@
 "use client";
 import type { RouterOutputs } from "@/server/api";
 import { supabase } from "@/supabase/supabaseClient";
-import { LayoutGrid, List, LogOut, Menu, Plus } from "lucide-react";
+import { LayoutGrid, List, LogOut, Menu } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 
 import {
   DropdownMenu,
@@ -13,15 +12,40 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+
 import { Separator } from "@/components/ui/separator";
+import type { Category } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import AddButton from "./AddButton";
 
 const AdminDashboard = ({
   session,
+  categories,
 }: {
   session: RouterOutputs["auth"]["getSession"];
+  categories: Category
 }) => {
+  const { data: categoryData } = api.products.getCategories.useQuery(
+    undefined,
+    { initialData: categories },
+  );
+
+  const searchParams = useSearchParams();
   const router = useRouter();
+  const pathname = usePathname();
+
+  function handleCategory(value: string) {
+    const params = new URLSearchParams(searchParams);
+
+    params.set("category", value);
+
+    router.push(`${pathname}?${params.toString()}`);
+  }
+
 
   const brown = "#76422C";
   const [productView, setProductView] = useState("grid");
@@ -63,7 +87,39 @@ const AdminDashboard = ({
         </nav>
         <Separator />
         <div className="flex h-full w-full">
-          <div className="w-56"></div>
+          <div className="w-56 p-5 text-xl">
+            {categoryData.map((category) => (
+              <button
+                className="group relative block py-2"
+                key={category.id}
+                onClick={() => handleCategory(category.name)}
+              >
+                <h1
+                  className={cn("", {
+                    "d font-bold text-brown":
+                      searchParams.get("category") === category.name,
+                    "font-bold text-brown":
+                      searchParams.get("category") === null &&
+                      category.name === "drinks",
+                  })}
+                >
+                  {category.name}
+                </h1>
+                <div
+                  className={cn(
+                    "absolute left-0 right-0 mx-auto h-1 w-0 bg-brown transition-all duration-300 ease-in-out group-hover:w-full",
+                    {
+                      "d w-full":
+                        searchParams.get("category") === category.name,
+                      "w-full":
+                        searchParams.get("category") === null &&
+                        category.name === "drinks",
+                    },
+                  )}
+                ></div>
+              </button>
+            ))}
+          </div>
           <Separator orientation="vertical" className="h-full" />
           <div className="w-full">
             <div className="flex w-full items-center justify-end gap-3 px-4 py-3">
@@ -80,11 +136,10 @@ const AdminDashboard = ({
                   onClick={() => setProductView("grid")}
                 />
               </button>
-              <button className="rounded-full bg-brown p-2 text-white transition-all duration-300 ease-in-out hover:scale-[1.1]">
-                <Plus />
-              </button>
+              <AddButton category={categoryData} />
             </div>
             <Separator />
+
           </div>
         </div>
       </div>

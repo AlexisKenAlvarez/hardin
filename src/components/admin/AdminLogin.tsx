@@ -1,14 +1,11 @@
 "use client";
 
-import Image from "next/image";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import type { Database } from "@/lib/database.types";
-import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 import {
   Form,
@@ -19,15 +16,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import type { RouterOutputs } from "@/server/api";
+import { supabase } from "@/supabase/supabaseClient";
+import { useRouter } from "next/navigation";
 
 const AdminLogin = ({
   session,
 }: {
   session: RouterOutputs["auth"]["getSession"];
 }) => {
-  const supabase = createClientComponentClient<Database>();
-
-  const router = useRouter()
+  const router = useRouter();
   const formSchema = z.object({
     email: z.string().email(),
     password: z.string().min(8),
@@ -76,16 +73,17 @@ const AdminLogin = ({
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(async (data: FormType) => {
-                  const result = await supabase.auth.signInWithPassword({
+                  const { error } = await supabase.auth.signInWithPassword({
                     email: data.email,
                     password: data.password,
                   });
-                  console.log("🚀 ~ onSubmit={form.handleSubmit ~ result:", result)
 
-                  if (result.error) {
-                    form.setError("email", { message: result.error.message });
+                  if (error) {
+                    form.setError("email", { message: error.message });
                   }
-                  router.refresh()
+
+                  console.log("Login success");
+                  router.refresh();
                 })}
                 className="space-y-4"
               >

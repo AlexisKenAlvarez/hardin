@@ -27,7 +27,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@/supabase/*": ["./supabase/*"]
+      "@/supabase/*": ["./supabase/*"],
+      "@/hooks/*": ["./hooks/*"]
     }
   },
   "include": [

@@ -1,15 +1,16 @@
 import AdminDashboard from "@/components/admin/AdminDashboard";
 import AdminLogin from "@/components/admin/AdminLogin";
+import createSupabaseServerClient from "@/supabase/server";
 import { api } from "@/trpc/server";
 import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic"
 
 const page = async () => {
-  const session = await api.auth.getSession.query();
-  // console.log("🚀 ~ page ~ session:", session)
-  const products = await api.products.getCategories.query()
-  console.log("🚀 ~ page ~ products:", products)
+  const supabase = await createSupabaseServerClient()
+  const session = await supabase.auth.getSession()
+
+  const categories = await api.products.getCategories.query()
 
   if (
     session.data.session &&
@@ -20,7 +21,7 @@ const page = async () => {
   return (
     <section className="relative min-h-screen w-full">
       <AdminLogin session={session} />
-      <AdminDashboard session={session} />
+      <AdminDashboard session={session} categories={categories} />
     </section>
   );
 };
