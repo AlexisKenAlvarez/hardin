@@ -6,6 +6,7 @@ import localFont from "next/font/local";
 import { TRPCReactProvider } from "@/trpc/react";
 import { headers } from "next/headers";
 import { cache } from "react";
+import { Toaster } from "@/components/ui/sonner";
 
 const fontspring = localFont({
   src: [
@@ -50,7 +51,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans ${poppins.variable} ${fontspring.variable}`}>
         <TRPCReactProvider headersPromise={getHeaders()}>
-          {children}
+          <>
+            {children}
+            <Toaster closeButton position="bottom-center" />
+          </>
         </TRPCReactProvider>
       </body>
     </html>

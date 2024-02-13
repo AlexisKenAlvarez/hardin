@@ -69,17 +69,17 @@ export type Database = {
         Row: {
           category: number
           id: number
-          name: string | null
+          name: string
         }
         Insert: {
           category: number
           id?: number
-          name?: string | null
+          name: string
         }
         Update: {
           category?: number
           id?: number
-          name?: string | null
+          name?: string
         }
         Relationships: [
           {

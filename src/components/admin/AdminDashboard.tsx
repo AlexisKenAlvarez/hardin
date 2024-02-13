@@ -13,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-
 import { Separator } from "@/components/ui/separator";
 import type { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
@@ -27,8 +26,9 @@ const AdminDashboard = ({
   categories,
 }: {
   session: RouterOutputs["auth"]["getSession"];
-  categories: Category
+  categories: Category;
 }) => {
+  console.log("🚀 ~ categories:", categories);
   const { data: categoryData } = api.products.getCategories.useQuery(
     undefined,
     { initialData: categories },
@@ -45,7 +45,6 @@ const AdminDashboard = ({
 
     router.push(`${pathname}?${params.toString()}`);
   }
-
 
   const brown = "#76422C";
   const [productView, setProductView] = useState("grid");
@@ -139,7 +138,6 @@ const AdminDashboard = ({
               <AddButton category={categoryData} />
             </div>
             <Separator />
-
           </div>
         </div>
       </div>

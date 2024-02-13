@@ -23,7 +23,6 @@ import type { Category } from "@/lib/types";
 import React from "react";
 import AddCategoryForm from "./AddCategoryForm";
 import AddProductForm from "./AddProductForm";
-import AddSubCategoryForm from "./AddSubCategoryForm";
 
 const AddButton = ({ category }: { category: Category }) => {
   const [open, setOpen] = useState("");
@@ -40,11 +39,6 @@ const AddButton = ({ category }: { category: Category }) => {
       label: "Edit category",
       value: "new_category",
       component: AddCategoryForm,
-    },
-    {
-      label: "Edit sub category",
-      value: "new_sub_category",
-      component: AddSubCategoryForm,
     },
   ];
 
@@ -78,7 +72,7 @@ const AddButton = ({ category }: { category: Category }) => {
         >
           <DialogTrigger asChild></DialogTrigger>
           <DialogContent
-            className="sm:max-w-[425px]"
+            className="sm:max-w-[425px] space-y-"
             onInteractOutside={() => setOpen("")}
           >
             {addDropdown.map((item) => (

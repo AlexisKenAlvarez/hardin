@@ -13,7 +13,7 @@ export const productsRouter = createTRPCRouter({
   getCategories: publicProcedure.query(async ({ ctx }) => {
     const { data: categoriesData, error: categoriesError } = await ctx.supabase
       .from("categories")
-      .select();
+      .select(`id, name, sub_categories ( id, name, category )`);
 
     if (categoriesError) {
       throw new TRPCError({
@@ -28,7 +28,12 @@ export const productsRouter = createTRPCRouter({
     .input(
       z.object({
         name: z.string(),
-        remove: z.array(ZodCategory).nullish()
+        subCategory: z.object({
+          name: z.string(),
+          categoryId: z.number(),
+        }),
+        remove: z.array(ZodCategory).nullish(),
+        removeSub: z.array(ZodCategory).nullish(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -44,11 +49,29 @@ export const productsRouter = createTRPCRouter({
           });
         }
       }
-      console.log("🚀 ~ .mutation ~ input.remove:", input.remove)
-      
+
+      if (input.subCategory?.name !== "") {
+        const { error: addSubError } = await ctx.supabase
+          .from("sub_categories")
+          .insert({
+            name: input.subCategory.name,
+            category: input.subCategory.categoryId,
+          });
+
+        if (addSubError) {
+          throw new TRPCError({
+            message: addSubError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
+      }
+
       if (input.remove && input.remove.length > 0) {
         input.remove.forEach(async (category) => {
-          const { error: removeError } = await ctx.supabase.from("categories").delete().eq("id", category.id);
+          const { error: removeError } = await ctx.supabase
+            .from("categories")
+            .delete()
+            .eq("id", category.id);
 
           if (removeError) {
             throw new TRPCError({
@@ -56,9 +79,25 @@ export const productsRouter = createTRPCRouter({
               code: "INTERNAL_SERVER_ERROR",
             });
           }
-        })
+        });
       }
 
-      return true
+      if (input.removeSub && input.removeSub.length > 0) {
+        input.removeSub.forEach(async (subCategory) => {
+          const { error: removeSubError } = await ctx.supabase
+            .from("sub_categories")
+            .delete()
+            .eq("id", subCategory.id);
+
+          if (removeSubError) {
+            throw new TRPCError({
+              message: removeSubError.message,
+              code: "INTERNAL_SERVER_ERROR",
+            });
+          }
+        });
+      }
+
+      return true;
     }),
 });
