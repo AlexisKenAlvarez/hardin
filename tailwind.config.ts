@@ -1,7 +1,8 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
 import type { Config } from "tailwindcss";
+import { withUt } from "uploadthing/tw";
 
-const config = {
+export default withUt({
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -54,7 +55,7 @@ const config = {
           foreground: "hsl(var(--card-foreground))",
         },
         brown: "#76422C",
-        bg: "#F4EFE4"
+        bg: "#F4EFE4",
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
@@ -82,6 +83,4 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config;
-
-export default config;
+}) satisfies Config;

@@ -21,6 +21,15 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import AddButton from "./AddButton";
 
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Button } from "../ui/button";
+import { ChevronsUpDown } from "lucide-react";
+import { Toggle } from "@/components/ui/toggle"
+
 const AdminDashboard = ({
   session,
   categories,
@@ -28,7 +37,7 @@ const AdminDashboard = ({
   session: RouterOutputs["auth"]["getSession"];
   categories: Category;
 }) => {
-  console.log("🚀 ~ categories:", categories);
+  
   const { data: categoryData } = api.products.getCategories.useQuery(
     undefined,
     { initialData: categories },
@@ -86,37 +95,47 @@ const AdminDashboard = ({
         </nav>
         <Separator />
         <div className="flex h-full w-full">
-          <div className="w-56 p-5 text-xl">
+          <div className="w-56 p-4">
+            <h1 className="mb-5 text-xl font-medium font-primary">Categories:</h1>
+
             {categoryData.map((category) => (
-              <button
-                className="group relative block py-2"
-                key={category.id}
-                onClick={() => handleCategory(category.name)}
-              >
-                <h1
-                  className={cn("", {
-                    "d font-bold text-brown":
-                      searchParams.get("category") === category.name,
-                    "font-bold text-brown":
-                      searchParams.get("category") === null &&
-                      category.name === "drinks",
-                  })}
-                >
-                  {category.name}
-                </h1>
-                <div
-                  className={cn(
-                    "absolute left-0 right-0 mx-auto h-1 w-0 bg-brown transition-all duration-300 ease-in-out group-hover:w-full",
-                    {
-                      "d w-full":
-                        searchParams.get("category") === category.name,
-                      "w-full":
-                        searchParams.get("category") === null &&
-                        category.name === "drinks",
-                    },
-                  )}
-                ></div>
-              </button>
+              <div className="" key={category.id}>
+                <Collapsible>
+                  <CollapsibleTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      className="group relative w-full justify-between text-lg"
+                      onClick={() => handleCategory(category.name)}
+                    >
+                      <h1
+                        className={cn("", {
+                          "d  text-brown":
+                            searchParams.get("category") === category.name,
+                          " text-brown":
+                            searchParams.get("category") === null &&
+                            category.name === "drinks",
+                        })}
+                      >
+                        {category.name}
+                      </h1>
+                      {category.sub_categories.length > 0 && (
+                        <ChevronsUpDown size={16} />
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    {category.sub_categories.map((sub) => (
+                      <div
+                        className="ml-4 flex items-center border-l-2"
+                        key={sub.id}
+                      >
+                        <div className="inline-block h-[2px] w-3 bg-black/10"></div>
+                        <Toggle className="w-full justify-start">{sub.name}</Toggle>
+                      </div>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
+              </div>
             ))}
           </div>
           <Separator orientation="vertical" className="h-full" />

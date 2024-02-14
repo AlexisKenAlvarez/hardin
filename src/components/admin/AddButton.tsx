@@ -23,6 +23,7 @@ import type { Category } from "@/lib/types";
 import React from "react";
 import AddCategoryForm from "./AddCategoryForm";
 import AddProductForm from "./AddProductForm";
+import { toast } from "sonner";
 
 const AddButton = ({ category }: { category: Category }) => {
   const [open, setOpen] = useState("");
@@ -55,7 +56,14 @@ const AddButton = ({ category }: { category: Category }) => {
             <DropdownMenuItem
               className="!hover:text-brown"
               key={item.value}
-              onClick={() => setOpen(item.value)}
+              onClick={() => {
+                if (category.length <= 0 && item.value === "new_product") {
+                  toast.error("You need to add a category first");
+                } else {
+
+                  setOpen(item.value);
+                }
+              }}
             >
               {item.label}
             </DropdownMenuItem>
@@ -72,7 +80,7 @@ const AddButton = ({ category }: { category: Category }) => {
         >
           <DialogTrigger asChild></DialogTrigger>
           <DialogContent
-            className="sm:max-w-[425px] space-y-"
+            className="space-y- sm:max-w-[425px]"
             onInteractOutside={() => setOpen("")}
           >
             {addDropdown.map((item) => (

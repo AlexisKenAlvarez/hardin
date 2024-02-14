@@ -30,6 +30,7 @@ export const env = createEnv({
    * Destructure all variables from `process.env` to make sure they aren't tree-shaken away.
    */
   runtimeEnv: {
+
     VERCEL_URL: process.env.VERCEL_URL,
     PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
@@ -37,6 +38,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    
   },
   skipValidation:
     !!process.env.CI ||
