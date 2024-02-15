@@ -29,6 +29,9 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
+import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 const AddProductForm = ({
   category,
@@ -36,31 +39,25 @@ const AddProductForm = ({
   category: Category;
   close?: () => void;
 }) => {
-  const [files, setFiles] = useState<File[]>([]);
   const [previewFile, setPreviewFile] = useState<
     string | ArrayBuffer | null | undefined
   >("");
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const reader = new FileReader();
-    reader.onload = function (event) {
-      setPreviewFile(event.target?.result);
-    };
-
-    if (acceptedFiles[0]) reader.readAsDataURL(acceptedFiles[0]);
-
-    setFiles(acceptedFiles);
-  }, []);
+  const addProductMutation = api.products.addProduct.useMutation({
+    onSuccess: () => {
+      form.reset({
+        name: "",
+        description: "",
+        image: [],
+        price: 0,
+        category: category[0]?.id ?? 0,
+      });
+    }
+  });
 
   const { startUpload, permittedFileInfo } = useUploadThing("productUpload", {
-    onClientUploadComplete: () => {
-      alert("uploaded successfully!");
-    },
     onUploadError: () => {
-      alert("error occurred while uploading");
-    },
-    onUploadBegin: () => {
-      alert("upload has begun");
+      toast.error("Error occurred while uploading");
     },
   });
 
@@ -68,18 +65,12 @@ const AddProductForm = ({
     ? Object.keys(permittedFileInfo?.config)
     : [];
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
-    multiple: false,
-    maxSize: 2 * 1024 * 1024,
-  });
-
   const newProductSchema = z.object({
     name: z.string().min(1),
     description: z.string().min(1),
     price: z.coerce.number().min(0),
     category: z.number(),
+    image: z.instanceof(File).array().min(1),
   });
 
   type newProductType = z.infer<typeof newProductSchema>;
@@ -91,7 +82,29 @@ const AddProductForm = ({
       description: "",
       price: 0.0,
       category: category[0]?.id ?? 0,
+      image: [],
     },
+  });
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        setPreviewFile(event.target?.result);
+      };
+
+      if (acceptedFiles[0]) reader.readAsDataURL(acceptedFiles[0]);
+
+      form.setValue("image", acceptedFiles);
+    },
+    [form],
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
+    multiple: false,
+    maxSize: 2 * 1024 * 1024,
   });
 
   return (
@@ -104,7 +117,7 @@ const AddProductForm = ({
           </p>
         </div>
 
-        {files.length > 0 && (
+        {form.getValues("image").length > 0 && (
           <Image
             src={previewFile as string}
             alt="Image"
@@ -116,22 +129,30 @@ const AddProductForm = ({
 
         <div
           {...getRootProps()}
-          className="group mt-2 flex cursor-pointer flex-col items-center border py-3 transition-all duration-300 ease-in-out hover:bg-black/5"
+          className={cn(
+            "group mt-2 flex cursor-pointer flex-col items-center border py-3 transition-all duration-300 ease-in-out hover:bg-black/5",
+            {
+              "text-red-500":
+                form.formState.errors.image?.message &&
+                form.getValues("image").length <= 0,
+            },
+          )}
         >
           <input {...getInputProps()} />
 
-          {files.length > 0 ? (
+          {form.getValues("image").length > 0 ? (
             <>
               <button>Choose another file</button>
               <p className="text-xs">
-                &#40;File: {files[0]?.name} {convertBytes(files[0]!.size)}&#41;
+                &#40;File: {form.getValues("image")[0]?.name}{" "}
+                {convertBytes(form.getValues("image")[0]!.size)}&#41;
               </p>
             </>
           ) : (
             <>
               <UploadCloud
                 size={30}
-                className="opacity-50 transition-all duration-300 ease-in-out group-hover:opacity-70"
+                className="hidden opacity-50 transition-all duration-300 ease-in-out group-hover:opacity-70 sm:block"
               />
               Upload product image
               <p className="text-sm">&#40;Must not exceed 5MB.&#41;</p>
@@ -141,8 +162,29 @@ const AddProductForm = ({
 
         <Form {...form}>
           <form
-            onSubmit={form.handleSubmit((data: newProductType) => {
-              console.log(data);
+            onSubmit={form.handleSubmit(async (data: newProductType) => {
+              const loadingToast = toast.loading("Uploading product...");
+
+              try {
+                const imageData = await startUpload(data.image);
+
+                await addProductMutation.mutateAsync({
+                  name: data.name,
+                  description: data.description,
+                  price: data.price,
+                  category: data.category,
+                  image: imageData![0]!.url,
+                });
+
+                toast.success("Product uploaded successfully", {
+                  id: loadingToast,
+                });
+              } catch (error) {
+                console.log(error);
+                toast.error("Product uploaded successfully", {
+                  id: loadingToast,
+                });
+              }
             })}
             className="mt-5 space-y-4"
           >
@@ -153,9 +195,12 @@ const AddProductForm = ({
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Product name" autoComplete="off"></Input>
+                    <Input
+                      {...field}
+                      placeholder="Product name"
+                      autoComplete="off"
+                    ></Input>
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -172,7 +217,6 @@ const AddProductForm = ({
                       placeholder="Tell us something about your product"
                     />
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -236,9 +280,7 @@ const AddProductForm = ({
               )}
             />
 
-            <Button className="w-full">
-              Confirm
-            </Button>
+            <Button className="w-full">Confirm</Button>
           </form>
         </Form>
       </div>

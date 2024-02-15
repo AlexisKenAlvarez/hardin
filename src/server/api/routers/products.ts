@@ -100,4 +100,27 @@ export const productsRouter = createTRPCRouter({
 
       return true;
     }),
+  addProduct: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().min(1),
+        description: z.string().min(1),
+        price: z.coerce.number().min(0),
+        category: z.number(),
+        image: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { error: newProductError } = await ctx.supabase
+        .from("products")
+        .insert(input);
+
+      if (newProductError)
+        throw new TRPCError({
+          message: newProductError.message,
+          code: "INTERNAL_SERVER_ERROR",
+        });
+
+      return true;
+    }),
 });

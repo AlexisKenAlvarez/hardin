@@ -102,8 +102,8 @@ const AddButton = ({ category }: { category: Category }) => {
             !value ? setOpen("") : setOpen((val) => val)
           }
         >
-          <DrawerContent onInteractOutside={() => setOpen("")}>
-            <div className="p-4">
+          <DrawerContent onInteractOutside={() => setOpen("")} className="max-h-screen">
+            <div className="p-4 overflow-y-scroll">
               {addDropdown.map((item) => (
                 <React.Fragment key={item.value}>
                   {open === item.value && (
@@ -115,12 +115,6 @@ const AddButton = ({ category }: { category: Category }) => {
                 </React.Fragment>
               ))}
             </div>
-
-            <DrawerFooter className="pt-2">
-              <DrawerClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DrawerClose>
-            </DrawerFooter>
           </DrawerContent>
         </Drawer>
       )}

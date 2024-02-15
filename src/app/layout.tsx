@@ -53,7 +53,7 @@ export default function RootLayout({
         <TRPCReactProvider headersPromise={getHeaders()}>
           <>
             {children}
-            <Toaster closeButton position="bottom-center" />
+            <Toaster closeButton position="top-center" />
           </>
         </TRPCReactProvider>
       </body>
