@@ -1,60 +1,29 @@
-import { TRPCClientError, createTRPCProxyClient, loggerLink } from "@trpc/client";
-import { callProcedure } from "@trpc/server";
-import { observable } from "@trpc/server/observable";
-import type { TRPCErrorResponse } from "@trpc/server/rpc";
-import { headers } from "next/headers";
-import { cache } from "react";
-import SuperJSON from "superjson";
+import {
+  createTRPCProxyClient,
+  loggerLink,
+  unstable_httpBatchStreamLink,
+} from "@trpc/client";
+import { cookies } from "next/headers";
 
-import { appRouter, createTRPCContext } from "@/server/api";
-import { createClient } from "@supabase/supabase-js";
-import { env } from "../env.mjs";
-import type { Database } from "@/lib/database.types";
-/**
- * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
- * handling a tRPC call from a React Server Component.
- */
-const createContext = cache(async () => {
-  const heads = new Headers(headers());
-  heads.set("x-trpc-source", "rsc");
+import { type AppRouter } from "@/server/api/root";
+import { getUrl, transformer } from "./shared";
 
-
-  const supabase = createClient<Database>(env.NEXT_PUBLIC_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY)
-
-  return createTRPCContext({
-    supabase,
-    headers: heads,
-  });
-});
-
-export const api = createTRPCProxyClient <typeof appRouter>({
-  transformer: SuperJSON,
+export const api = createTRPCProxyClient<AppRouter>({
+  transformer,
   links: [
     loggerLink({
       enabled: (op) =>
         process.env.NODE_ENV === "development" ||
         (op.direction === "down" && op.result instanceof Error),
     }),
-    () =>
-      ({ op }) =>
-        observable((observer) => {
-          createContext()
-            .then((ctx) => {
-              return callProcedure({
-                procedures: appRouter._def.procedures,
-                path: op.path,
-                rawInput: () => Promise.resolve(op.input),
-                ctx,
-                type: op.type,
-              });
-            })
-            .then((data) => {
-              observer.next({ result: { data } });
-              observer.complete();
-            })
-            .catch((cause: TRPCErrorResponse) => {
-              observer.error(TRPCClientError.from(cause));
-            });
-        }),
+    unstable_httpBatchStreamLink({
+      url: getUrl(),
+      headers() {
+        return {
+          cookie: cookies().toString(),
+          "x-trpc-source": "rsc",
+        };
+      },
+    }),
   ],
 });

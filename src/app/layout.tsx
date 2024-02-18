@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 
-import { Poppins } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import localFont from "next/font/local";
 
 import { TRPCReactProvider } from "@/trpc/react";
@@ -29,8 +29,8 @@ const fontspring = localFont({
   variable: "--font-fontspring",
 });
 
-const poppins = Poppins({
-  weight: ["300", "400", "500", "600"],
+const montserrat = Montserrat({
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -49,7 +49,7 @@ export default function RootLayout({
   const getHeaders = cache(async () => headers());
   return (
     <html lang="en">
-      <body className={`font-sans ${poppins.variable} ${fontspring.variable}`}>
+      <body className={`font-sans ${montserrat.variable} ${fontspring.variable}`}>
         <TRPCReactProvider headersPromise={getHeaders()}>
           <>
             {children}

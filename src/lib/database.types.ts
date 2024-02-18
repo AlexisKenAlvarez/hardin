@@ -34,6 +34,7 @@ export type Database = {
           image: string
           name: string
           price: number
+          sub_category: number | null
         }
         Insert: {
           best_seller?: boolean | null
@@ -44,6 +45,7 @@ export type Database = {
           image: string
           name: string
           price: number
+          sub_category?: number | null
         }
         Update: {
           best_seller?: boolean | null
@@ -54,11 +56,19 @@ export type Database = {
           image?: string
           name?: string
           price?: number
+          sub_category?: number | null
         }
         Relationships: [
           {
-            foreignKeyName: "products_category_fkey"
+            foreignKeyName: "public_products_category_fkey"
             columns: ["category"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_products_sub_category_fkey"
+            columns: ["sub_category"]
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["id"]
@@ -83,7 +93,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "sub_categories_category_fkey"
+            foreignKeyName: "public_sub_categories_category_fkey"
             columns: ["category"]
             isOneToOne: false
             referencedRelation: "categories"

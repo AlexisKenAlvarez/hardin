@@ -32,6 +32,7 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
+import React from "react";
 
 const AddProductForm = ({
   category,
@@ -43,6 +44,7 @@ const AddProductForm = ({
     string | ArrayBuffer | null | undefined
   >("");
 
+  const utils = api.useUtils()
   const addProductMutation = api.products.addProduct.useMutation({
     onSuccess: () => {
       form.reset({
@@ -52,10 +54,10 @@ const AddProductForm = ({
         price: 0,
         category: category[0]?.id ?? 0,
       });
-    }
+    },
   });
 
-  const { startUpload, permittedFileInfo } = useUploadThing("productUpload", {
+  const { startUpload, permittedFileInfo, isUploading } = useUploadThing("productUpload", {
     onUploadError: () => {
       toast.error("Error occurred while uploading");
     },
@@ -70,6 +72,7 @@ const AddProductForm = ({
     description: z.string().min(1),
     price: z.coerce.number().min(0),
     category: z.number(),
+    sub_category: z.number().nullish(),
     image: z.instanceof(File).array().min(1),
   });
 
@@ -82,6 +85,7 @@ const AddProductForm = ({
       description: "",
       price: 0.0,
       category: category[0]?.id ?? 0,
+      sub_category: null,
       image: [],
     },
   });
@@ -163,9 +167,21 @@ const AddProductForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(async (data: newProductType) => {
-              const loadingToast = toast.loading("Uploading product...");
+              console.log("🚀 ~ onSubmit={form.handleSubmit ~ data:", data);
 
               try {
+
+
+                const hasCategory = category.some((val) => val.id === data.category && val.sub_categories.length > 0)
+                
+                if (hasCategory && data.sub_category === null) {
+                  form.setError("sub_category", {
+                    message: "Please select a category",
+                  });
+                  return;
+                }
+                const loadingToast = toast.loading("Uploading product...");
+
                 const imageData = await startUpload(data.image);
 
                 await addProductMutation.mutateAsync({
@@ -174,16 +190,17 @@ const AddProductForm = ({
                   price: data.price,
                   category: data.category,
                   image: imageData![0]!.url,
+                  sub_category: !hasCategory ? null : data.sub_category,
                 });
-
+                 
                 toast.success("Product uploaded successfully", {
                   id: loadingToast,
                 });
+
+                await utils.products.getProducts.invalidate()
               } catch (error) {
                 console.log(error);
-                toast.error("Product uploaded successfully", {
-                  id: loadingToast,
-                });
+                toast.error("Product uploaded successfully");
               }
             })}
             className="mt-5 space-y-4"
@@ -245,42 +262,94 @@ const AddProductForm = ({
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field: { onChange, value } }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
+            <div className="flex w-full justify-between gap-3">
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field: { onChange, value } }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>Category</FormLabel>
 
-                  <FormControl>
-                    <Select
-                      onValueChange={(val: string) => {
-                        onChange(parseInt(val));
-                      }}
-                      defaultValue={value.toString()}
-                      value={value.toString()}
-                    >
-                      <SelectTrigger className="">
-                        <SelectValue
-                          placeholder="Category"
-                          defaultValue={value.toString()}
-                        />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {category.map((item) => (
-                          <SelectItem key={item.id} value={item.id.toString()}>
-                            {item.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                  {/* <FormMessage /> */}
-                </FormItem>
-              )}
-            />
+                    <FormControl>
+                      <Select
+                        onValueChange={(val: string) => {
+                          onChange(parseInt(val));
+                        }}
+                        defaultValue={value.toString()}
+                        value={value.toString()}
+                      >
+                        <SelectTrigger className="">
+                          <SelectValue
+                            placeholder="Category"
+                            defaultValue={value.toString()}
+                          />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {category.map((item) => (
+                            <SelectItem
+                              key={item.id}
+                              value={item.id.toString()}
+                            >
+                              {item.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    {/* <FormMessage /> */}
+                  </FormItem>
+                )}
+              />
 
-            <Button className="w-full">Confirm</Button>
+              <FormField
+                control={form.control}
+                name="sub_category"
+                render={({ field: { onChange, value } }) => (
+                  <>
+                    {category.map(
+                      (item) =>
+                        item.id === form.getValues("category") &&
+                        item.sub_categories.length > 0 && (
+                          <FormItem className="w-full" key={item.id}>
+                            <FormLabel>Sub Category</FormLabel>
+
+                            <FormControl>
+                              <Select
+                                onValueChange={(val: string) => {
+                                  onChange(parseInt(val));
+                                }}
+                                defaultValue={value?.toString()}
+                                value={value?.toString()}
+                              >
+                                <SelectTrigger className="">
+                                  <SelectValue
+                                    placeholder="Category"
+                                    defaultValue={item.sub_categories[0]?.name}
+                                  />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {item.sub_categories.map((sub) => (
+                                    <SelectItem
+                                      key={sub.id}
+                                      value={sub.id.toString()}
+                                    >
+                                      {sub.name}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </FormControl>
+                          </FormItem>
+                        ),
+                    )}
+                  </>
+                )}
+              />
+            </div>
+
+            <Button className="w-full" disabled={addProductMutation.isLoading || isUploading}>
+              Confirm
+            </Button>
           </form>
         </Form>
       </div>

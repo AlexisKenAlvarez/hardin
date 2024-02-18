@@ -80,7 +80,7 @@ const AddButton = ({ category }: { category: Category }) => {
         >
           <DialogTrigger asChild></DialogTrigger>
           <DialogContent
-            className="space-y- sm:max-w-[425px]"
+            className="space-y- sm:max-w-[425px] max-h-[80vh] mini-scroll overflow-y-scroll"
             onInteractOutside={() => setOpen("")}
           >
             {addDropdown.map((item) => (

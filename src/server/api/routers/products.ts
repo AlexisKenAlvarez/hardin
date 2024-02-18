@@ -107,10 +107,13 @@ export const productsRouter = createTRPCRouter({
         description: z.string().min(1),
         price: z.coerce.number().min(0),
         category: z.number(),
+        sub_category: z.number().nullish(),
         image: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      console.log("SubCateg: " + input.sub_category);
+
       const { error: newProductError } = await ctx.supabase
         .from("products")
         .insert(input);
@@ -122,5 +125,44 @@ export const productsRouter = createTRPCRouter({
         });
 
       return true;
+    }),
+  getProducts: publicProcedure
+    .input(
+      z.object({
+        category: z.number(),
+        sub_category: z.number().nullish(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+
+      console.log("Inputted category " ,input.category);
+      if (!input.sub_category) {
+        const { data: productData, error: productError } = await ctx.supabase
+          .from("products")
+          .select()
+          .eq("category", input.category);
+
+        if (productError)
+          throw new TRPCError({
+            message: productError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+
+        return productData;
+      } else {
+        const { data: productData, error: productError } = await ctx.supabase
+          .from("products")
+          .select()
+          .eq("category", input.category)
+          .eq("sub_category", input.sub_category);
+
+        if (productError)
+          throw new TRPCError({
+            message: productError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+
+        return productData;
+      }
     }),
 });

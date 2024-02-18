@@ -27,30 +27,47 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Button } from "../ui/button";
-import { ChevronsUpDown } from "lucide-react";
-import { Toggle } from "@/components/ui/toggle"
+import { ChevronsUpDown, MoreVertical } from "lucide-react";
+import { Toggle } from "@/components/ui/toggle";
 
 const AdminDashboard = ({
   session,
   categories,
+  products,
+  queryCategory,
 }: {
   session: RouterOutputs["auth"]["getSession"];
   categories: Category;
+  products: RouterOutputs["products"]["getProducts"];
+  queryCategory: number;
 }) => {
-  
+  const searchParams = useSearchParams();
+
+  const router = useRouter();
+  const pathname = usePathname();
+
   const { data: categoryData } = api.products.getCategories.useQuery(
     undefined,
     { initialData: categories },
   );
 
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
+  const { data: productsData } = api.products.getProducts.useQuery(
+    {
+      category: queryCategory,
+    },
+    {
+      initialData: products,
+    },
+  );
 
-  function handleCategory(value: string) {
+  function handleCategory(value: string, type: "category" | "sub") {
     const params = new URLSearchParams(searchParams);
 
-    params.set("category", value);
+    if (type == "category") {
+      params.set("category", value);
+    } else {
+      params.set("sub", value);
+    }
 
     router.push(`${pathname}?${params.toString()}`);
   }
@@ -96,7 +113,9 @@ const AdminDashboard = ({
         <Separator />
         <div className="flex h-full w-full">
           <div className="w-56 p-4">
-            <h1 className="mb-5 text-xl font-medium font-primary">Categories:</h1>
+            <h1 className="mb-5 font-primary text-xl font-medium">
+              Categories:
+            </h1>
 
             {categoryData.map((category) => (
               <div className="" key={category.id}>
@@ -105,7 +124,7 @@ const AdminDashboard = ({
                     <Button
                       variant="ghost"
                       className="group relative w-full justify-between text-lg"
-                      onClick={() => handleCategory(category.name)}
+                      onClick={() => handleCategory(category.name, "category")}
                     >
                       <h1
                         className={cn("", {
@@ -130,7 +149,16 @@ const AdminDashboard = ({
                         key={sub.id}
                       >
                         <div className="inline-block h-[2px] w-3 bg-black/10"></div>
-                        <Toggle className="w-full justify-start">{sub.name}</Toggle>
+                        <div
+                          className={cn("w-full cursor-pointer justify-start flex pl-2 py-1 hover:bg-slate-100", {
+                            "text-brown font-medium": searchParams.get("sub") === sub.name,
+                          })}
+                          onClick={() => {
+                            handleCategory(sub.name, "sub");
+                          }}
+                        >
+                          {sub.name}
+                        </div>
                       </div>
                     ))}
                   </CollapsibleContent>
@@ -157,6 +185,37 @@ const AdminDashboard = ({
               <AddButton category={categoryData} />
             </div>
             <Separator />
+            <div className="grid w-fit grid-cols-4 gap-5 p-5">
+              {productsData.map((product) => (
+                <div
+                  className="relative flex w-full bg-neutral-100"
+                  key={product.id}
+                >
+                  <button className="absolute right-0 top-2 opacity-50 hover:opacity-100">
+                    <MoreVertical />
+                  </button>
+                  <Image
+                    className="h-52 w-36 shrink-0 object-cover"
+                    alt={product.name}
+                    src={product.image}
+                    width={700}
+                    height={700}
+                  />
+                  <div className="w-60 p-5">
+                    <h1 className="font-secondary text-xl font-extrabold text-brown">
+                      {product.name}
+                    </h1>
+                    <p className="text-sm text-muted-foreground">
+                      {product.description}
+                    </p>
+
+                    <p className="mt-5 text-lg font-bold text-lime-500">
+                      P{product.price}.00
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
