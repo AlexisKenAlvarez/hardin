@@ -70,7 +70,7 @@ export type Database = {
             foreignKeyName: "public_products_sub_category_fkey"
             columns: ["sub_category"]
             isOneToOne: false
-            referencedRelation: "categories"
+            referencedRelation: "sub_categories"
             referencedColumns: ["id"]
           }
         ]

@@ -24,6 +24,19 @@ export const productsRouter = createTRPCRouter({
 
     return categoriesData;
   }),
+  getSubCategories: publicProcedure.query(async ({ ctx }) => {
+    const { data: subCategoriesData, error: subCategoriesError } =
+      await ctx.supabase.from("sub_categories").select();
+
+    if (subCategoriesError) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "Error fetching categories",
+      });
+    }
+
+    return subCategoriesData;
+  }),
   saveCategory: protectedProcedure
     .input(
       z.object({
@@ -134,12 +147,13 @@ export const productsRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
-
-      console.log("Inputted category " ,input.category);
+      console.log("Inputted category ", input.sub_category);
       if (!input.sub_category) {
         const { data: productData, error: productError } = await ctx.supabase
           .from("products")
-          .select()
+          .select(
+            `*, sub_categories ( id, name )`,
+          )
           .eq("category", input.category);
 
         if (productError)
@@ -152,7 +166,9 @@ export const productsRouter = createTRPCRouter({
       } else {
         const { data: productData, error: productError } = await ctx.supabase
           .from("products")
-          .select()
+          .select(
+            `*, sub_categories ( id, name )`,
+          )
           .eq("category", input.category)
           .eq("sub_category", input.sub_category);
 

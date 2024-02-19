@@ -16,15 +16,21 @@ const page = async ({
   const session = await supabase.auth.getSession();
 
   const category = searchParams.category as string;
+  const sub = searchParams.sub as string;
+  console.log("🚀 ~ sub:", sub);
 
   const categories = await api.products.getCategories.query();
+  const subCategories = await api.products.getSubCategories.query()
 
   const queryCategory = category
     ? categories.find((val) => val.name === category)!.id
     : categories[0]?.id ?? 0;
 
+  const querySub = sub ? subCategories.find((val) => val.name === sub)!.id : null;
+
   const products = await api.products.getProducts.query({
     category: queryCategory,
+    // sub_category: querySub,
   });
 
   if (
@@ -32,7 +38,7 @@ const page = async ({
     session.data.session.user.email !== "alexisken1432@gmail.com"
   )
     redirect("/");
-  
+
   return (
     <section className="relative min-h-screen w-full">
       <AdminLogin session={session} />
@@ -41,6 +47,7 @@ const page = async ({
         categories={categories}
         products={products}
         queryCategory={queryCategory}
+        querySub={querySub}
       />
     </section>
   );
