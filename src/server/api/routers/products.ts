@@ -9,6 +9,16 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+const productObject = z.object({
+  id: z.number(),
+  name: z.string().min(1),
+  description: z.string().min(1),
+  price: z.coerce.number().min(0),
+  category: z.number(),
+  sub_category: z.number().nullish(),
+  image: z.string(),
+});
+
 export const productsRouter = createTRPCRouter({
   getCategories: publicProcedure.query(async ({ ctx }) => {
     const { data: categoriesData, error: categoriesError } = await ctx.supabase
@@ -151,9 +161,7 @@ export const productsRouter = createTRPCRouter({
       if (!input.sub_category) {
         const { data: productData, error: productError } = await ctx.supabase
           .from("products")
-          .select(
-            `*, sub_categories ( id, name )`,
-          )
+          .select(`*, sub_categories ( id, name )`)
           .eq("category", input.category);
 
         if (productError)
@@ -166,9 +174,7 @@ export const productsRouter = createTRPCRouter({
       } else {
         const { data: productData, error: productError } = await ctx.supabase
           .from("products")
-          .select(
-            `*, sub_categories ( id, name )`,
-          )
+          .select(`*, sub_categories ( id, name )`)
           .eq("category", input.category)
           .eq("sub_category", input.sub_category);
 
@@ -180,5 +186,111 @@ export const productsRouter = createTRPCRouter({
 
         return productData;
       }
+    }),
+  editProduct: protectedProcedure
+    .input(
+      z.object({
+        origData: productObject,
+        newData: productObject,
+        imageChanged: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const {
+        name: newName,
+        category: newCategory,
+        description: newDescription,
+        image: newImage,
+        price: newPrice,
+        sub_category: newSubCategory,
+      } = input.newData;
+      const {
+        id: origId,
+        name: origName,
+        category: origCategory,
+        description: origDescription,
+        price: origPrice,
+        sub_category: origSubCategory,
+      } = input.origData;
+
+      if (newName !== origName) {
+        const { error: updateNameError } = await ctx.supabase
+          .from("products")
+          .update({ name: newName })
+          .eq("id", origId);
+
+        if (updateNameError)
+          throw new TRPCError({
+            message: updateNameError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+      }
+
+      if (newCategory !== origCategory) {
+        const { error: updateCategoryError } = await ctx.supabase
+          .from("products")
+          .update({ category: newCategory })
+          .eq("id", origId);
+
+        if (updateCategoryError)
+          throw new TRPCError({
+            message: updateCategoryError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+      }
+
+      if (newDescription !== origDescription) {
+        const { error: updateDescriptionError } = await ctx.supabase
+          .from("products")
+          .update({ description: newDescription })
+          .eq("id", origId);
+
+        if (updateDescriptionError)
+          throw new TRPCError({
+            message: updateDescriptionError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+      }
+
+      if (input.imageChanged) {
+        const { error: updateImageError } = await ctx.supabase
+          .from("products")
+          .update({ image: newImage })
+          .eq("id", origId);
+
+        if (updateImageError)
+          throw new TRPCError({
+            message: updateImageError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+      }
+
+      if (newPrice !== origPrice) {
+        const { error: updatePriceError } = await ctx.supabase
+          .from("products")
+          .update({ price: newPrice })
+          .eq("id", origId);
+
+        if (updatePriceError)
+          throw new TRPCError({
+            message: updatePriceError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+      }
+
+      if (newSubCategory !== origSubCategory) {
+        const { error: updateSubCategoryError } = await ctx.supabase
+          .from("products")
+          .update({ sub_category: newSubCategory })
+          .eq("id", origId);
+
+        if (updateSubCategoryError)
+          throw new TRPCError({
+            message: updateSubCategoryError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+      }
+
+      return true;
     }),
 });

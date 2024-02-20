@@ -5,10 +5,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
   Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerTrigger,
+  DrawerContent
 } from "@/components/ui/drawer";
 
 import {
@@ -18,12 +15,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Button } from "@/components/ui/button";
 import type { Category } from "@/lib/types";
 import React from "react";
+import { toast } from "sonner";
 import AddCategoryForm from "./AddCategoryForm";
 import AddProductForm from "./AddProductForm";
-import { toast } from "sonner";
 
 const AddButton = ({ category }: { category: Category }) => {
   const [open, setOpen] = useState("");

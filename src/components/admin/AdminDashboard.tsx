@@ -18,21 +18,18 @@ import type { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import AddButton from "./AddButton";
 
 import { ChevronsUpDown, MoreVertical } from "lucide-react";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Drawer, DrawerContent } from "@/components/ui/drawer";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import EditProductForm from "./EditProductForm";
 
 const AdminDashboard = ({
   session,
@@ -49,6 +46,11 @@ const AdminDashboard = ({
 }) => {
   const searchParams = useSearchParams();
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const [editing, setEditing] = useState<
+    RouterOutputs["products"]["getProducts"][0] | null
+  >(null);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -83,8 +85,6 @@ const AdminDashboard = ({
       params.set("sub", value);
     }
 
-    setCategoryOpen(false);
-
     router.push(`${pathname}?${params.toString()}`);
 
     callback;
@@ -92,6 +92,10 @@ const AdminDashboard = ({
 
   const brown = "#76422C";
   const [productView, setProductView] = useState("grid");
+
+  const cancelEditing = useCallback(() => {
+    setEditing(null);
+  }, []);
 
   if (!session?.data.session) return null;
 
@@ -192,7 +196,7 @@ const AdminDashboard = ({
         <div className="flex h-full w-full">
           <div
             className={cn(
-              "left-0 top-0 z-10 h-screen w-56 bg-white p-4 relative lg:block hidden",
+              "relative left-0 top-0 z-10 hidden h-screen w-56 bg-white p-4 lg:block",
             )}
           >
             {sideBar}
@@ -234,9 +238,21 @@ const AdminDashboard = ({
             <div className="grid-cols-1dddddddddddddddd mx-auto grid w-full gap-5 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
               {productsData.map((product) => (
                 <div className="relative flex  bg-neutral-100" key={product.id}>
-                  <button className="absolute right-0 top-2 opacity-50 hover:opacity-100">
-                    <MoreVertical />
-                  </button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      asChild
+                      className="absolute right-0 top-2 cursor-pointer opacity-50 hover:opacity-100"
+                    >
+                      <MoreVertical />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => setEditing(product)}>
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
                   <Image
                     className="h-36 w-20 shrink-0 object-cover md:h-44 md:w-28 lg:h-52 lg:w-36"
                     alt={product.name}
@@ -253,7 +269,7 @@ const AdminDashboard = ({
                     </p>
 
                     <div className="mt-5">
-                      <p className="text-subtle-foreground text-sm font-semibold capitalize">
+                      <p className="text-sm font-semibold capitalize text-muted-foreground">
                         {product.sub_categories?.name}
                       </p>
                       <p className="text-base font-bold text-lime-500 md:text-lg">
@@ -274,6 +290,39 @@ const AdminDashboard = ({
           </div>
         </div>
       </div>
+
+      {isDesktop ? (
+        <Dialog
+          open={editing !== null}
+          onOpenChange={(val) => !val ?? setEditing(null)}
+        >
+          <DialogContent
+            className="space-y- mini-scroll max-h-[80vh] overflow-y-scroll sm:max-w-[425px]"
+            onInteractOutside={cancelEditing}
+          >
+            {editing && (
+            <EditProductForm category={categories} cancelEditing={cancelEditing} editing={editing} />
+            )}
+
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Drawer
+          open={editing !== null}
+          onOpenChange={(val) => !val ?? setEditing(null)}
+        >
+          <DrawerContent
+            onInteractOutside={cancelEditing}
+            className="max-h-screen"
+          >
+            <div className="overflow-y-scroll p-4">
+            {editing && (
+            <EditProductForm category={categories} cancelEditing={cancelEditing} editing={editing} />
+            )}
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
     </section>
   );
 };
