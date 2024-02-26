@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import type { Category } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -7,8 +8,9 @@ import { useUploadThing } from "@/utils/uploadthing";
 import { useDropzone } from "@uploadthing/react";
 import { UploadCloud } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { generateClientDropzoneAccept } from "uploadthing/client";
+import "react-image-crop/dist/ReactCrop.css";
 
 import {
   Form,
@@ -29,22 +31,34 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
-import { cn } from "@/lib/utils";
+import { cn, setCanvasPreview } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import React from "react";
+import ReactCrop, {
+  makeAspectCrop,
+  type Crop,
+  centerCrop,
+  convertToPixelCrop,
+} from "react-image-crop";
 
 const AddProductForm = ({
   category,
+  closeDialog,
 }: {
   category: Category;
   close?: () => void;
+  closeDialog: () => void;
 }) => {
+  const [crop, setCrop] = useState<Crop>();
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   const [previewFile, setPreviewFile] = useState<
     string | ArrayBuffer | null | undefined
   >("");
 
-  const utils = api.useUtils()
+  const utils = api.useUtils();
   const addProductMutation = api.products.addProduct.useMutation({
     onSuccess: () => {
       form.reset({
@@ -54,14 +68,40 @@ const AddProductForm = ({
         price: 0,
         category: category[0]?.id ?? 0,
       });
+
+      closeDialog();
     },
   });
 
-  const { startUpload, permittedFileInfo, isUploading } = useUploadThing("productUpload", {
-    onUploadError: () => {
-      toast.error("Error occurred while uploading");
+  const { startUpload, permittedFileInfo, isUploading } = useUploadThing(
+    "productUpload",
+    {
+      onUploadError: () => {
+        toast.error("Error occurred while uploading");
+      },
     },
-  });
+  );
+
+  const onImageLoad: React.EventHandler<
+    React.SyntheticEvent<HTMLImageElement>
+  > = (event) => {
+    const image = event.currentTarget;
+    const { width, height } = image;
+    const cropWidthInPercent = (150 / width) * 100;
+
+    const crop = makeAspectCrop(
+      {
+        unit: "%",
+        width: cropWidthInPercent,
+      },
+      1,
+      width,
+      height,
+    );
+
+    const centeredCrop = centerCrop(crop, width, height);
+    setCrop(centeredCrop);
+  };
 
   const fileTypes = permittedFileInfo?.config
     ? Object.keys(permittedFileInfo?.config)
@@ -111,6 +151,7 @@ const AddProductForm = ({
     maxSize: 2 * 1024 * 1024,
   });
 
+
   return (
     <>
       <div className="space-y-4">
@@ -122,14 +163,42 @@ const AddProductForm = ({
         </div>
 
         {form.getValues("image").length > 0 && (
-          <Image
-            src={previewFile as string}
-            alt="Image"
-            className="mx-auto h-52 w-36 rounded-md object-cover"
-            width={500}
-            height={500}
-          />
+          <ReactCrop
+            crop={crop}
+            onChange={(c) => setCrop(c)}
+            circularCrop
+            aspect={1}
+            // minWidth={150}
+            // locked
+            keepSelection
+            onComplete={async (c) => {
+              setCanvasPreview(
+                imgRef.current!,
+                canvasRef.current!,
+                convertToPixelCrop(
+                  c,
+                  imgRef.current!.width,
+                  imgRef.current!.height,
+                ),
+              );
+            }}
+          >
+            <img
+              ref={imgRef}
+              src={previewFile as string}
+              width={1000}
+              height={1000}
+              alt="crop_image"
+              onLoad={onImageLoad}
+            />
+          </ReactCrop>
         )}
+
+        <canvas
+          ref={canvasRef}
+          className="mx-auto mt-4  border rounded-full"
+          style={{ width: 150, height: 150, objectFit: "contain" }}
+        />
 
         <div
           {...getRootProps()}
@@ -170,10 +239,11 @@ const AddProductForm = ({
               console.log("🚀 ~ onSubmit={form.handleSubmit ~ data:", data);
 
               try {
+                const hasCategory = category.some(
+                  (val) =>
+                    val.id === data.category && val.sub_categories.length > 0,
+                );
 
-
-                const hasCategory = category.some((val) => val.id === data.category && val.sub_categories.length > 0)
-                
                 if (hasCategory && data.sub_category === null) {
                   form.setError("sub_category", {
                     message: "Please select a category",
@@ -182,7 +252,17 @@ const AddProductForm = ({
                 }
                 const loadingToast = toast.loading("Uploading product...");
 
-                const imageData = await startUpload(data.image);
+                const response = await fetch(canvasRef.current!.toDataURL());
+                const blob = await response.blob();
+                const file = new File([blob], data.image[0]!.name, {
+                  type: data.image[0]!.type,
+                  lastModified: Date.now(),
+                });
+  
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+
+                const imageData = await startUpload([file]);
 
                 await addProductMutation.mutateAsync({
                   name: data.name,
@@ -192,12 +272,12 @@ const AddProductForm = ({
                   image: imageData![0]!.url,
                   sub_category: !hasCategory ? null : data.sub_category,
                 });
-                 
+
                 toast.success("Product uploaded successfully", {
                   id: loadingToast,
                 });
 
-                await utils.products.getProducts.invalidate()
+                await utils.products.getProducts.invalidate();
               } catch (error) {
                 console.log(error);
                 toast.error("Product uploaded successfully");
@@ -347,7 +427,10 @@ const AddProductForm = ({
               />
             </div>
 
-            <Button className="w-full" disabled={addProductMutation.isLoading || isUploading}>
+            <Button
+              className="w-full"
+              disabled={addProductMutation.isLoading || isUploading}
+            >
               Confirm
             </Button>
           </form>

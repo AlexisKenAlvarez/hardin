@@ -1,7 +1,22 @@
 "use client";
 import type { RouterOutputs } from "@/server/api";
 import { supabase } from "@/supabase/supabaseClient";
-import { Filter, LayoutGrid, List, LogOut, Menu } from "lucide-react";
+import type { Category } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useState } from "react";
+import AddButton from "./AddButton";
+import {
+  ChevronRight,
+  Filter,
+  LayoutGrid,
+  List,
+  LogOut,
+  Menu,
+} from "lucide-react";
+import { ChevronsUpDown, MoreVertical } from "lucide-react";
+
 import Image from "next/image";
 
 import {
@@ -13,23 +28,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Separator } from "@/components/ui/separator";
-import type { Category } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { api } from "@/trpc/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
-import AddButton from "./AddButton";
-
-import { ChevronsUpDown, MoreVertical } from "lucide-react";
-import { Button } from "../ui/button";
-import { Skeleton } from "../ui/skeleton";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { ChevronLeft } from "lucide-react";
 import EditProductForm from "./EditProductForm";
+import { toast } from "sonner";
+
+import { Separator } from "@/components/ui/separator";
+import { Button } from "../ui/button";
 
 const AdminDashboard = ({
   session,
@@ -37,15 +57,25 @@ const AdminDashboard = ({
   products,
   queryCategory,
   querySub,
+  offset,
+  totalPage,
+  page,
+  limit,
 }: {
   session: RouterOutputs["auth"]["getSession"];
   categories: Category;
   products: RouterOutputs["products"]["getProducts"];
   queryCategory: number;
   querySub: number | null;
+  totalPage: number;
+  offset: number;
+  limit: number;
+  page: number;
 }) => {
+  const utils = api.useUtils();
   const searchParams = useSearchParams();
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(0);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const [editing, setEditing] = useState<
@@ -55,21 +85,24 @@ const AdminDashboard = ({
   const router = useRouter();
   const pathname = usePathname();
 
+  const deleteMutation = api.products.deleteProduct.useMutation();
+
   const { data: categoryData } = api.products.getCategories.useQuery(
     undefined,
     { initialData: categories },
   );
 
-  const { data: productsData, isLoading: productsLoading } =
-    api.products.getProducts.useQuery(
-      {
-        category: queryCategory,
-        sub_category: querySub,
-      },
-      {
-        initialData: products,
-      },
-    );
+  const { data: productsData } = api.products.getProducts.useQuery(
+    {
+      category: queryCategory,
+      sub_category: querySub,
+      offset,
+      limit,
+    },
+    {
+      initialData: products,
+    },
+  );
 
   function handleCategory(
     value: string,
@@ -89,6 +122,20 @@ const AdminDashboard = ({
 
     callback;
   }
+
+  const handlePage = (type: "prev" | "next") => {
+    const params = new URLSearchParams(searchParams);
+
+    if (type === "prev") {
+      const newPage = page ? page - 1 : 1;
+      params.set("page", newPage.toString());
+    } else {
+      const newPage = page + 1;
+      params.set("page", newPage.toString());
+    }
+
+    router.push(`${pathname}?${params.toString()}`);
+  };
 
   const brown = "#76422C";
   const [productView, setProductView] = useState("grid");
@@ -235,9 +282,49 @@ const AdminDashboard = ({
               </div>
             </div>
             <Separator />
+            {productsData.length === 0 && (
+                <h1 className="text-center mt-10">There are no products yet.</h1>
+              )}
             <div className="grid-cols-1dddddddddddddddd mx-auto grid w-full gap-5 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
+
               {productsData.map((product) => (
                 <div className="relative flex  bg-neutral-100" key={product.id}>
+                  <AlertDialog open={isDeleting === product.id} onOpenChange={(val) => !val ?? setIsDeleting(0)} >
+                    <AlertDialogTrigger></AlertDialogTrigger>
+                    <AlertDialogContent >
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete the product.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setIsDeleting(0)}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={async () => {
+                            try {
+                              await deleteMutation.mutateAsync({
+                                id: product.id,
+                                image: product.image,
+                              });
+
+                              toast.success("Product deleted successfully");
+                              await utils.products.getProducts.invalidate();
+                            } catch (error) {
+                              console.log(error);
+                            }
+                          }}
+                          disabled={deleteMutation.isLoading}
+                        >
+                          Continue
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+
                   <DropdownMenu>
                     <DropdownMenuTrigger
                       asChild
@@ -249,19 +336,19 @@ const AdminDashboard = ({
                       <DropdownMenuItem onClick={() => setEditing(product)}>
                         Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem>Delete</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setIsDeleting(product.id)} >Delete</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
 
                   <Image
-                    className="h-36 w-20 shrink-0 object-cover md:h-44 md:w-28 lg:h-52 lg:w-36"
+                    className="h-36 w-20 shrink-0 object-cover md:h-44 md:w-28 xl:h-52 xl:w-36"
                     alt={product.name}
                     src={product.image}
                     width={700}
                     height={700}
                   />
                   <div className="w-60 p-5">
-                    <h1 className="font-secondary text-base font-extrabold text-brown md:text-xl">
+                    <h1 className="font-secondary text-base font-extrabold text-brown xl:text-xl">
                       {product.name}
                     </h1>
                     <p className="text-sm text-muted-foreground">
@@ -279,13 +366,22 @@ const AdminDashboard = ({
                   </div>
                 </div>
               ))}
+            </div>
 
-              {productsLoading && (
-                <Skeleton className="relative flex w-full gap-2 p-2">
-                  <Skeleton className="h-52 w-36 shrink-0 "></Skeleton>
-                  <Skeleton className="w-60 p-5"></Skeleton>
-                </Skeleton>
-              )}
+            <div className="mx-auto mt-5 flex w-fit items-center gap-4">
+              <Button
+                onClick={() => handlePage("prev")}
+                disabled={!page || page === 1}
+              >
+                <ChevronLeft size={17} />
+              </Button>
+              {page ?? 1} of {totalPage}
+              <Button
+                onClick={() => handlePage("next")}
+                disabled={page >= totalPage}
+              >
+                <ChevronRight size={17} />
+              </Button>
             </div>
           </div>
         </div>
@@ -301,9 +397,12 @@ const AdminDashboard = ({
             onInteractOutside={cancelEditing}
           >
             {editing && (
-            <EditProductForm category={categories} cancelEditing={cancelEditing} editing={editing} />
+              <EditProductForm
+                category={categories}
+                cancelEditing={cancelEditing}
+                editing={editing}
+              />
             )}
-
           </DialogContent>
         </Dialog>
       ) : (
@@ -316,9 +415,13 @@ const AdminDashboard = ({
             className="max-h-screen"
           >
             <div className="overflow-y-scroll p-4">
-            {editing && (
-            <EditProductForm category={categories} cancelEditing={cancelEditing} editing={editing} />
-            )}
+              {editing && (
+                <EditProductForm
+                  category={categories}
+                  cancelEditing={cancelEditing}
+                  editing={editing}
+                />
+              )}
             </div>
           </DrawerContent>
         </Drawer>

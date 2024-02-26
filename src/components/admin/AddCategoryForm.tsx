@@ -35,6 +35,7 @@ const AddCategoryForm = ({
 }: {
   category: Category;
   close?: () => void;
+  closeDialog?: () => void;
 }) => {
   const utils = api.useUtils();
 

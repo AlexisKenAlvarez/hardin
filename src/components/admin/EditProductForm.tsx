@@ -36,20 +36,20 @@ import {
 const EditProductForm = ({
   category,
   cancelEditing,
-  editing
+  editing,
 }: {
   category: Category;
   cancelEditing: () => void;
   editing: RouterOutputs["products"]["getProducts"][0];
 }) => {
-
+  const [imageChanged, setImageChanged] = useState(false);
 
   const [previewFile, setPreviewFile] = useState<
     string | ArrayBuffer | null | undefined
   >(editing.image);
 
   const utils = api.useUtils();
-  const addProductMutation = api.products.addProduct.useMutation({
+  const addProductMutation = api.products.editProduct.useMutation({
     onSuccess: () => {
       cancelEditing();
     },
@@ -74,7 +74,9 @@ const EditProductForm = ({
     price: z.coerce.number().min(0),
     category: z.number(),
     sub_category: z.number().nullish(),
-    image: z.instanceof(File).array().min(1),
+    image: z
+      .instanceof(File)
+      .array()
   });
 
   type newProductType = z.infer<typeof newProductSchema>;
@@ -101,6 +103,8 @@ const EditProductForm = ({
       if (acceptedFiles[0]) reader.readAsDataURL(acceptedFiles[0]);
 
       form.setValue("image", acceptedFiles);
+      setImageChanged(true);
+      console.log("Changed image");
     },
     [form],
   );
@@ -116,13 +120,13 @@ const EditProductForm = ({
     <>
       <div className="space-y-4">
         <div className="">
-          <h1 className="text-xl font-bold">Add new product</h1>
+          <h1 className="text-xl font-bold">Edit product</h1>
           <p className="text-sm">
-            Create a new product to display on the website.
+            Edit the details of the product and click confirm to save changes
           </p>
         </div>
 
-        {form.getValues("image").length > 0 || previewFile !== "" && (
+        {previewFile && (
           <Image
             src={previewFile as string}
             alt="Image"
@@ -138,6 +142,7 @@ const EditProductForm = ({
             "group mt-2 flex cursor-pointer flex-col items-center border py-3 transition-all duration-300 ease-in-out hover:bg-black/5",
             {
               "text-red-500":
+                imageChanged &&
                 form.formState.errors.image?.message &&
                 form.getValues("image").length <= 0,
             },
@@ -164,8 +169,6 @@ const EditProductForm = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(async (data: newProductType) => {
-              console.log("🚀 ~ onSubmit={form.handleSubmit ~ data:", data);
-
               try {
                 const hasCategory = category.some(
                   (val) =>
@@ -176,29 +179,55 @@ const EditProductForm = ({
                   form.setError("sub_category", {
                     message: "Please select a category",
                   });
-                  return;
                 }
-                const loadingToast = toast.loading("Uploading product...");
+                const loadingToast = toast.loading("Updating product...");
 
-                const imageData = await startUpload(data.image);
+                console.log("Going in");
 
-                await addProductMutation.mutateAsync({
-                  name: data.name,
-                  description: data.description,
-                  price: data.price,
-                  category: data.category,
-                  image: imageData![0]!.url,
-                  sub_category: !hasCategory ? null : data.sub_category,
-                });
+                if (imageChanged) {
+                  console.log("Image changed");
+                  const imageData = await startUpload(data.image);
+                  console.log("🚀 ~ onSubmit={form.handleSubmit ~ imageData:", imageData)
 
-                toast.success("Product uploaded successfully", {
+                  await addProductMutation.mutateAsync({
+                    imageChanged,
+                    newData: {
+                      id: editing.id,
+                      name: data.name,
+                      description: data.description,
+                      price: data.price,
+                      category: data.category,
+                      image: imageData![0]!.url,
+                      sub_category: !hasCategory ? null : data.sub_category,
+                    },
+                    origData: editing,
+                  });
+                } else {
+                  console.log("Image not changed");
+
+                  await addProductMutation.mutateAsync({
+                    imageChanged,
+                    newData: {
+                      id: editing.id,
+                      name: data.name,
+                      description: data.description,
+                      price: data.price,
+                      category: data.category,
+                      image: editing.image,
+                      sub_category: !hasCategory ? null : data.sub_category,
+                    },
+                    origData: editing,
+                  });
+                }
+
+                toast.success("Product updated successfully", {
                   id: loadingToast,
                 });
 
                 await utils.products.getProducts.invalidate();
               } catch (error) {
                 console.log(error);
-                toast.error("Product uploaded successfully");
+                toast.error("Product update failed");
               }
             })}
             className="mt-5 space-y-4"

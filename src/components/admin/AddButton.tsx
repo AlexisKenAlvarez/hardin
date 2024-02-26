@@ -1,6 +1,6 @@
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -24,6 +24,10 @@ import AddProductForm from "./AddProductForm";
 const AddButton = ({ category }: { category: Category }) => {
   const [open, setOpen] = useState("");
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const closeDialog = useCallback(() => {
+    setOpen("");
+  }, [])
 
   const addDropdown = [
     {
@@ -85,6 +89,7 @@ const AddButton = ({ category }: { category: Category }) => {
                   <item.component
                     category={category}
                     close={() => setOpen("")}
+                    closeDialog={closeDialog}
                   />
                 )}
               </React.Fragment>
@@ -106,6 +111,7 @@ const AddButton = ({ category }: { category: Category }) => {
                     <item.component
                       category={category}
                       close={() => setOpen("")}
+                      closeDialog={closeDialog}
                     />
                   )}
                 </React.Fragment>
