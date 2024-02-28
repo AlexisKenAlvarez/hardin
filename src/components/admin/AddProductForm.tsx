@@ -1,16 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Category } from "@/lib/types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { convertBytes } from "@/utils";
 import { useUploadThing } from "@/utils/uploadthing";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useDropzone } from "@uploadthing/react";
 import { UploadCloud } from "lucide-react";
-import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
-import { generateClientDropzoneAccept } from "uploadthing/client";
+import { useForm } from "react-hook-form";
 import "react-image-crop/dist/ReactCrop.css";
+import { generateClientDropzoneAccept } from "uploadthing/client";
+import { z } from "zod";
 
 import {
   Form,
@@ -23,6 +22,17 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Textarea } from "@/components/ui/textarea";
+import { cn, setCanvasPreview } from "@/lib/utils";
+import { api } from "@/trpc/react";
+import React from "react";
+import ReactCrop, {
+  centerCrop,
+  convertToPixelCrop,
+  makeAspectCrop,
+  type Crop,
+} from "react-image-crop";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
 import {
   Select,
   SelectContent,
@@ -30,17 +40,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Button } from "../ui/button";
-import { cn, setCanvasPreview } from "@/lib/utils";
-import { api } from "@/trpc/react";
-import { toast } from "sonner";
-import React from "react";
-import ReactCrop, {
-  makeAspectCrop,
-  type Crop,
-  centerCrop,
-  convertToPixelCrop,
-} from "react-image-crop";
 
 const AddProductForm = ({
   category,
@@ -139,6 +138,18 @@ const AddProductForm = ({
 
       if (acceptedFiles[0]) reader.readAsDataURL(acceptedFiles[0]);
 
+      const fileType = acceptedFiles[0]?.name.split(".").pop();
+      const VALID_FILE_TYPES = ["jpg", "jpeg", "png"];
+
+      if (acceptedFiles[0]?.size === undefined) {
+        toast.error("The file is too large!");
+        return;
+      }
+
+      if (!fileType || !VALID_FILE_TYPES.includes(fileType)) {
+        toast.error("Invalid file type");
+        return;
+      }
       form.setValue("image", acceptedFiles);
     },
     [form],
@@ -150,7 +161,6 @@ const AddProductForm = ({
     multiple: false,
     maxSize: 2 * 1024 * 1024,
   });
-
 
   return (
     <>
@@ -164,6 +174,7 @@ const AddProductForm = ({
 
         {form.getValues("image").length > 0 && (
           <ReactCrop
+            className=""
             crop={crop}
             onChange={(c) => setCrop(c)}
             circularCrop
@@ -171,6 +182,7 @@ const AddProductForm = ({
             // minWidth={150}
             // locked
             keepSelection
+            ruleOfThirds
             onComplete={async (c) => {
               setCanvasPreview(
                 imgRef.current!,
@@ -196,7 +208,7 @@ const AddProductForm = ({
 
         <canvas
           ref={canvasRef}
-          className="mx-auto mt-4  border rounded-full"
+          className="mx-auto mt-4  hidden rounded-full border"
           style={{ width: 150, height: 150, objectFit: "contain" }}
         />
 
@@ -252,16 +264,19 @@ const AddProductForm = ({
                 }
                 const loadingToast = toast.loading("Uploading product...");
 
-                const response = await fetch(canvasRef.current!.toDataURL());
+                const response = await fetch(
+                  canvasRef.current!.toDataURL("image/jpeg", 0.5),
+                );
                 const blob = await response.blob();
                 const file = new File([blob], data.image[0]!.name, {
                   type: data.image[0]!.type,
                   lastModified: Date.now(),
                 });
-  
+
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
 
+                console.log("File size of canvas", file.size);
                 const imageData = await startUpload([file]);
 
                 await addProductMutation.mutateAsync({
@@ -280,7 +295,7 @@ const AddProductForm = ({
                 await utils.products.getProducts.invalidate();
               } catch (error) {
                 console.log(error);
-                toast.error("Product uploaded successfully");
+                toast.error("There was an error uploading the product");
               }
             })}
             className="mt-5 space-y-4"

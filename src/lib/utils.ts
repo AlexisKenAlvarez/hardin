@@ -18,12 +18,13 @@ export const setCanvasPreview = (
     return;
   }
 
-  const pixelRatio = window.devicePixelRatio;
+  const pixelRatio = window.devicePixelRatio || 1;
   const scaleX = image.naturalWidth / image.width;
   const scaleY = image.naturalHeight / image.height;
 
   canvas.width = Math.floor(crop.width * scaleX * pixelRatio);
   canvas.height = Math.floor(crop.height * scaleY * pixelRatio);
+  
 
   ctx.scale(pixelRatio, pixelRatio);
   ctx.imageSmoothingQuality = "high";

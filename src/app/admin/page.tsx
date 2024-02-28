@@ -17,9 +17,6 @@ const page = async ({
 
   const category = searchParams.category as string;
   const sub = searchParams.sub as string;
-  console.log("🚀 ~ sub:", sub);
-
-
 
   const categories = await api.products.getCategories.query();
   const subCategories = await api.products.getSubCategories.query()
@@ -29,13 +26,6 @@ const page = async ({
     : categories[0]?.id ?? 0;
 
   const querySub = sub ? subCategories.find((val) => val.name === sub)!.id : null;
-
-  const productCount = await api.products.countProducts.query()
-
-  const page = searchParams.page as string;
-  const itemsPerPage = 12
-  const offset = page ? (parseInt(page) - 1) * itemsPerPage : 0
-  const totalPage = Math.ceil(productCount / itemsPerPage)
 
   const products = await api.products.getProducts.query({
     category: queryCategory,
@@ -57,10 +47,7 @@ const page = async ({
         products={products}
         queryCategory={queryCategory}
         querySub={querySub}
-        offset={offset}
-        totalPage={totalPage}
-        limit={itemsPerPage}
-        page={page ? parseInt(page) : 1}
+        subCategories={subCategories}
       />
     </section>
   );

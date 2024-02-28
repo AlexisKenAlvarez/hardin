@@ -1,21 +1,20 @@
 "use client";
-import type { RouterOutputs } from "@/server/api";
-import { supabase } from "@/supabase/supabaseClient";
 import type { Category } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import type { RouterOutputs } from "@/server/api";
+import { supabase } from "@/supabase/supabaseClient";
 import { api } from "@/trpc/react";
+import {
+  ChevronsUpDown,
+  Filter,
+  LogOut,
+  Menu,
+  Pencil,
+  Trash,
+} from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useState } from "react";
 import AddButton from "./AddButton";
-import {
-  ChevronRight,
-  Filter,
-  LayoutGrid,
-  List,
-  LogOut,
-  Menu,
-} from "lucide-react";
-import { ChevronsUpDown, MoreVertical } from "lucide-react";
 
 import Image from "next/image";
 
@@ -44,38 +43,38 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { ChevronLeft } from "lucide-react";
-import EditProductForm from "./EditProductForm";
 import { toast } from "sonner";
+import EditProductForm from "./EditProductForm";
 
+import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "../ui/button";
 
 const AdminDashboard = ({
   session,
   categories,
+  subCategories,
   products,
   queryCategory,
   querySub,
-  offset,
-  totalPage,
-  page,
-  limit,
 }: {
   session: RouterOutputs["auth"]["getSession"];
   categories: Category;
   products: RouterOutputs["products"]["getProducts"];
+  subCategories: RouterOutputs["products"]["getSubCategories"];
   queryCategory: number;
   querySub: number | null;
-  totalPage: number;
-  offset: number;
-  limit: number;
-  page: number;
 }) => {
+  type toDeleteType = {
+    id: number;
+    image: string;
+  };
+
   const utils = api.useUtils();
   const searchParams = useSearchParams();
   const [categoryOpen, setCategoryOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(0);
+  const [toDelete, setToDelete] = useState<toDeleteType[]>([]);
+
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
   const [editing, setEditing] = useState<
@@ -96,8 +95,6 @@ const AdminDashboard = ({
     {
       category: queryCategory,
       sub_category: querySub,
-      offset,
-      limit,
     },
     {
       initialData: products,
@@ -110,6 +107,7 @@ const AdminDashboard = ({
     callback?: void,
   ) {
     const params = new URLSearchParams(searchParams);
+    setToDelete([]);
 
     if (type == "category") {
       params.delete("sub");
@@ -122,23 +120,6 @@ const AdminDashboard = ({
 
     callback;
   }
-
-  const handlePage = (type: "prev" | "next") => {
-    const params = new URLSearchParams(searchParams);
-
-    if (type === "prev") {
-      const newPage = page ? page - 1 : 1;
-      params.set("page", newPage.toString());
-    } else {
-      const newPage = page + 1;
-      params.set("page", newPage.toString());
-    }
-
-    router.push(`${pathname}?${params.toString()}`);
-  };
-
-  const brown = "#76422C";
-  const [productView, setProductView] = useState("grid");
 
   const cancelEditing = useCallback(() => {
     setEditing(null);
@@ -243,7 +224,7 @@ const AdminDashboard = ({
         <div className="flex h-full w-full">
           <div
             className={cn(
-              "relative left-0 top-0 z-10 hidden h-screen w-56 bg-white p-4 lg:block",
+              "relative left-0 top-0 z-10 hidden w-56 bg-white p-4 lg:block",
             )}
           >
             {sideBar}
@@ -264,125 +245,242 @@ const AdminDashboard = ({
                 <Filter strokeWidth="1.2" size={14} />
                 <p className="">Filter</p>
               </Button>
-              <div className="flex w-full items-center justify-end gap-3">
-                <button>
-                  <List
-                    stroke={productView === "list" ? brown : "black"}
-                    onClick={() => setProductView("list")}
-                  />
-                </button>
-                <button>
-                  <LayoutGrid
-                    fill={productView === "grid" ? brown : "black"}
-                    stroke={productView === "grid" ? brown : "black"}
-                    onClick={() => setProductView("grid")}
-                  />
-                </button>
-                <AddButton category={categoryData} />
-              </div>
-            </div>
-            <Separator />
-            {productsData.length === 0 && (
-                <h1 className="text-center mt-10">There are no products yet.</h1>
-              )}
-            <div className="grid-cols-1dddddddddddddddd mx-auto grid w-full gap-5 p-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
-
-              {productsData.map((product) => (
-                <div className="relative flex  bg-neutral-100" key={product.id}>
-                  <AlertDialog open={isDeleting === product.id} onOpenChange={(val) => !val ?? setIsDeleting(0)} >
-                    <AlertDialogTrigger></AlertDialogTrigger>
-                    <AlertDialogContent >
+              <div className="flex w-full items-center justify-between gap-3">
+                <div className="flex gap-4">
+                  <div
+                    className={cn("flex items-center gap-2 ", {
+                      hidden: productsData.length === 0,
+                    })}
+                  >
+                    <Checkbox
+                      id="selectall"
+                      checked={toDelete.length === productsData.length}
+                      onCheckedChange={(val) => {
+                        if (val) {
+                          setToDelete([]);
+                          setToDelete((val) => [
+                            ...val,
+                            ...productsData.map((product) => {
+                              return { id: product.id, image: product.image };
+                            }),
+                          ]);
+                        } else {
+                          setToDelete([]);
+                        }
+                      }}
+                    />
+                    <label htmlFor="selectall">Select all</label>
+                  </div>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="destructive"
+                        className={cn("flex gap-2", {
+                          hidden: toDelete.length === 0,
+                        })}
+                      >
+                        <Trash size={14} />
+                        <p>
+                          Delete {toDelete.length} item
+                          {toDelete.length > 1 && <span>s</span>}{" "}
+                        </p>
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
                       <AlertDialogHeader>
                         <AlertDialogTitle>
                           Are you absolutely sure?
                         </AlertDialogTitle>
                         <AlertDialogDescription>
                           This action cannot be undone. This will permanently
-                          delete the product.
+                          delete the products selected.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setIsDeleting(0)}>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
                         <AlertDialogAction
+                          disabled={deleteMutation.isLoading}
                           onClick={async () => {
                             try {
+                              const loading = toast.loading(
+                                "Deleting products...",
+                              );
                               await deleteMutation.mutateAsync({
-                                id: product.id,
-                                image: product.image,
+                                toDeleteArray: toDelete,
+                              });
+                              await utils.products.getProducts.invalidate();
+
+                              toast.success("Products deleted successfully.", {
+                                id: loading,
                               });
 
-                              toast.success("Product deleted successfully");
-                              await utils.products.getProducts.invalidate();
+                              setToDelete([]);
                             } catch (error) {
                               console.log(error);
+                              toast.error(
+                                "An error occurred while deleting the products.",
+                              );
                             }
                           }}
-                          disabled={deleteMutation.isLoading}
                         >
                           Continue
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger
-                      asChild
-                      className="absolute right-0 top-2 cursor-pointer opacity-50 hover:opacity-100"
-                    >
-                      <MoreVertical />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => setEditing(product)}>
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setIsDeleting(product.id)} >Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  <Image
-                    className="h-36 w-20 shrink-0 object-cover md:h-44 md:w-28 xl:h-52 xl:w-36"
-                    alt={product.name}
-                    src={product.image}
-                    width={700}
-                    height={700}
-                  />
-                  <div className="w-60 p-5">
-                    <h1 className="font-secondary text-base font-extrabold text-brown xl:text-xl">
-                      {product.name}
-                    </h1>
-                    <p className="text-sm text-muted-foreground">
-                      {product.description}
-                    </p>
-
-                    <div className="mt-5">
-                      <p className="text-sm font-semibold capitalize text-muted-foreground">
-                        {product.sub_categories?.name}
-                      </p>
-                      <p className="text-base font-bold text-lime-500 md:text-lg">
-                        P{product.price}.00
-                      </p>
-                    </div>
-                  </div>
                 </div>
-              ))}
-            </div>
 
-            <div className="mx-auto mt-5 flex w-fit items-center gap-4">
-              <Button
-                onClick={() => handlePage("prev")}
-                disabled={!page || page === 1}
-              >
-                <ChevronLeft size={17} />
-              </Button>
-              {page ?? 1} of {totalPage}
-              <Button
-                onClick={() => handlePage("next")}
-                disabled={page >= totalPage}
-              >
-                <ChevronRight size={17} />
-              </Button>
+                <AddButton category={categoryData} />
+              </div>
             </div>
+            <Separator />
+            {productsData.length === 0 && (
+              <h1 className="mt-10 text-center">There are no products yet.</h1>
+            )}
+
+            {categories.map((categ) =>
+              categ.id === queryCategory && categ.sub_categories.length > 0 ? (
+                <div
+                  className="grid grid-cols-3 justify-between gap-10 p-4 px-2 pr-6"
+                  key={categ.id}
+                >
+                  {subCategories.map(
+                    (sub) =>
+                      sub.category === queryCategory && (
+                        <div
+                          className={cn("h-full w-full", {
+                            hidden: querySub !== sub.id,
+                            block: !querySub,
+                          })}
+                          key={sub.id}
+                        >
+                          <div className="flex items-center gap-x-2 px-2">
+                            <h1 className="text-2xl font-bold capitalize text-brown">
+                              {sub.name}
+                            </h1>
+                          </div>
+                          <ul className="mt-5 divide-y rounded-sm">
+                            {productsData.map(
+                              (product) =>
+                                sub.id === product.sub_category && (
+                                  <li
+                                    className="relative flex w-full items-center gap-2 px-2 py-3"
+                                    key={product.id}
+                                  >
+                                    <Checkbox
+                                      className=""
+                                      checked={toDelete.some(
+                                        (val) => val.id === product.id,
+                                      )}
+                                      onCheckedChange={(checked) => {
+                                        if (checked) {
+                                          setToDelete((val) => [
+                                            ...val,
+                                            {
+                                              id: product.id,
+                                              image: product.image,
+                                            },
+                                          ]);
+                                        } else {
+                                          setToDelete((val) =>
+                                            val.filter(
+                                              (del) => del.id !== product.id,
+                                            ),
+                                          );
+                                        }
+                                      }}
+                                    />
+                                    <Image
+                                      src={product.image}
+                                      alt={product.name}
+                                      width={200}
+                                      height={200}
+                                      className="w-10 rounded-full"
+                                    />
+                                    <div className="w-full">
+                                      <h1 className="font-semibold text-brown">
+                                        {product.name}
+                                      </h1>
+                                      <p className="text-sm text-muted-foreground">
+                                        {product.description}
+                                      </p>
+                                    </div>
+                                    <button
+                                      className=""
+                                      onClick={() => setEditing(product)}
+                                    >
+                                      <Pencil
+                                        size={19}
+                                        className="opacity-40 transition-all duration-300 ease-in-out hover:opacity-100"
+                                      />
+                                    </button>
+                                  </li>
+                                ),
+                            )}
+                          </ul>
+                        </div>
+                      ),
+                  )}
+                </div>
+              ) : (
+                categ.id === queryCategory && (
+                  <ul className="mt-5 flex flex-wrap w-full rounded-sm divide-x" key={categ.id}>
+                    {productsData.map((product) => (
+                      <li
+                        className="relative flex w-full items-center gap-2 px-4 py-3 max-w-sm"
+                        key={product.id}
+                      >
+                        <Checkbox
+                          className=""
+                          checked={toDelete.some(
+                            (val) => val.id === product.id,
+                          )}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setToDelete((val) => [
+                                ...val,
+                                {
+                                  id: product.id,
+                                  image: product.image,
+                                },
+                              ]);
+                            } else {
+                              setToDelete((val) =>
+                                val.filter((del) => del.id !== product.id),
+                              );
+                            }
+                          }}
+                        />
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          width={200}
+                          height={200}
+                          className="w-10 rounded-full"
+                        />
+                        <div className="w-full">
+                          <h1 className="font-semibold text-brown">
+                            {product.name}
+                          </h1>
+                          <p className="text-sm text-muted-foreground">
+                            {product.description}
+                          </p>
+                        </div>
+                        <button
+                          className=""
+                          onClick={() => setEditing(product)}
+                        >
+                          <Pencil
+                            size={19}
+                            className="opacity-40 transition-all duration-300 ease-in-out hover:opacity-100"
+                          />
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )
+              ),
+            )}
           </div>
         </div>
       </div>

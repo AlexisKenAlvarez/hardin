@@ -1,10 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import type { Category } from "@/lib/types";
 import { useUploadThing } from "@/utils/uploadthing";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDropzone } from "@uploadthing/react";
 import { UploadCloud } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { generateClientDropzoneAccept } from "uploadthing/client";
 import { z } from "zod";
@@ -20,7 +21,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn, setCanvasPreview } from "@/lib/utils";
 import type { RouterOutputs } from "@/server/api";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
@@ -32,6 +33,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import ReactCrop, {
+  Crop,
+  centerCrop,
+  convertToPixelCrop,
+  makeAspectCrop,
+} from "react-image-crop";
 
 const EditProductForm = ({
   category,
@@ -43,6 +50,9 @@ const EditProductForm = ({
   editing: RouterOutputs["products"]["getProducts"][0];
 }) => {
   const [imageChanged, setImageChanged] = useState(false);
+  const [crop, setCrop] = useState<Crop>();
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [previewFile, setPreviewFile] = useState<
     string | ArrayBuffer | null | undefined
@@ -74,9 +84,7 @@ const EditProductForm = ({
     price: z.coerce.number().min(0),
     category: z.number(),
     sub_category: z.number().nullish(),
-    image: z
-      .instanceof(File)
-      .array()
+    image: z.instanceof(File).array(),
   });
 
   type newProductType = z.infer<typeof newProductSchema>;
@@ -104,7 +112,6 @@ const EditProductForm = ({
 
       form.setValue("image", acceptedFiles);
       setImageChanged(true);
-      console.log("Changed image");
     },
     [form],
   );
@@ -116,6 +123,27 @@ const EditProductForm = ({
     maxSize: 2 * 1024 * 1024,
   });
 
+  const onImageLoad: React.EventHandler<
+    React.SyntheticEvent<HTMLImageElement>
+  > = (event) => {
+    const image = event.currentTarget;
+    const { width, height } = image;
+    const cropWidthInPercent = (150 / width) * 100;
+
+    const crop = makeAspectCrop(
+      {
+        unit: "%",
+        width: cropWidthInPercent,
+      },
+      1,
+      width,
+      height,
+    );
+
+    const centeredCrop = centerCrop(crop, width, height);
+    setCrop(centeredCrop);
+  };
+
   return (
     <>
       <div className="space-y-4">
@@ -126,11 +154,50 @@ const EditProductForm = ({
           </p>
         </div>
 
-        {previewFile && (
+        {form.getValues("image").length > 0 && (
+          <ReactCrop
+            className=""
+            crop={crop}
+            onChange={(c) => setCrop(c)}
+            circularCrop
+            aspect={1}
+            // minWidth={150}
+            // locked
+            keepSelection
+            ruleOfThirds
+            onComplete={async (c) => {
+              setCanvasPreview(
+                imgRef.current!,
+                canvasRef.current!,
+                convertToPixelCrop(
+                  c,
+                  imgRef.current!.width,
+                  imgRef.current!.height,
+                ),
+              );
+            }}
+          >
+            <img
+              ref={imgRef}
+              src={previewFile as string}
+              width={1000}
+              height={1000}
+              alt="crop_image"
+              onLoad={onImageLoad}
+            />
+          </ReactCrop>
+        )}
+        <canvas
+          ref={canvasRef}
+          className="mx-auto mt-4  hidden rounded-full border"
+          style={{ width: 150, height: 150, objectFit: "contain" }}
+        />
+        
+        {!imageChanged && (
           <Image
             src={previewFile as string}
             alt="Image"
-            className="mx-auto h-52 w-36 rounded-md object-cover"
+            className="mx-auto w-44 rounded-full object-cover"
             width={500}
             height={500}
           />
@@ -185,9 +252,17 @@ const EditProductForm = ({
                 console.log("Going in");
 
                 if (imageChanged) {
-                  console.log("Image changed");
-                  const imageData = await startUpload(data.image);
-                  console.log("🚀 ~ onSubmit={form.handleSubmit ~ imageData:", imageData)
+                  const response = await fetch(canvasRef.current!.toDataURL());
+                  const blob = await response.blob();
+                  const file = new File([blob], data.image[0]!.name, {
+                    type: data.image[0]!.type,
+                    lastModified: Date.now(),
+                  });
+
+                  const reader = new FileReader();
+                  reader.readAsDataURL(file);
+
+                  const imageData = await startUpload([file]);
 
                   await addProductMutation.mutateAsync({
                     imageChanged,

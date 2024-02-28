@@ -6,10 +6,9 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import { utapi } from "@/server/uploadthing";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { UTApi } from "uploadthing/server";
-import { utapi } from "@/server/uploadthing";
 
 const productObject = z.object({
   id: z.number(),
@@ -156,8 +155,6 @@ export const productsRouter = createTRPCRouter({
       z.object({
         category: z.number(),
         sub_category: z.number().nullish(),
-        limit: z.number().default(12),
-        offset: z.number().default(0),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -166,8 +163,6 @@ export const productsRouter = createTRPCRouter({
         const { data: productData, error: productError } = await ctx.supabase
           .from("products")
           .select(`*, sub_categories ( id, name )`)
-          .order("name", { ascending: true })
-          .range(input.offset, input.offset + input.limit - 1)
           .eq("category", input.category);
 
         if (productError)
@@ -320,32 +315,40 @@ export const productsRouter = createTRPCRouter({
   deleteProduct: protectedProcedure
     .input(
       z.object({
-        id: z.number(),
-        image: z.string(),
+        toDeleteArray: z.array(
+          z.object({
+            id: z.number(),
+            image: z.string(),
+          }),
+        ),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { error: deleteError } = await ctx.supabase
-        .from("products")
-        .delete()
-        .eq("id", input.id);
+      input.toDeleteArray.forEach(async (product) => {
+        const { error: deleteError } = await ctx.supabase
+          .from("products")
+          .delete()
+          .eq("id", product.id);
 
-      if (deleteError) {
-        throw new TRPCError({
-          message: deleteError.message,
-          code: "INTERNAL_SERVER_ERROR",
-        });
-      }
+        if (deleteError) {
+          throw new TRPCError({
+            message: deleteError.message,
+            code: "INTERNAL_SERVER_ERROR",
+          });
+        }
 
-      const newUrl = new URL(input.image);
+        const newUrl = new URL(product.image);
 
-      if (
-        newUrl.hostname === "utfs.io" ||
-        newUrl.hostname === "uploadthing.com"
-      ) {
-        const filekey = input.image.substring(input.image.lastIndexOf("/") + 1);
-        await utapi.deleteFiles(filekey);
-      }
+        if (
+          newUrl.hostname === "utfs.io" ||
+          newUrl.hostname === "uploadthing.com"
+        ) {
+          const filekey = product.image.substring(
+            product.image.lastIndexOf("/") + 1,
+          );
+          await utapi.deleteFiles(filekey);
+        }
+      });
 
       return true;
     }),
