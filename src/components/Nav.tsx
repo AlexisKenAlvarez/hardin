@@ -1,13 +1,14 @@
-import { cn } from "@/lib/utils";
-import { AlignJustify } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button"
-import Image from 'next/image';
+'use client'
+
 import {
   Sheet,
   SheetContent,
   SheetTrigger
 } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
+import { AlignJustify } from "lucide-react";
+import Image from 'next/image';
+import { useEffect, useState } from "react";
 
 const Nav = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
