@@ -34,11 +34,12 @@ import {
   SelectValue,
 } from "../ui/select";
 import ReactCrop, {
-  Crop,
   centerCrop,
   convertToPixelCrop,
   makeAspectCrop,
 } from "react-image-crop";
+
+import type { Crop } from "react-image-crop";
 
 const EditProductForm = ({
   category,
@@ -192,7 +193,7 @@ const EditProductForm = ({
           className="mx-auto mt-4  hidden rounded-full border"
           style={{ width: 150, height: 150, objectFit: "contain" }}
         />
-        
+
         {!imageChanged && (
           <Image
             src={previewFile as string}

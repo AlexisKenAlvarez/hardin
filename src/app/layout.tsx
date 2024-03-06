@@ -1,12 +1,11 @@
 import "@/styles/globals.css";
 
-import { Montserrat } from "next/font/google";
 import localFont from "next/font/local";
 
+import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/trpc/react";
 import { headers } from "next/headers";
 import { cache } from "react";
-import { Toaster } from "@/components/ui/sonner";
 
 const fontspring = localFont({
   src: [
