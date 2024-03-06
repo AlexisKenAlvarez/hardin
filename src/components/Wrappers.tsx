@@ -11,7 +11,7 @@ const Wrappers = ({ children }: { children: ReactNode }) => {
       new LocomotiveScroll();
     })()
   }, []);
-  return <Suspense fallback={<>Loading...</>}>{children}</Suspense>;
+  return <Suspense fallback={<>Loading..</>}>{children}</Suspense>;
 };
 
 export default Wrappers;
