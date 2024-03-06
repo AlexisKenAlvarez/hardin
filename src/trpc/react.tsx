@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { loggerLink, unstable_httpBatchStreamLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useState } from "react";
 import SuperJSON from "superjson";
 
 import type { AppRouter } from "../server/api";
@@ -37,9 +39,10 @@ export function TRPCReactProvider(props: {
     }),
   );
 
+  gsap.registerPlugin(ScrollTrigger);
+
   return (
     <QueryClientProvider client={queryClient}>
-      
       <api.Provider client={trpcClient} queryClient={queryClient}>
         {props.children}
       </api.Provider>

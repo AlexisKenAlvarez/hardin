@@ -29,11 +29,26 @@ const fontspring = localFont({
   variable: "--font-fontspring",
 });
 
-const montserrat = Montserrat({
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  subsets: ["latin"],
+const sfpro = localFont({
+  src: [
+    {
+      path: "../../fonts/SFPRODISPLAYREGULAR.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../fonts/SFPRODISPLAYMEDIUM.woff",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../../fonts/SFPRODISPLAYBOLD.woff",
+      weight: "700",
+      style: "normal",
+    },
+  ],
   variable: "--font-sans",
-});
+})
 
 export const metadata = {
   title: "HardinCafe",
@@ -49,7 +64,7 @@ export default function RootLayout({
   const getHeaders = cache(async () => headers());
   return (
     <html lang="en">
-      <body className={`font-sans ${montserrat.variable} ${fontspring.variable}`}>
+      <body className={`font-sans ${sfpro.variable} ${fontspring.variable}`}>
         <TRPCReactProvider headersPromise={getHeaders()}>
           <>
             {children}
