@@ -1,17 +1,21 @@
 import Nav from "@/components/Nav";
-import Wrappers from "@/components/Wrappers";
-import About from "@/views/About";
+import Second from "@/views/Second";
 import Hero from "@/views/Hero";
+import About from "@/views/About";
 
 const page = () => {
   return (
-    <Wrappers>
-      <div className="relative">
+
+      <div className="relative" >
         <Nav />
         <Hero />
+        <Second />
         <About />
+        <div className="w-full min-h-screen grid place-content-center text-3xl bg-slate-50">
+          Next section
+        </div>
       </div>
-    </Wrappers>
+
   );
 };
 

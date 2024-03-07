@@ -1,17 +1,18 @@
-'use client'
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+"use client";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { AlignJustify } from "lucide-react";
-import Image from 'next/image';
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
 const Nav = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState(-1);
+
   const handleScroll = () => {
     const position = window.scrollY;
     setScrollPosition(position);
@@ -25,22 +26,35 @@ const Nav = () => {
     };
   }, []);
 
+  function onScroll({ direction }: { direction: number }) {
+    setScrollDirection(direction);
+  }
+
+  useEffect(() => {
+    void (async () => {
+      const LocomotiveScroll = (await import("locomotive-scroll")).default;
+
+      new LocomotiveScroll({
+        scrollCallback: onScroll,
+      });
+    })();
+  }, []);
+
   const navList = [
     {
-      label: "Twitter",
-      link: "",
-    },
-
-    {
-      label: "Telegram",
+      label: "Menu",
       link: "",
     },
     {
-      label: "Dextools",
+      label: "About",
       link: "",
     },
     {
-      label: "Telegram",
+      label: "Gallery",
+      link: "",
+    },
+    {
+      label: "Location",
       link: "",
     },
   ];
@@ -48,39 +62,56 @@ const Nav = () => {
   return (
     <nav
       className={cn(
-        "w-full lg:py-8 py-7 transition-all ease-in-out duration-300 font-secondary fixed top-0 left-0 px-6 bg-white/0 z-20",
+        "font-secondary fixed left-0 top-0 z-20 w-full translate-y-0 bg-white/40 px-8 py-4 backdrop-blur-sm transition-all duration-300 ease-in-out",
         {
-          "!py-4 bg-white/100": scrollPosition > 100,
-        }
+          "bg-white/100": scrollPosition > 100,
+        },
+        { "-translate-y-full": scrollDirection === 1 },
       )}
     >
-      <div className="max-w-screen-2xl flex items-center mx-auto justify-center">
-        <div className="w-full grid lg:place-content-center">
-          <Image width="500" height="500" src="/logo.webp" alt="mini_logo" className="w-10" />
+      <div className="mx-auto flex items-center justify-center">
+        <div className="w-full">
+          <Image
+            width="500"
+            height="500"
+            src="/logo.webp"
+            alt="mini_logo"
+            className="w-14"
+          />
         </div>
-        <ul className="w-full hidden items-center justify-center gap-x-10 lg:flex">
-          {navList.map((items) => (
-            <li key={items.label}>{items.label}</li>
-          ))}
-        </ul>
-        <div className="w-full flex items-center justify-end gap-x-3 lg:justify-center">
+
+        <div className="flex w-full items-center justify-end gap-x-3">
           <Sheet>
             <SheetTrigger asChild>
-              <button className="lg:hidden block">
-                <AlignJustify />
+              <button className="block lg:hidden">
+                <AlignJustify size={20} />
               </button>
             </SheetTrigger>
             <SheetContent>
-              <div className="w-full h-full bg-white font-secondary">
-              <Image width="500" height="500" src="/logo.webp" alt="mini_logo" className="w-14 mx-auto" />
-                <ul className="w-full flex flex-col items-center justify-center gap-y-10 mt-10">
+              <div className="font-secondary h-full w-full bg-white">
+                <Image
+                  width="500"
+                  height="500"
+                  src="/logo.webp"
+                  alt="mini_logo"
+                  className="mx-auto w-14"
+                />
+                <ul className="mt-10 flex w-full flex-col items-center justify-center gap-y-10">
                   {navList.map((items) => (
                     <li key={items.label}>{items.label}</li>
                   ))}
                 </ul>
-              </div>  
+              </div>
             </SheetContent>
           </Sheet>
+          <div className="hidden items-center gap-10 lg:flex">
+            <ul className="flex gap-x-10">
+              {navList.map((items) => (
+                <li key={items.label}>{items.label}</li>
+              ))}
+            </ul>
+            <Button className="rounded-full">Message us</Button>
+          </div>
         </div>
       </div>
     </nav>
