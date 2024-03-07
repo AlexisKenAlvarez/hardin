@@ -15,7 +15,7 @@ const Hero = () => {
           height={1200}
         />
         <div className="relative z-10 mx-auto flex w-full max-w-screen-2xl flex-col items-center justify-center gap-6">
-          <h1 className="max-w-sm text-center font-primary text-5xl text-brown sm:text-7xl">
+          <h1 className="max-w-sm text-center font-primary text-5xl text-brown sm:text-6xl 2xl:text-7xl">
             HARDIN CAFE
           </h1>
           <div className=" relative">
@@ -24,7 +24,7 @@ const Hero = () => {
               alt="coffe cup"
               width={600}
               height={600}
-              className="w-44 sm:w-72"
+              className="w-44 sm:w-58 2xl:w-72"
             />
             <Image
               src="/beans.webp"
