@@ -12,12 +12,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 const About = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const phrases = [
-    "Hardin Cafe seamlessly blends the vibrancy of a coffeehouse with the serenity of a garden",
-    "sanctuary. Amidst verdant foliage, patrons can delight in handcrafted brews and delectable",
-    "treats, immersing themselves in the tranquil ambiance.",
-  ];
-
   useGSAP(() => {
     const mm = gsap.matchMedia();
     const targets: HTMLElement[] = gsap.utils.toArray(".about-containers");
