@@ -146,7 +146,7 @@ const About = () => {
       ref={wrapperRef}
     >
       <div className="slide-container flex w-full flex-col lg:flex-row">
-        <Container className="about-containers w-full lg:shrink-0 p-5 py-20 pt-24 lg:h-screen">
+        <Container className="about-containers w-full p-5 py-20 pt-24 lg:h-screen lg:shrink-0">
           <div className="mx-auto w-full max-w-screen-2xl">
             <div className="w-fit space-y-2">
               <div className="text-4xl md:text-6xl lg:text-8xl">
@@ -191,7 +191,7 @@ const About = () => {
           </div>
         </Container>
 
-        <Container className="about-containers flex w-full lg:shrink-0 items-end py-20  lg:h-screen h-auto lg:py-0">
+        <Container className="about-containers flex h-auto w-full items-end py-20  lg:h-screen lg:shrink-0 lg:py-0">
           <div className="mx-auto flex w-full max-w-screen-2xl sm:justify-end lg:pb-24">
             <div className="w-fit space-y-2">
               <div className="text-4xl md:text-6xl lg:text-8xl">
@@ -208,7 +208,7 @@ const About = () => {
               </div>
 
               <div className="ml-auto mr-9 h-fit w-fit overflow-hidden">
-                <p className="about-subheader-2 sm:text-right text-lg md:text-xl">
+                <p className="about-subheader-2 text-lg sm:text-right md:text-xl">
                   Let the great outdoors do all the talking
                 </p>
               </div>
@@ -227,12 +227,30 @@ const About = () => {
           </div>
         </Container>
 
-        <Container className="about-containers grid w-full lg:shrink-0 place-content-center py-20 lg:h-screen h-auto lg:py-0">
-          <div className="mx-auto w-full max-w-screen-2xl">
-            <div className="relative h-fit w-fit overflow-hidden">
-              <h1 className="location-text text-center font-primary text-4xl md:text-5xl lg:text-7xl font-medium">
+        <Container className="about-containers flex h-auto w-full flex-col py-20 lg:h-screen lg:shrink-0 lg:py-0">
+          <div className="mt-28 flex w-full flex-1 flex-col">
+            <div className="relative w-full overflow-hidden">
+              <h1 className="location-text text-center font-primary text-4xl font-medium md:text-5xl lg:text-7xl">
                 Where are we located?
               </h1>
+            </div>
+
+            <div className="mx-auto mr-9 h-fit w-full overflow-hidden">
+              <p className="location-text text-center text-lg md:text-xl ">
+                Our location
+              </p>
+            </div>
+
+            <div className="relative flex flex-1 flex-col">
+              <div className="md:block hidden absolute z-10 bg-white p-5 rounded-md top-0 bottom-0 my-auto h-fit left-20">
+                We are located beside taal fire department
+              </div>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d242.08451034053456!2d120.91763876686716!3d13.877878802438001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd0b003b0ff2c9%3A0x6f813e24850eed57!2sHardin%20Caf%C3%A9!5e0!3m2!1sen!2sph!4v1710055487885!5m2!1sen!2sph"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="mt-8 h-full w-full flex-1 "
+              ></iframe>
             </div>
           </div>
         </Container>

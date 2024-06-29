@@ -2,7 +2,7 @@ import Nav from "@/components/Nav";
 import Second from "@/views/Second";
 import Hero from "@/views/Hero";
 import About from "@/views/About";
-import Location from "@/views/Location";
+// import Location from "@/views/Location";
 
 const page = () => {
   return (
@@ -12,7 +12,7 @@ const page = () => {
         <Hero />
         <Second />
         <About />
-        <Location/>
+        {/* <Location/> */}
       </div>
 
   );

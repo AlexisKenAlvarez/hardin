@@ -1,6 +1,7 @@
 "use client";
 import Container from "@/components/Container";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 const Hero = () => {
   return (
@@ -19,20 +20,43 @@ const Hero = () => {
             HARDIN CAFE
           </h1>
           <div className=" relative">
-            <Image
-              src="/coffee_cup.webp"
-              alt="coffe cup"
-              width={600}
-              height={600}
-              className="w-44 sm:w-58 2xl:w-72"
-            />
-            <Image
-              src="/beans.webp"
-              width={500}
-              height={500}
-              className="absolute -bottom-10 w-full scale-150 sm:scale-[1.7]"
-              alt="Coffee beans"
-            />
+            <motion.div
+              initial={{ rotate: 8 }}
+              animate={{ rotate: [8, -8] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "linear",
+                repeatType: "reverse",
+              }}
+              className=""
+            >
+              <Image
+                src="/coffee_cup.webp"
+                alt="coffe cup"
+                width={600}
+                height={600}
+                className="sm:w-58 w-44 2xl:w-72"
+              />
+            </motion.div>
+            <motion.div
+              animate={{ scale: [1, 1.05] }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "linear",
+                repeatType: "reverse",
+              }}
+              className=""
+            >
+              <Image
+                src="/beans.webp"
+                width={500}
+                height={500}
+                className="absolute -bottom-10 w-full scale-150 sm:scale-[1.7]"
+                alt="Coffee beans"
+              />
+            </motion.div>
           </div>
         </div>
       </Container>
