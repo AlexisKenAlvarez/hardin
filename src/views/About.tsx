@@ -108,10 +108,11 @@ const About = () => {
             opacity: 100,
             transformOrigin: "bottomLeft",
             scrollTrigger: {
+              markers: true,
               trigger: target,
               containerAnimation: scrollTween,
-              start: "center 50%",
-              end: "center+=150 25%",
+              start: "center 60%",
+              end: "center+=150 35%",
               scrub: true,
             },
           },
