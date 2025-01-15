@@ -10,7 +10,7 @@ const page = () => {
       <div className="relative" >
         <Nav />
         <Hero />
-        <Second />
+        {/* <Second /> */}
         <About />
         {/* <Location/> */}
       </div>
