@@ -1,20 +1,17 @@
 import Nav from "@/components/Nav";
-import Second from "@/views/Second";
-import Hero from "@/views/Hero";
-import About from "@/views/About";
-// import Location from "@/views/Location";
+import About from "@/views/landing/About";
+import Hero from "@/views/landing/Hero";
 
 const page = () => {
   return (
-
-      <div className="relative" >
-        <Nav />
-        <Hero />
-        {/* <Second /> */}
-        <About />
-        {/* <Location/> */}
-      </div>
-
+    <div className="relative">
+      {/* <Nav /> */}
+      <Hero />
+      <div className="w-full h-screen bg-transparent"></div>
+      {/* <Second /> */}
+      <About />
+      {/* <Location/> */}
+    </div>
   );
 };
 

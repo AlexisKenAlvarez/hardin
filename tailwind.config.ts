@@ -1,8 +1,7 @@
 import { fontFamily } from "tailwindcss/defaultTheme";
 import type { Config } from "tailwindcss";
-import { withUt } from "uploadthing/tw";
 
-export default withUt({
+module.exports = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -21,6 +20,7 @@ export default withUt({
     },
     extend: {
       colors: {
+        orange: "#EE792A",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -59,6 +59,7 @@ export default withUt({
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        title: ["var(--font-title)", ...fontFamily.sans],
         primary: "var(--font-fontspring)",
       },
       borderRadius: {
@@ -83,4 +84,4 @@ export default withUt({
     },
   },
   plugins: [require("tailwindcss-animate")],
-}) satisfies Config;
+} satisfies Config;

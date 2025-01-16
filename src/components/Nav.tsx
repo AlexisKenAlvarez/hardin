@@ -2,16 +2,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
-import { AlignJustify } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Button } from "./ui/button";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
 
 const Nav = () => {
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState(-1);
+  const [, setScrollPosition] = useState(0);
+  const [, setScrollDirection] = useState(-1);
 
   const handleScroll = () => {
     const position = window.scrollY;
@@ -40,80 +37,75 @@ const Nav = () => {
     })();
   }, []);
 
-  const navList = [
+  const NAV_ITEMS = [
+    {
+      label: "Home",
+      slug: "home",
+    },
     {
       label: "Menu",
-      link: "",
+      slug: "",
     },
     {
-      label: "About",
-      link: "",
-    },
-    {
-      label: "Gallery",
-      link: "",
+      label: "Hours",
+      slug: "hours",
     },
     {
       label: "Location",
-      link: "",
+      slug: "location",
+    },
+  ];
+
+  const SOCIALS = [
+    {
+      label: "Instagram",
+      icon: FaInstagram,
+      url: "https://www.instagram.com/hardincafe",
+    },
+    {
+      label: "Facebook",
+      icon: FaFacebook,
+      url: "https://www.facebook.com/profile.php?id=61553926187351",
     },
   ];
 
   return (
-    <nav
-      className={cn(
-        "font-secondary fixed left-0 top-0 z-20 w-full translate-y-0 bg-white/40 px-8 py-4 backdrop-blur-sm transition-all duration-300 ease-in-out",
-        {
-          "bg-white/100": scrollPosition > 100,
-        },
-        { "-translate-y-full": scrollDirection === 1 },
-      )}
-    >
-      <div className="mx-auto flex items-center justify-center">
-        <div className="w-full">
-          <Image
-            width="500"
-            height="500"
-            src="/logo.webp"
-            alt="mini_logo"
-            className="w-14"
-          />
-        </div>
-
-        <div className="flex w-full items-center justify-end gap-x-3">
-          <Sheet>
-            <SheetTrigger asChild>
-              <button className="block lg:hidden">
-                <AlignJustify size={20} />
-              </button>
-            </SheetTrigger>
-            <SheetContent>
-              <div className="font-secondary h-full w-full bg-white">
-                <Image
-                  width="500"
-                  height="500"
-                  src="/logo.webp"
-                  alt="mini_logo"
-                  className="mx-auto w-14"
-                />
-                <ul className="mt-10 flex w-full flex-col items-center justify-center gap-y-10">
-                  {navList.map((items) => (
-                    <li key={items.label}>{items.label}</li>
-                  ))}
-                </ul>
-              </div>
-            </SheetContent>
-          </Sheet>
-          <div className="hidden items-center gap-10 lg:flex">
-            <ul className="flex gap-x-10">
-              {navList.map((items) => (
-                <li key={items.label}>{items.label}</li>
-              ))}
-            </ul>
-            <Button className="rounded-full">Message us</Button>
-          </div>
-        </div>
+    <nav className="fixed left-0 top-0 z-50 flex w-full items-start justify-between p-5 font-sans">
+      <ul className="flex w-full items-center gap-4">
+        {NAV_ITEMS.map((item, index) => (
+          <li
+            key={index}
+            className="rounded-full bg-white/10 px-4 py-2 text-white"
+          >
+            <a href={`#${item.slug}`}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+      <div className="flex w-full justify-center">
+        <Image
+          alt="logo"
+          width={150}
+          height={150}
+          src="/logo-white.png"
+          className="w-28"
+        />
       </div>
+      <ul className="w-full flex items-center justify-end gap-4">
+        {SOCIALS.map((item, index) => (
+          <a
+            href={`${item.url}`}
+            rel="noopener noreferrer"
+            target="_blank"
+            key={index}
+            
+          >
+            <li className="rounded-full bg-white/10 px-4 py-2 items-center gap-2 text-white flex">
+              <item.icon />
+              <p>{item.label}</p>
+            </li>
+          </a>
+        ))}
+      </ul>
     </nav>
   );
 };
