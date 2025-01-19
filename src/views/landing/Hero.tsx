@@ -8,9 +8,11 @@ import {
   motion,
   useMotionValue,
   useSpring,
+  useScroll,
+  useTransform,
 } from "motion/react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const QUINT_IN = [1, -0.02, 0.58, 0.94];
 
@@ -37,22 +39,31 @@ const GET_RANDOM_NUMBER = (min: number, max: number) => {
 };
 
 const Hero = () => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const { scrollY, scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["end end", "end start"],
+  });
+
+  const translateY = useTransform(scrollYProgress, [0, 0.7], [0, -50]);
+  const coffee_translateY = useTransform(scrollYProgress, [0, 0.7], [0, -60]);
+
+  const text_animation = {
+    translateY: useTransform(scrollYProgress, [0, 0.7], [0, -140]),
+    opacity: useTransform(scrollYProgress, [0.1, 0.7], [1, 0]),
+  };
+
+  const [blurAmount, setBlurAmount] = useState(0);
   const [image1Loaded, setImage1Loaded] = useState(false);
   const [image2Loaded, setImage2Loaded] = useState(false);
   const [profile, setProfile] = useState<null | number>(null);
 
-
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const bgMouseX = useMotionValue(0);
-  const bgMouseY = useMotionValue(0);
-
   const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
   const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
-
-  const bgSpringX = useSpring(bgMouseX, { stiffness: 50, damping: 20 });
-  const bgSpringY = useSpring(bgMouseY, { stiffness: 50, damping: 20 });
 
   const imageLoaded = image1Loaded && image2Loaded && profile;
 
@@ -68,6 +79,44 @@ const Hero = () => {
       duration: 0.3,
     },
   };
+
+  useEffect(() => {
+    const getScrollY = (value: number) => {
+      if (!ref.current) return;
+
+      const heroHeight = ref.current.offsetHeight;
+      const heroStart = ref.current.offsetTop;
+      const heroMiddle = heroStart + heroHeight / 3;
+
+      const normalizedValue = Math.min(
+        Math.max(((value - heroMiddle) / heroHeight) * 20, -10),
+        10
+      );
+
+      setBlurAmount(normalizedValue);
+    };
+
+    const unsubscribe = scrollY.on("change", getScrollY);
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (event: MouseEvent) => {
+      const { clientX, clientY } = event;
+
+      mouseX.set(-(clientX / window.innerHeight - 0.5) * 10);
+      mouseY.set(-(clientY / window.innerWidth - 0.5) * 10);
+    };
+
+    window?.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window?.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
   useEffect(() => {
     const profile = localStorage.getItem("landing_profile");
@@ -86,27 +135,8 @@ const Hero = () => {
     setProfile(random_number);
   }, []);
 
-  useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      const { clientX, clientY } = event;
-
-      mouseX.set(-(clientX / window.innerHeight - 0.5) * 20);
-      mouseY.set(-(clientY / window.innerWidth - 0.5) * 20);
-
-      bgMouseX.set(-(clientX / window.innerHeight - 0.5) * 10);
-      bgMouseY.set(-(clientY / window.innerWidth - 0.5) * 10);
-    };
-
-    window?.addEventListener("mousemove", handleMouseMove);
-
-
-    return () => {
-      window?.removeEventListener("mousemove", handleMouseMove);
-    };
-  }, []);
-
   return (
-    <div className="min-h-screen  bg-orange">
+    <div ref={ref} className="h-screen bg-orange">
       <AnimatePresence>
         {profile && (
           <motion.div
@@ -135,8 +165,8 @@ const Hero = () => {
                   id="image-animate-div"
                   className="h-full"
                   style={{
-                    x: bgSpringX,
-                    y: bgSpringY,
+                    translateY,
+                    filter: `blur(${blurAmount}px)`,
                   }}
                 >
                   <Image
@@ -149,6 +179,9 @@ const Hero = () => {
                   />
                 </motion.div>
                 <motion.h1
+                  style={{
+                    ...text_animation,
+                  }}
                   animate={
                     imageLoaded
                       ? {
@@ -195,6 +228,8 @@ const Hero = () => {
                   style={{
                     x: springX,
                     y: springY,
+                    translateY: coffee_translateY,
+                    filter: `blur(${blurAmount}px)`,
                   }}
                 >
                   <Image
@@ -207,7 +242,7 @@ const Hero = () => {
                   />
                 </motion.div>
 
-                <div className="absolute left-0 top-0 h-full w-full bg-gradient-to-b from-transparent via-transparent to-black/50"></div>
+                <div className="fixed left-0 top-0 h-full w-full bg-gradient-to-b from-transparent via-transparent to-black/50"></div>
               </div>
 
               <div className="absolute bottom-10 left-0 right-0 z-10 mx-auto flex w-full flex-col items-center  justify-center gap-4">

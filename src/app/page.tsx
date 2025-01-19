@@ -7,7 +7,8 @@ const page = () => {
     <div className="relative">
       {/* <Nav /> */}
       <Hero />
-      <div className="w-full h-screen bg-transparent"></div>
+      <div className="w-full h-screen z-20 relative">
+      </div>
       {/* <Second /> */}
       <About />
       {/* <Location/> */}
