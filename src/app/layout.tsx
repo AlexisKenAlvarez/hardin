@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-import { Albert_Sans, Montserrat } from "next/font/google";
+import { Albert_Sans, Montserrat, STIX_Two_Text } from "next/font/google";
 
 
 import { Toaster } from "@/components/ui/sonner";
@@ -20,6 +20,11 @@ const Albert = Albert_Sans({
   variable: '--font-sans'
  })
 
+const Stix = STIX_Two_Text({
+  subsets: ['latin'], 
+  variable: '--font-serif'
+})
+
 export default function RootLayout({
   children,
 }: {
@@ -28,7 +33,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${Albert.variable} ${Mont.variable}`}>
+      <body className={`${Albert.variable} ${Mont.variable} ${Stix.variable}`}>
         <>
           {children}
           <Toaster closeButton position="top-center" />

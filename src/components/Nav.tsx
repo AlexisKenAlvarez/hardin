@@ -76,7 +76,7 @@ const Nav = () => {
   return (
     <nav
       className={cn(
-        "fixed left-0 top-0 drop-shadow-md z-50 flex w-full items-start justify-between p-5 font-sans transition-all duration-500 ease-in-out",
+        "fixed hidden left-0 top-0 drop-shadow-md z-50 lg:flex w-full items-start justify-between p-5 font-sans transition-all duration-500 ease-in-out",
         {
           "-translate-y-full opacity-0": scrollDirection === 1,
           "bg-white": show_nav,

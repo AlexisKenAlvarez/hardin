@@ -49,6 +49,8 @@ const Hero = () => {
   const translateY = useTransform(scrollYProgress, [0, 0.7], [0, -50]);
   const coffee_translateY = useTransform(scrollYProgress, [0, 0.7], [0, -60]);
 
+  const black_opacity = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
+
   const text_animation = {
     translateY: useTransform(scrollYProgress, [0, 0.7], [0, -140]),
     opacity: useTransform(scrollYProgress, [0.1, 0.7], [1, 0]),
@@ -205,7 +207,7 @@ const Hero = () => {
                       duration: 0.3,
                     },
                   }}
-                  className="text-shadow absolute left-0 top-0 font-title text-[25vw] font-black text-white"
+                  className="text-shadow absolute left-0 top-10 sm:top-0 font-title text-center mx-auto right-0 text-[23vw] sm:text-[25vw] font-black text-white"
                 >
                   HARDIN
                 </motion.h1>
@@ -243,6 +245,12 @@ const Hero = () => {
                 </motion.div>
 
                 <div className="fixed left-0 top-0 h-full w-full bg-gradient-to-b from-transparent via-transparent to-black/50"></div>
+
+                <motion.div 
+                style={{
+                  opacity: black_opacity
+                }}
+                className="fixed left-0 top-0 h-full w-full bg-black/30"></motion.div>
               </div>
 
               <div className="absolute bottom-10 left-0 right-0 z-10 mx-auto flex w-full flex-col items-center  justify-center gap-4">
