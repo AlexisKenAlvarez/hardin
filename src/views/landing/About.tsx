@@ -12,7 +12,6 @@ const About = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-
     gsap.registerPlugin(ScrollTrigger);
 
     const mm = gsap.matchMedia();
@@ -230,7 +229,7 @@ const About = () => {
         </Container>
 
         <Container className="about-containers flex h-auto w-full flex-col py-20 lg:h-screen lg:shrink-0 lg:py-0">
-         <></>
+          <></>
         </Container>
       </div>
     </div>

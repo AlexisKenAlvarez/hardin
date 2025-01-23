@@ -92,7 +92,7 @@ const Hero = () => {
 
       const normalizedValue = Math.min(
         Math.max(((value - heroMiddle) / heroHeight) * 20, -10),
-        10
+        20
       );
 
       setBlurAmount(normalizedValue);
