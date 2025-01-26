@@ -72,6 +72,9 @@ module.exports = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        whiteBorder: "0px 0px 0px 2px rgba(237,237,237,1) inset"
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },

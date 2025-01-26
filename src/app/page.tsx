@@ -1,17 +1,16 @@
-import Nav from "@/components/Nav";
 import About from "@/views/landing/About";
 import Hero from "@/views/landing/Hero";
 import Hours from "@/views/landing/Hours";
+import Location from "@/views/landing/Location";
 
 const page = () => {
   return (
     <div className="relative">
-      {/* <Nav /> */}
       <Hero />
-      <Hours />
-      {/* <Second /> */}
+      <Location />
+
       <About />
-      {/* <Location/> */}
+      <Hours />
     </div>
   );
 };

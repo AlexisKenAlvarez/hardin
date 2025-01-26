@@ -7,23 +7,24 @@ import {
   AnimatePresence,
   motion,
   useMotionValue,
-  useSpring,
   useScroll,
+  useSpring,
   useTransform,
 } from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { ImSpinner2 } from "react-icons/im";
 
 const QUINT_IN = [1, -0.02, 0.58, 0.94];
 
 const LANDING_PROFILES = [
   {
-    background: "/landing/1-bg.webp",
+    background: "/landing/3-bg.webp",
     coffee: "/landing/1-coffee.png",
     text: "Coffee, crafted in nature.",
   },
   {
-    background: "/landing/2-bg.webp",
+    background: "/landing/3-bg.webp",
     coffee: "/landing/2-coffee.png",
     text: "Where coffee meets nature.",
   },
@@ -92,7 +93,7 @@ const Hero = () => {
 
       const normalizedValue = Math.min(
         Math.max(((value - heroMiddle) / heroHeight) * 20, -10),
-        20
+        20,
       );
 
       setBlurAmount(normalizedValue);
@@ -138,7 +139,8 @@ const Hero = () => {
   }, []);
 
   return (
-    <div ref={ref} className="h-screen bg-orange">
+    <div ref={ref} className="relative h-screen overflow-hidden bg-orange">
+     
       <AnimatePresence>
         {profile && (
           <motion.div
@@ -177,7 +179,7 @@ const Hero = () => {
                     height={1500}
                     src={LANDING_PROFILES[profile - 1]?.background ?? ""}
                     onLoad={() => setImage1Loaded(true)}
-                    className="h-full w-full object-cover brightness-[.80]"
+                    className="h-full w-full rotate-[2.5deg] object-cover brightness-[.80]"
                   />
                 </motion.div>
                 <motion.h1
@@ -207,7 +209,7 @@ const Hero = () => {
                       duration: 0.3,
                     },
                   }}
-                  className="text-shadow absolute left-0 top-10 sm:top-0 font-title text-center mx-auto right-0 text-[23vw] sm:text-[25vw] font-black text-white"
+                  className="text-shadow absolute left-0 right-0 top-10 mx-auto text-center font-title text-[23vw] font-black text-white sm:top-0 sm:text-[25vw]"
                 >
                   HARDIN
                 </motion.h1>
@@ -244,13 +246,14 @@ const Hero = () => {
                   />
                 </motion.div>
 
-                <div className="fixed left-0 top-0 h-full w-full bg-gradient-to-b from-transparent via-transparent to-black/50"></div>
+                <div className="fixed left-0 top-0 h-full w-full bg-gradient-to-b from-transparent via-transparent to-black-primary/50"></div>
 
-                <motion.div 
-                style={{
-                  opacity: black_opacity
-                }}
-                className="fixed left-0 top-0 h-full w-full bg-black/30"></motion.div>
+                <motion.div
+                  style={{
+                    opacity: black_opacity,
+                  }}
+                  className="fixed left-0 top-0 h-full w-full bg-black-primary/30"
+                ></motion.div>
               </div>
 
               <div className="absolute bottom-10 left-0 right-0 z-10 mx-auto flex w-full flex-col items-center  justify-center gap-4">
@@ -259,7 +262,7 @@ const Hero = () => {
                     <p>See Menu</p>
                     <ArrowRight strokeWidth={1} className="opacity-60" />
                   </Button>
-                  <Button variant={"outline"} className="gap-2">
+                  <Button variant={"outline"} className="group relative gap-2">
                     <p>Directions</p>
                     <MapPin strokeWidth={1} className="opacity-60" />
                   </Button>

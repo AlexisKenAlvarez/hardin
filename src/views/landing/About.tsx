@@ -28,7 +28,7 @@ const About = () => {
           pin: true,
           scrub: 0.1,
           //snap: directionalSnap(1 / (sections.length - 1)),
-          end: "+=3000",
+          end: "+=2000",
         },
       });
 
@@ -62,7 +62,7 @@ const About = () => {
             trigger: ".about-header-2",
             start: "start 65%",
             containerAnimation: scrollTween,
-            end: `+=${targets[0]!.clientHeight / 2}`,
+            end: `+=${targets[0]!.clientHeight / 3}`,
             scrub: true,
           },
           y: 0,
@@ -77,7 +77,7 @@ const About = () => {
             trigger: ".about-header-2",
             start: "start 65%",
             containerAnimation: scrollTween,
-            end: `+=${targets[0]!.clientHeight / 2}`,
+            end: `+=${targets[0]!.clientHeight / 3}`,
             scrub: true,
           },
           y: 0,
@@ -131,8 +131,8 @@ const About = () => {
             scrollTrigger: {
               trigger: target,
               containerAnimation: scrollTween,
-              start: "center 75%",
-              end: "center+=150 35%",
+              start: "center-=250 95%",
+              end: "center 55%",
               scrub: true,
             },
           },
@@ -146,7 +146,7 @@ const About = () => {
       className="relative flex flex-col justify-between overflow-hidden bg-white"
       ref={wrapperRef}
     >
-      <div className="slide-container flex w-full flex-col lg:flex-row">
+      <div className=" flex w-full flex-col lg:flex-row">
         <Container className="about-containers w-full p-5 py-20 pt-24 lg:h-screen lg:shrink-0">
           <div className="mx-auto w-full max-w-screen-2xl">
             <div className="w-fit space-y-2">
@@ -165,7 +165,7 @@ const About = () => {
 
               <div className="ml-auto mr-9 w-fit">
                 <div className="relative h-fit w-fit overflow-hidden">
-                  <p className="about-header-1 text-right text-lg md:text-xl">
+                  <p className="about-header-1 text-right font-sans text-lg text-black-secondary md:text-xl">
                     Awaken your senses, one sip at a time
                   </p>
                 </div>
@@ -173,7 +173,7 @@ const About = () => {
                   <button className="about-header-1 relative mt-10 flex items-center gap-2 pb-2 text-sm md:text-lg">
                     <ArrowUpRight className="inline" size={21} />
                     <h1 className="">Message us</h1>
-                    <div className="absolute bottom-1 h-[1px] w-full bg-black"></div>
+                    <div className="bg-black absolute bottom-1 h-[1px] w-full"></div>
                   </button>
                 </div>
               </div>
@@ -208,8 +208,8 @@ const About = () => {
                 </div>
               </div>
 
-              <div className="ml-auto mr-9 h-fit w-fit overflow-hidden">
-                <p className="about-subheader-2 text-lg sm:text-right md:text-xl">
+              <div className="ml-auto mr-1 h-fit w-fit overflow-hidden">
+                <p className="about-subheader-2 font-sans text-lg text-black-secondary sm:text-right md:text-xl">
                   Let the great outdoors do all the talking
                 </p>
               </div>
@@ -226,10 +226,6 @@ const About = () => {
               />
             ))}
           </div>
-        </Container>
-
-        <Container className="about-containers flex h-auto w-full flex-col py-20 lg:h-screen lg:shrink-0 lg:py-0">
-          <></>
         </Container>
       </div>
     </div>

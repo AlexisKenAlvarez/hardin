@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { DotPattern } from "@/components/ui/dot-pattern";
 
 const HOURS = [
   {
@@ -18,16 +19,28 @@ const HOURS = [
 
 const Hours = () => {
   return (
-    <div className="relative z-20 flex min-h-[40rem] w-full flex-col items-center justify-center rounded-tl-[8rem] rounded-tr-[8rem] bg-white px-10 py-20">
+    <div className="relative z-20 flex min-h-[40rem] w-full flex-col items-center justify-center  bg-white px-10 py-20 pt-28">
       <div className="space-y-2">
-        <div className="drop-shadow-md w-fit px-8 mx-auto py-2 rounded-full bg-slate-100/40 border-white border-2">
-          <h1 className="font-sans text-black-secondary text-sm font-medium">Open hours</h1>
+        <DotPattern
+          style={{
+            maskImage:
+              "radial-gradient(470px 180px at center, white, transparent)",
+            WebkitMaskImage:
+              "radial-gradient(470px 180px at center, white, transparent)",
+          }}
+          className={cn("absolute -top-44")}
+        />
+
+        <div className="relative z-10 mx-auto w-fit rounded-full border-2 border-white bg-slate-100/20 px-8 py-2 drop-shadow-md backdrop-blur-[1px]">
+          <h1 className="font-sans text-sm font-medium  text-black-secondary">
+            Open hours
+          </h1>
         </div>
-        <h1 className="text-black-primary text-center font-secondary text-5xl  font-medium">
+        <h1 className="relative z-10 text-center font-secondary text-5xl font-medium  text-black-primary">
           Join us at your <br />
           convenience
         </h1>
-        <p className="text-black-secondary font-sans">
+        <p className="font-sans text-black-secondary">
           We are open everyday except Monday. Come and enjoy our coffee.
         </p>
       </div>
