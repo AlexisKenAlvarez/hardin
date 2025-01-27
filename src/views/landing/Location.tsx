@@ -1,9 +1,12 @@
+"use client";
+
 import { DotPattern } from "@/components/ui/dot-pattern";
 import Safari from "@/components/ui/safari";
+import { useEffect } from "react";
 
 const Location = () => {
   return (
-    <section className="relative min-h-screen w-full rounded-tl-[8rem] rounded-tr-[8rem] bg-white py-20 px-10">
+    <div className="relative min-h-screen w-full  bg-white px-10 py-20">
       <div className=" text-center">
         <DotPattern
           style={{
@@ -31,18 +34,19 @@ const Location = () => {
         </div>
       </div>
 
-      <Safari url="hardincafe.com" className="mx-auto mt-16">
+      <Safari url="hardincafe.com" className="safari z-10 mx-auto mt-16 w-[40rem] h-fit">
         <iframe
           className="h-full w-full"
+          id="myIframemyIframe"
           src="https://my.atlist.com/map/b808a1cc-921a-4612-a38b-13b051199775?share=true"
           allow="geolocation 'self' https://my.atlist.com"
           loading="lazy"
           frameBorder="0"
+          scrolling="no"
           allowFullScreen
-          id="atlist-embed"
         ></iframe>
       </Safari>
-    </section>
+    </div>
   );
 };
 

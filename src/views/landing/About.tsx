@@ -143,7 +143,7 @@ const About = () => {
 
   return (
     <div
-      className="relative flex flex-col justify-between overflow-hidden bg-white"
+      className="relative flex flex-col justify-between overflow-hidden bg-white "
       ref={wrapperRef}
     >
       <div className=" flex w-full flex-col lg:flex-row">

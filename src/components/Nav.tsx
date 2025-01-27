@@ -24,17 +24,33 @@ const Nav = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+  let isScrolling: string | number | NodeJS.Timeout | undefined;
 
   function onScroll({ direction }: { direction: number }) {
     setScrollDirection(direction);
+
+    const iframe = document.getElementById('myIframe');
+
+    iframe?.classList.add('no-pointer-events');
+    // Clear timeout if it exists
+    clearTimeout(isScrolling);
+
+    isScrolling = setTimeout(() => {
+      iframe?.classList.remove('no-pointer-events');
+    }, 200); // Adjust the timeout delay if necessary
+
   }
 
   useEffect(() => {
     void (async () => {
       const LocomotiveScroll = (await import("locomotive-scroll")).default;
+      
 
       new LocomotiveScroll({
         scrollCallback: onScroll,
+        onScroll: () => {
+          console.log("scrolling")
+        }
       });
     })();
   }, []);

@@ -13,7 +13,6 @@ import {
 } from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { ImSpinner2 } from "react-icons/im";
 
 const QUINT_IN = [1, -0.02, 0.58, 0.94];
 
@@ -51,6 +50,8 @@ const Hero = () => {
   const coffee_translateY = useTransform(scrollYProgress, [0, 0.7], [0, -60]);
 
   const black_opacity = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
+
+  const zIndex = useTransform(scrollYProgress, [0, 1], [20, 0]);
 
   const text_animation = {
     translateY: useTransform(scrollYProgress, [0, 0.7], [0, -140]),
@@ -139,8 +140,9 @@ const Hero = () => {
   }, []);
 
   return (
-    <div ref={ref} className="relative h-screen overflow-hidden bg-orange">
-     
+    <motion.div ref={ref} style={{
+      zIndex
+    }} className="relative h-screen overflow-hidden bg-orange">
       <AnimatePresence>
         {profile && (
           <motion.div
@@ -276,7 +278,7 @@ const Hero = () => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 

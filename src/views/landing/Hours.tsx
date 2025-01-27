@@ -19,7 +19,7 @@ const HOURS = [
 
 const Hours = () => {
   return (
-    <div className="relative z-20 flex min-h-[40rem] w-full flex-col items-center justify-center  bg-white px-10 py-20 pt-28">
+    <div className="relative z-20  flex min-h-[40rem] w-full flex-col items-center justify-center  bg-white px-10 py-20 pt-28">
       <div className="space-y-2">
         <DotPattern
           style={{
