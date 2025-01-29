@@ -1,6 +1,5 @@
 "use client";
 
-import Nav from "@/components/Nav";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin } from "lucide-react";
 import {
@@ -46,12 +45,17 @@ const Hero = () => {
     offset: ["end end", "end start"],
   });
 
+  const { scrollYProgress: zIndexScrollYProgress } = useScroll({
+    target: ref,
+    offset: ["end end", `${180}vh start`],
+  });
+
   const translateY = useTransform(scrollYProgress, [0, 0.7], [0, -50]);
   const coffee_translateY = useTransform(scrollYProgress, [0, 0.7], [0, -60]);
 
   const black_opacity = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
 
-  const zIndex = useTransform(scrollYProgress, [0, 1], [20, 0]);
+  const zIndex = useTransform(zIndexScrollYProgress, [0, 1], [20, 0]);
 
   const text_animation = {
     translateY: useTransform(scrollYProgress, [0, 0.7], [0, -140]),
@@ -140,9 +144,13 @@ const Hero = () => {
   }, []);
 
   return (
-    <motion.div ref={ref} style={{
-      zIndex
-    }} className="relative h-screen overflow-hidden bg-orange">
+    <motion.div
+      ref={ref}
+      style={{
+        zIndex,
+      }}
+      className="relative h-screen overflow-hidden bg-orange"
+    >
       <AnimatePresence>
         {profile && (
           <motion.div
@@ -151,8 +159,10 @@ const Hero = () => {
             exit={{ opacity: 0 }}
             className="relative"
           >
-            <Nav />
             <div className="relative min-h-screen w-full">
+              <Image src="/landing/blurleaf.png" alt="leaf1" className="absolute z-10 w-80 " width={400} height={400} />
+              <Image src="/landing/blurleaf.png" alt="leaf1" className="absolute z-10 bottom-0 right-24 w-60 rotate-45" width={400} height={400} />
+              <Image src="/landing/blurleaf.png" alt="leaf1" className="absolute z-10 bottom-48 left-[35vw] w-32 rotate-90" width={400} height={400} />
               <div className="fixed left-0 top-0 h-full w-full">
                 <motion.div
                   animate={

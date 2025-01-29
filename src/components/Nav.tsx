@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
+import NavButton from "./ui/NavButton";
 
 const Nav = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
@@ -29,28 +30,26 @@ const Nav = () => {
   function onScroll({ direction }: { direction: number }) {
     setScrollDirection(direction);
 
-    const iframe = document.getElementById('myIframe');
+    const iframe = document.getElementById("myIframe");
 
-    iframe?.classList.add('no-pointer-events');
+    iframe?.classList.add("no-pointer-events");
     // Clear timeout if it exists
     clearTimeout(isScrolling);
 
     isScrolling = setTimeout(() => {
-      iframe?.classList.remove('no-pointer-events');
+      iframe?.classList.remove("no-pointer-events");
     }, 200); // Adjust the timeout delay if necessary
-
   }
 
   useEffect(() => {
     void (async () => {
       const LocomotiveScroll = (await import("locomotive-scroll")).default;
-      
 
       new LocomotiveScroll({
         scrollCallback: onScroll,
         onScroll: () => {
-          console.log("scrolling")
-        }
+          console.log("scrolling");
+        },
       });
     })();
   }, []);
@@ -87,29 +86,19 @@ const Nav = () => {
     },
   ];
 
-  const show_nav = scrollDirection === -1 && scrollPosition > 100;
 
   return (
     <nav
       className={cn(
-        "fixed hidden left-0 top-0 drop-shadow-md z-50 lg:flex w-full items-start justify-between p-5 font-sans transition-all duration-500 ease-in-out",
-        {
-          "-translate-y-full opacity-0": scrollDirection === 1,
-          "bg-white": show_nav,
-        },
+        "absolute left-0 top-0 z-50 hidden w-full items-start justify-between bg-gradient-to-b from-white/30 to-transparent p-5 font-sans transition-all duration-500 ease-in-out lg:flex"
       )}
     >
-      <ul
-        className={cn("flex w-full items-center gap-4", {
-          invert: show_nav,
-        })}
-      >
+      <ul className={cn("flex w-full items-center gap-4 text-white")}>
         {NAV_ITEMS.map((item, index) => (
-          <li
-            key={index}
-            className="rounded-full bg-white/10 px-4 py-2 text-white"
-          >
-            <a href={`#${item.slug}`}>{item.label}</a>
+          <li key={index} className="">
+            <a href={`#${item.slug}`}>
+              <NavButton>{item.label}</NavButton>
+            </a>
           </li>
         ))}
       </ul>
@@ -119,14 +108,10 @@ const Nav = () => {
           width={150}
           height={150}
           src="/logo-white.png"
-          className={cn('w-28 transition-all ease-in-out duration-500', {
-            'invert w-10': show_nav
-          })}
+          className={cn("w-28 transition-all duration-500 ease-in-out")}
         />
       </div>
-      <ul className={cn("flex w-full items-center justify-end gap-4", {
-        invert: show_nav,
-      })}>
+      <ul className={cn("flex w-full items-center justify-end gap-4")}>
         {SOCIALS.map((item, index) => (
           <a
             href={`${item.url}`}

@@ -34,7 +34,7 @@ const Location = () => {
         </div>
       </div>
 
-      <Safari url="hardincafe.com" className="safari z-10 mx-auto mt-16 w-[40rem] h-fit">
+      <Safari url="hardincafe.com" className="safari z-10 mx-auto mt-16 w-full max-w-[40rem] h-fit">
         <iframe
           className="h-full w-full"
           id="myIframemyIframe"

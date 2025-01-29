@@ -28,7 +28,7 @@ const Hours = () => {
             WebkitMaskImage:
               "radial-gradient(470px 180px at center, white, transparent)",
           }}
-          className={cn("absolute -top-44")}
+          className={cn("absolute -top-96 sm:-top-72 md:-top-44")}
         />
 
         <div className="relative z-10 mx-auto w-fit rounded-full border-2 border-white bg-slate-100/20 px-8 py-2 drop-shadow-md backdrop-blur-[1px]">
@@ -36,21 +36,21 @@ const Hours = () => {
             Open hours
           </h1>
         </div>
-        <h1 className="relative z-10 text-center font-secondary text-5xl font-medium  text-black-primary">
+        <h1 className="relative z-10 text-center mx-auto font-secondary text-5xl font-medium  text-black-primary">
           Join us at your <br />
           convenience
         </h1>
-        <p className="font-sans text-black-secondary">
+        <p className="font-sans text-black-secondary text-center">
           We are open everyday except Monday. Come and enjoy our coffee.
         </p>
       </div>
 
-      <ul className="mt-32 flex flex-wrap items-center justify-center gap-8">
+      <ul className="mt-32 flex flex-wrap items-center justify-center gap-8 gap-y-20">
         {HOURS.map((item, index) => (
           <li
             key={index}
             className={cn(
-              "relative flex h-72 w-72 flex-col items-center justify-center rounded-[5rem] border bg-white p-2 text-[#1D4861]",
+              "relative flex md:h-72 md:w-72 w-60 h-60 flex-col items-center justify-center rounded-[4rem] sm:rounded-[5rem] border bg-white p-2 text-[#1D4861]",
             )}
           >
             <Image
@@ -58,14 +58,14 @@ const Hours = () => {
               width={900}
               height={900}
               src={`/hours/${index + 1}.png`}
-              className="absolute -top-32 mt-4 w-72 object-contain"
+              className="absolute -top-24 md:-top-32 mt-4 w-60 md:w-72 object-contain"
             />
-            <span className="w-40 text-center font-secondary text-3xl italic">
+            <span className="w-40 text-center font-secondary text-2xl md:text-3xl italic">
               {item.label}
             </span>
 
             <span
-              className={cn("text-md mt-5 font-sans font-medium", {
+              className={cn("text-md mt-2 md:mt-5 font-sans font-medium", {
                 "mt-12": item.label === "Sunday",
               })}
             >
