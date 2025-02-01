@@ -75,9 +75,9 @@ const About = () => {
         {
           scrollTrigger: {
             trigger: ".about-header-2",
-            start: "start 65%",
+            start: "start 60%",
             containerAnimation: scrollTween,
-            end: `+=${targets[0]!.clientHeight / 3}`,
+            end: `+=${targets[0]!.clientHeight / 4}`,
             scrub: true,
           },
           y: 0,

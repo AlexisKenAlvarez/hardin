@@ -143,6 +143,53 @@ const Hero = () => {
     setProfile(random_number);
   }, []);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <motion.div
       ref={ref}
@@ -160,9 +207,8 @@ const Hero = () => {
             className="relative"
           >
             <div className="relative min-h-screen w-full">
-              <Image src="/landing/blurleaf.png" alt="leaf1" className="absolute z-10 w-80 " width={400} height={400} />
-              <Image src="/landing/blurleaf.png" alt="leaf1" className="absolute z-10 bottom-0 right-24 w-60 rotate-45" width={400} height={400} />
-              <Image src="/landing/blurleaf.png" alt="leaf1" className="absolute z-10 bottom-48 left-[35vw] w-32 rotate-90" width={400} height={400} />
+ 
+
               <div className="fixed left-0 top-0 h-full w-full">
                 <motion.div
                   animate={

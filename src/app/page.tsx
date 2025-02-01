@@ -8,6 +8,8 @@ import Footer from "@/views/landing/Footer";
 import Nav from "@/components/Nav";
 
 const page = () => {
+
+
   return (
     <div className="relative">
       <Nav />
