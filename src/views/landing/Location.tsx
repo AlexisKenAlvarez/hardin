@@ -24,7 +24,7 @@ const Location = () => {
               Location
             </h1>
           </div>
-          <h1 className="relative z-10 text-center font-secondary text-5xl font-medium  text-black-primary">
+          <h1 className="relative z-10 text-center font-secondary header font-medium  text-black-primary">
             Visit us at our <br />
             location
           </h1>

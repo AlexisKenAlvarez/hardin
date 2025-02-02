@@ -20,10 +20,8 @@ module.exports = {
     },
     extend: {
       colors: {
-        black: {
-          primary: "#2E2E2E",
-          secondary: "#646464",
-        },
+        "black-primary": "#2E2E2E",
+        "black-secondary": "#646464",
         orange: "#EE792A",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -31,7 +29,7 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#EE792A",
+          DEFAULT: "#B65321",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
@@ -73,7 +71,7 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        whiteBorder: "0px 0px 0px 2px rgba(237,237,237,0.5) inset"
+        whiteBorder: "0px 0px 0px 2px rgba(237,237,237,0.5) inset",
       },
       keyframes: {
         "accordion-down": {

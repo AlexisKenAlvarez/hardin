@@ -2,6 +2,7 @@
 "use client";
 
 import Container from "@/components/Container";
+import Button from "@/components/ui/button";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -170,11 +171,10 @@ const About = () => {
                   </p>
                 </div>
                 <div className="relative h-fit w-fit overflow-hidden">
-                  <button className="about-header-1 relative mt-10 flex items-center gap-2 pb-2 text-sm md:text-lg">
+                  <Button className="about-header-1 relative mt-10">
                     <ArrowUpRight className="inline" size={21} />
                     <h1 className="">Message us</h1>
-                    <div className="bg-black absolute bottom-1 h-[1px] w-full"></div>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

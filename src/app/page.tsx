@@ -6,6 +6,7 @@ import Image from "next/image";
 import Collage from "../../public/collage.png";
 import Footer from "@/views/landing/Footer";
 import Nav from "@/components/Nav";
+import Rental from "@/views/landing/Rental";
 
 const page = () => {
 
@@ -16,6 +17,7 @@ const page = () => {
       <Hero />
       <div className="relative z-20  overflow-hidden rounded-bl-[8rem] rounded-br-[8rem]">
         <About />
+        <Rental/>
         <Hours />
         <div className="relative z-10 flex justify-center bg-white px-10">
           <Image

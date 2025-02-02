@@ -36,7 +36,7 @@ const Hours = () => {
             Open hours
           </h1>
         </div>
-        <h1 className="relative z-10 text-center mx-auto font-secondary text-5xl font-medium  text-black-primary">
+        <h1 className="relative z-10 text-center mx-auto font-secondary header font-medium  text-black-primary">
           Join us at your <br />
           convenience
         </h1>

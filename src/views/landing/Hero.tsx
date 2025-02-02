@@ -143,53 +143,6 @@ const Hero = () => {
     setProfile(random_number);
   }, []);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <motion.div
       ref={ref}
@@ -207,8 +160,6 @@ const Hero = () => {
             className="relative"
           >
             <div className="relative min-h-screen w-full">
- 
-
               <div className="fixed left-0 top-0 h-full w-full">
                 <motion.div
                   animate={
@@ -315,12 +266,12 @@ const Hero = () => {
               </div>
 
               <div className="absolute bottom-10 left-0 right-0 z-10 mx-auto flex w-full flex-col items-center  justify-center gap-4">
-                <div className="flex gap-4">
+                <div className="flex gap-4 sm:flex-row flex-col">
                   <Button className="gap-2">
                     <p>See Menu</p>
                     <ArrowRight strokeWidth={1} className="opacity-60" />
                   </Button>
-                  <Button variant={"outline"} className="group relative gap-2">
+                  <Button className="group relative gap-2">
                     <p>Directions</p>
                     <MapPin strokeWidth={1} className="opacity-60" />
                   </Button>
