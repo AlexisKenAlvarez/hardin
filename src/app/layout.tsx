@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import { Albert_Sans, Montserrat, STIX_Two_Text } from "next/font/google";
+import localFont from 'next/font/local'
 
 
 import { Toaster } from "@/components/ui/sonner";
@@ -9,6 +10,18 @@ export const metadata = {
   description: "Welcome to HardinCafe",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
+
+const fontSpring = localFont({
+  src: [
+    {
+      path: "../../fonts/Fontspring-DEMO-theseasons-bd.woff",
+      weight: '700',
+      style: 'normal'
+    },
+
+  ],
+  variable: "--fontSpring"
+})
 
 const Albert = Albert_Sans({ 
   subsets: ['latin'], 
@@ -33,7 +46,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${Albert.variable} ${Mont.variable} ${Stix.variable}`}>
+      <body className={`${Albert.variable} ${Mont.variable} ${Stix.variable} ${fontSpring.variable}`}>
         <>
           {children}
           <Toaster closeButton position="top-center" />

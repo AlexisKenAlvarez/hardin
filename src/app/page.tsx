@@ -4,7 +4,7 @@ import Hours from "@/views/landing/Hours";
 import Location from "@/views/landing/Location";
 import Image from "next/image";
 import Collage from "../../public/collage.png";
-import Footer from "@/views/landing/Footer";
+import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import Rental from "@/views/landing/Rental";
 

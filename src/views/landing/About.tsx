@@ -153,7 +153,7 @@ const About = () => {
             <div className="w-fit space-y-2">
               <div className="text-4xl md:text-6xl lg:text-8xl">
                 <div className="relative h-fit w-fit overflow-hidden">
-                  <h1 className="about-header-1 max-w-3xl font-primary">
+                  <h1 className="about-header-1 max-w-3xl font-primary pb-2">
                     Selfies with your
                   </h1>
                 </div>
@@ -197,11 +197,11 @@ const About = () => {
             <div className="w-fit space-y-2">
               <div className="text-4xl md:text-6xl lg:text-8xl">
                 <div className="relative h-fit w-fit overflow-hidden">
-                  <h1 className="about-header-2 max-w-4xl font-primary">
+                  <h1 className="about-header-2 max-w-4xl font-primary pb-3">
                     Outdoor dining has
                   </h1>
                 </div>
-                <div className="relative h-fit w-fit overflow-hidden pb-2">
+                <div className="relative h-fit w-fit overflow-hidden pb-3">
                   <h1 className="about-header-2 max-w-4xl font-primary">
                     never been so good
                   </h1>

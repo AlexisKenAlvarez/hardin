@@ -62,7 +62,7 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         title: ["var(--font-title)", ...fontFamily.sans],
-        primary: "var(--font-fontspring)",
+        primary: "var(--fontSpring)",
         secondary: "var(--font-serif)",
       },
       borderRadius: {

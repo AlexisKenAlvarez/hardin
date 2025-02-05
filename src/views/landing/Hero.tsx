@@ -40,7 +40,7 @@ const GET_RANDOM_NUMBER = (min: number, max: number) => {
 const Hero = () => {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { scrollY, scrollYProgress } = useScroll({
+  const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["end end", "end start"],
   });
@@ -52,17 +52,14 @@ const Hero = () => {
 
   const translateY = useTransform(scrollYProgress, [0, 0.7], [0, -50]);
   const coffee_translateY = useTransform(scrollYProgress, [0, 0.7], [0, -60]);
-
   const black_opacity = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
-
   const zIndex = useTransform(zIndexScrollYProgress, [0, 1], [20, 0]);
 
   const text_animation = {
     translateY: useTransform(scrollYProgress, [0, 0.7], [0, -140]),
-    opacity: useTransform(scrollYProgress, [0.1, 0.7], [1, 0]),
+    opacity: useTransform(scrollYProgress, [0, 0.7], [1, 0]),
   };
 
-  const [blurAmount, setBlurAmount] = useState(0);
   const [image1Loaded, setImage1Loaded] = useState(false);
   const [image2Loaded, setImage2Loaded] = useState(false);
   const [profile, setProfile] = useState<null | number>(null);
@@ -87,29 +84,6 @@ const Hero = () => {
       duration: 0.3,
     },
   };
-
-  useEffect(() => {
-    const getScrollY = (value: number) => {
-      if (!ref.current) return;
-
-      const heroHeight = ref.current.offsetHeight;
-      const heroStart = ref.current.offsetTop;
-      const heroMiddle = heroStart + heroHeight / 3;
-
-      const normalizedValue = Math.min(
-        Math.max(((value - heroMiddle) / heroHeight) * 20, -10),
-        20,
-      );
-
-      setBlurAmount(normalizedValue);
-    };
-
-    const unsubscribe = scrollY.on("change", getScrollY);
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
@@ -179,7 +153,6 @@ const Hero = () => {
                   className="h-full"
                   style={{
                     translateY,
-                    filter: `blur(${blurAmount}px)`,
                   }}
                 >
                   <Image
@@ -218,7 +191,38 @@ const Hero = () => {
                       duration: 0.3,
                     },
                   }}
-                  className="text-shadow absolute left-0 right-0 top-10 mx-auto text-center font-title text-[23vw] font-black text-white sm:top-0 sm:text-[25vw]"
+                  className=" absolute bottom-0 left-0 right-0 -top-32 sm:top-0 mx-auto my-auto h-fit text-center font-secondary text-[18vw] font-black text-white sm:text-[22vw] z-10 sm:z-0 text-shadow"
+                >
+                  HARDIN
+                </motion.h1>
+                <motion.h1
+                  style={{
+                    ...text_animation,
+                  }}
+                  animate={
+                    imageLoaded
+                      ? {
+                          opacity: 1,
+                          scale: 1,
+                        }
+                      : {}
+                  }
+                  initial={{
+                    opacity: 0,
+                    scale: 0.8,
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    scale: {
+                      delay: 0.5,
+                      duration: 1.5,
+                      ease: QUINT_IN,
+                    },
+                    opacity: {
+                      duration: 0.3,
+                    },
+                  }}
+                  className="text-outline absolute bottom-0 left-0 right-0 top-0 mx-auto my-auto h-fit text-center font-secondary text-[20vw] font-black text-white/0 sm:top-0 sm:text-[22vw] z-10 sm:block hidden"
                 >
                   HARDIN
                 </motion.h1>
@@ -237,12 +241,11 @@ const Hero = () => {
                   }}
                   transition={ANIM_TRANSITION}
                   id="image-animate-div"
-                  className="absolute left-0 top-0 h-full w-full"
+                  className="absolute left-0 top-0 h-full w-full items-center justify-center flex"
                   style={{
                     x: springX,
                     y: springY,
                     translateY: coffee_translateY,
-                    filter: `blur(${blurAmount}px)`,
                   }}
                 >
                   <Image
@@ -251,11 +254,11 @@ const Hero = () => {
                     alt="coffee_image"
                     onLoad={() => setImage2Loaded(true)}
                     src={LANDING_PROFILES[profile - 1]?.coffee ?? ""}
-                    className="h-full w-full object-cover"
+                    className="sm:h-full w-[90%] h-[90%] sm:w-full object-cover"
                   />
                 </motion.div>
 
-                <div className="fixed left-0 top-0 h-full w-full bg-gradient-to-b from-transparent via-transparent to-black-primary/50"></div>
+                <div className="fixed left-0 top-0 z-20 h-full w-full bg-gradient-to-b from-transparent via-transparent to-black-primary/50"></div>
 
                 <motion.div
                   style={{
@@ -265,8 +268,8 @@ const Hero = () => {
                 ></motion.div>
               </div>
 
-              <div className="absolute bottom-10 left-0 right-0 z-10 mx-auto flex w-full flex-col items-center  justify-center gap-4">
-                <div className="flex gap-4 sm:flex-row flex-col">
+              <div className="absolute px-4 bottom-10 left-0 right-0 z-10 mx-auto flex w-full flex-col items-center  justify-center gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row">
                   <Button className="gap-2">
                     <p>See Menu</p>
                     <ArrowRight strokeWidth={1} className="opacity-60" />
@@ -277,7 +280,7 @@ const Hero = () => {
                   </Button>
                 </div>
 
-                <p className="font-sans text-lg font-medium text-white">
+                <p className="font-sans lg:text-lg font-medium text-white text-center">
                   {LANDING_PROFILES[profile - 1]?.text ?? ""}
                 </p>
               </div>

@@ -5,7 +5,7 @@
 @layer base {
 
   .text-shadow {
-    text-shadow: 4px 4px 2px rgba(0,0,0,0.1);
+    text-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
   }
 
   .no-pointer-events {
@@ -130,6 +130,13 @@
   }
 
   .sub-header {
-    @apply  text-sm md:text-base font-sans text-black-secondary leading-relaxed;
+    @apply text-sm md:text-base font-sans text-black-secondary leading-relaxed;
+  }
+
+  .text-outline {
+
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+
   }
 }
