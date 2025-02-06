@@ -95,11 +95,11 @@ const Nav = () => {
     >
       <div className="w-full lg:hidden block">
         <button>
-          <Menu className="text-primary" />
+          <Menu className="text-orange" />
         </button>
       </div>
       <ul
-        className={cn("hidden w-full items-center gap-4  text-primary lg:flex")}
+        className={cn("hidden w-full items-center gap-4  text-orange lg:flex")}
       >
         {NAV_ITEMS.map((item, index) => (
           <li key={index} className="">
@@ -110,7 +110,7 @@ const Nav = () => {
         ))}
       </ul>
       <div className="flex w-full justify-center">
-        <h1 className="flex flex-col font-secondary text-xl font-bold uppercase leading-none text-primary text-center">
+        <h1 className="flex flex-col font-secondary text-xl font-bold uppercase leading-none text-orange text-center">
           Hardin <span className="font-normal">Cafe</span>
         </h1>
       </div>
@@ -122,7 +122,7 @@ const Nav = () => {
             target="_blank"
             key={index}
           >
-            <li className="flex items-center  gap-2 rounded-full px-2 lg:px-4 py-2 text-primary">
+            <li className="flex items-center  gap-2 rounded-full px-2 lg:px-4 py-2 text-orange">
               <item.icon className="text-xl lg:text-base" />
               <p className="hidden lg:block">{item.label}</p>
             </li>

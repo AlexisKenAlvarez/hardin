@@ -10,7 +10,7 @@ const Rental = () => {
       <div className="z-10 mx-auto flex max-w-screen-lg flex-col items-center justify-center gap-14 lg:flex-row">
         <div className="w-full px-10 pt-10 text-center lg:text-left">
           <div className="space-y-2">
-            <h1 className="font-sans text-lg font-bold text-primary">
+            <h1 className="font-sans text-lg font-bold text-orange">
               Coffee Cart
             </h1>
             <h1 className="header font-primary">Mobile Coffee Cart Rental</h1>
@@ -21,7 +21,17 @@ const Rental = () => {
             Perfect for serving 100+ guests, we provide premium coffee and
             refreshing drinks to keep everyone energized.
           </p>
-          <Button variant="black" className="mx-auto lg:mx-0 mt-10">Book now!</Button>
+          <div className="relative h-fit w-full">
+            <Image
+              className="absolute -right-10 pointer-events-none top-0 w-44 bottom-0 my-auto"
+              alt="Tropical leave"
+              src="/tropical-leave.png"
+              width={300} height={300}
+            />
+            <Button variant="black" className="mx-auto mt-10 w-full lg:mx-0">
+              Book now!
+            </Button>
+          </div>
         </div>
         <div className="flex w-full items-center justify-center md:mx-0">
           <Image
