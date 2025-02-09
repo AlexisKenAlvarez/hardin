@@ -126,7 +126,7 @@
   }
 
   .header {
-    @apply text-5xl md:text-6xl;
+    @apply text-4xl sm:text-5xl md:text-6xl;
   }
 
   .sub-header {

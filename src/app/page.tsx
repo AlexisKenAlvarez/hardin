@@ -7,17 +7,17 @@ import Collage from "../../public/collage.png";
 import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import Rental from "@/views/landing/Rental";
+import Categories from "@/views/landing/Categories";
 
 const page = () => {
-
-
   return (
     <div className="relative">
       <Nav />
       <Hero />
       <div className="relative z-20  overflow-hidden rounded-bl-[8rem] rounded-br-[8rem]">
         <About />
-        <Rental/>
+        <Rental />
+        <Categories />
         <Hours />
         <div className="relative z-10 flex justify-center bg-white px-10">
           <Image

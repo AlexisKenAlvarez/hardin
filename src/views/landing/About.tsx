@@ -8,9 +8,11 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 import { useRef } from "react";
+import { useMediaQuery } from "usehooks-ts";
 
 const About = () => {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const matches = useMediaQuery("(max-width: 768px)");
 
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -19,6 +21,7 @@ const About = () => {
     const targets: HTMLElement[] = gsap.utils.toArray(".about-containers");
     const imageTargets1: HTMLElement[] = gsap.utils.toArray(".about-images-1");
     const imageTargets2: HTMLElement[] = gsap.utils.toArray(".about-images-2");
+
 
     mm.add("(min-width: 1024px)", () => {
       const scrollTween = gsap.to(targets, {
@@ -146,6 +149,7 @@ const About = () => {
     <div
       className="relative flex flex-col justify-between overflow-hidden bg-white "
       ref={wrapperRef}
+      style={ matches ? { height: "unset" } : {}}
     >
       <div className=" flex w-full flex-col lg:flex-row">
         <Container className="about-containers w-full p-5 py-20 pt-24 lg:h-screen lg:shrink-0">
@@ -153,7 +157,7 @@ const About = () => {
             <div className="w-fit space-y-2">
               <div className="text-4xl md:text-6xl lg:text-8xl">
                 <div className="relative h-fit w-fit overflow-hidden">
-                  <h1 className="about-header-1 max-w-3xl font-primary pb-2">
+                  <h1 className="about-header-1 max-w-3xl pb-2 font-primary">
                     Selfies with your
                   </h1>
                 </div>
@@ -171,7 +175,10 @@ const About = () => {
                   </p>
                 </div>
                 <div className="relative h-fit w-fit overflow-hidden">
-                  <Button className="about-header-1 relative mt-10">
+                  <Button
+                    className="about-header-1 relative mt-10"
+                    variant="black"
+                  >
                     <ArrowUpRight className="inline" size={21} />
                     <h1 className="">Message us</h1>
                   </Button>
@@ -192,16 +199,16 @@ const About = () => {
           </div>
         </Container>
 
-        <Container className="about-containers flex h-auto w-full items-end py-20  lg:h-screen lg:shrink-0 lg:py-0">
+        <Container className="about-containers flex h-auto w-full items-end py-14 sm:py-20  lg:h-screen lg:shrink-0 lg:py-0">
           <div className="mx-auto flex w-full max-w-screen-2xl sm:justify-end lg:pb-24">
-            <div className="w-fit space-y-2">
+            <div className="mx-auto w-fit space-y-2 md:mx-0">
               <div className="text-4xl md:text-6xl lg:text-8xl">
-                <div className="relative h-fit w-fit overflow-hidden">
-                  <h1 className="about-header-2 max-w-4xl font-primary pb-3">
+                <div className="relative mx-auto h-fit w-fit overflow-hidden md:mx-0">
+                  <h1 className="about-header-2 max-w-4xl pb-3 font-primary ">
                     Outdoor dining has
                   </h1>
                 </div>
-                <div className="relative h-fit w-fit overflow-hidden pb-3">
+                <div className="relative mx-auto h-fit w-fit overflow-hidden pb-3 md:mx-0">
                   <h1 className="about-header-2 max-w-4xl font-primary">
                     never been so good
                   </h1>
