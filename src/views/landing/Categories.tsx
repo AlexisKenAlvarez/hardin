@@ -54,7 +54,7 @@ const Categories = () => {
 
   return (
     <div className="bg-white py-10 md:py-20" ref={ref}>
-      <div className="mx-auto max-w-screen-lg">
+      <div className="mx-auto max-w-screen-lg px-6">
         <div className="space-y-2 text-center">
           <p className="font-sans text-lg font-bold text-orange">
             JUST FOR YOU
@@ -69,7 +69,7 @@ const Categories = () => {
             View Full Menu
           </Button>
         </div>
-        <div className="mt-10">
+        <div className="mt-10 px-10">
           <Carousel
             opts={{
               align: "start",
@@ -78,15 +78,29 @@ const Categories = () => {
             <CarouselContent>
               {categoriesData.map((item) => {
                 return (
-                  <CarouselItem key={item.name} className="basis-1/4">
+                  <CarouselItem key={item.name} className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
                     <div className="relative h-fit w-fit overflow-hidden">
+                      <div className="absolute left-0 top-0 z-10 flex h-full w-full items-end justify-center bg-black/40 pb-4">
+                        <div className="flex items-center flex-col gap-2">
+                          <Image
+                            src={`/categories/icons/${item.image}.png`}
+                            alt={item.name}
+                            width={200}
+                            height={200}
+                            className="w-9"
+                          />
+                          <h2 className="font-sans font-medium text-white">
+                            {item.name}
+                          </h2>
+                        </div>
+                      </div>
                       <motion.div style={{ translateX }} className="">
                         <Image
                           src={`/categories/${item.image}.webp`}
                           alt={item.name}
                           width={700}
                           height={700}
-                          className="h-[25rem] scale-125 object-cover"
+                          className="h-[25rem] scale-[1.3] object-cover"
                         />
                       </motion.div>
                     </div>

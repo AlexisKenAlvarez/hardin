@@ -139,4 +139,9 @@
     -webkit-text-stroke-color: white;
 
   }
+
+  .clamped-text-footer {
+    font-size: clamp(4rem, 20vw, 17rem);
+  }
+
 }

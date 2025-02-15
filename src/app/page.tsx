@@ -8,27 +8,19 @@ import Footer from "@/components/Footer";
 import Nav from "@/components/Nav";
 import Rental from "@/views/landing/Rental";
 import Categories from "@/views/landing/Categories";
+import Hours2 from "@/views/landing/Hours2";
 
 const page = () => {
   return (
     <div className="relative">
       <Nav />
       <Hero />
-      <div className="relative z-20  overflow-hidden rounded-bl-[8rem] rounded-br-[8rem]">
+      <div className="relative z-20">
         <About />
         <Rental />
         <Categories />
-        <Hours />
-        <div className="relative z-10 flex justify-center bg-white px-10">
-          <Image
-            src={Collage}
-            placeholder="blur"
-            alt="Coffe_Collage"
-            width={1000}
-            height={1000}
-          />
-        </div>
-        <Location />
+        <Hours2 />
+
       </div>
 
       <Footer />
