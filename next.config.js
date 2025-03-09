@@ -11,6 +11,10 @@ const config = {
         hostname: "utfs.io",
         protocol: "https",
       },
+      {
+        hostname: "ocnexavifbliweqtoupr.supabase.co",
+        protocol: "https",
+      },
     ]
   }
 };

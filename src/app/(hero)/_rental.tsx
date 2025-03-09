@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/components/ui/button";
+import CustomButton from "@/components/ui/CustomButton";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -67,7 +67,7 @@ interface CardProps {
 const Rental = () => {
   const ref = useRef<StackedCarousel>(undefined);
   const [centerSlideDataIndex, setCenterSlideDataIndex] = React.useState(0);
-  const matches = useMediaQuery('(max-width: 500px)')
+  const matches = useMediaQuery("(max-width: 500px)");
   const onCenterSlideDataIndexChange = (newIndex: number) => {
     play_carousel();
     setCenterSlideDataIndex(newIndex);
@@ -95,10 +95,11 @@ const Rental = () => {
         clearTimeout(timeoutId);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="relative flex  w-full items-center justify-center bg-[#FFF3E2] px-10 py-16 sm:py-28">
+    <div className="relative flex  w-full items-center justify-center bg-[#FFF3E2] px-10 py-16 !pb-24 sm:py-20">
       <div className="absolute left-0 top-0 h-full w-full  bg-[url(/rental_noise.webp)] opacity-30"></div>
       <div className="items- z-10 mx-auto flex max-w-screen-lg flex-col items-center justify-center gap-20 md:gap-14 lg:flex-row">
         <div className="w-full px-10 text-center lg:text-left">
@@ -116,18 +117,21 @@ const Rental = () => {
           </p>
           <div className="relative h-fit w-full">
             <Image
-              className="pointer-events-none absolute -right-4 sm:-right-10 bottom-0 top-0 my-auto w-32 sm:w-44"
+              className="pointer-events-none absolute -right-4 bottom-0 top-0 my-auto w-32 sm:-right-10 sm:w-44"
               alt="Tropical leave"
               src="/tropical-leave.png"
               width={300}
               height={300}
             />
-            <Button variant="black" className="mx-auto mt-10 lg:w-full lg:mx-0 ">
+            <CustomButton
+              variant="black"
+              className="mx-auto mt-10 lg:mx-0 lg:w-full "
+            >
               Book now!
-            </Button>
+            </CustomButton>
           </div>
         </div>
-        <div className="flex md:w-full w-[25rem] sm:w-[34rem] flex-col items-center justify-center md:mx-0 ">
+        <div className="flex w-[22rem] flex-col items-center justify-center sm:w-[34rem] md:mx-0 md:w-full ">
           <ResponsiveContainer
             carouselRef={ref}
             render={(parentWidth, carouselRef) => {
@@ -182,7 +186,7 @@ const Card = React.memo(function (props: CardProps) {
       }}
       draggable={false}
       src={cover}
-      className="lg:h-[20rem] w-[25rem]"
+      className="w-[25rem] lg:h-[20rem]"
       alt=""
     />
   );

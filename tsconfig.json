@@ -28,7 +28,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/supabase/*": ["./supabase/*"],
-      "@/hooks/*": ["./hooks/*"]
+      "@/hooks/*": ["./src/hooks/*"]
     }
   },
   "include": [

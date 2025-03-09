@@ -1,14 +1,12 @@
 "use client";
 
-import Button from "@/components/ui/button";
+import CustomButton from "@/components/ui/CustomButton";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
-import { motion, useScroll, useSpring, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
 import { useRef } from "react";
 const categoriesData = [
@@ -65,9 +63,9 @@ const Categories = () => {
             creamy pasta, rich cheesecakes, tasty sandwiches and snacks.
             There&apos;s something for everyone!
           </p>
-          <Button variant="black" className="mx-auto !mt-10">
+          <CustomButton variant="black" className="mx-auto !mt-10">
             View Full Menu
-          </Button>
+          </CustomButton>
         </div>
         <div className="mt-10 px-10">
           <Carousel
@@ -78,10 +76,13 @@ const Categories = () => {
             <CarouselContent>
               {categoriesData.map((item) => {
                 return (
-                  <CarouselItem key={item.name} className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4">
+                  <CarouselItem
+                    key={item.name}
+                    className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 select-none cursor-grabbing"
+                  >
                     <div className="relative h-fit w-fit overflow-hidden">
                       <div className="absolute left-0 top-0 z-10 flex h-full w-full items-end justify-center bg-black/40 pb-4">
-                        <div className="flex items-center flex-col gap-2">
+                        <div className="flex flex-col items-center gap-2">
                           <Image
                             src={`/categories/icons/${item.image}.png`}
                             alt={item.name}
@@ -108,8 +109,6 @@ const Categories = () => {
                 );
               })}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
           </Carousel>
         </div>
       </div>

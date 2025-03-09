@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import CustomButton from "@/components/ui/CustomButton";
 import { ArrowRight, MapPin } from "lucide-react";
 import {
   AnimatePresence,
@@ -191,7 +191,7 @@ const Hero = () => {
                       duration: 0.3,
                     },
                   }}
-                  className=" absolute bottom-0 left-0 right-0 -top-32 sm:top-0 mx-auto my-auto h-fit text-center font-secondary text-[18vw] font-black text-white sm:text-[22vw] z-10 sm:z-0 text-shadow"
+                  className=" text-shadow absolute -top-32 bottom-0 left-0 right-0 z-10 mx-auto my-auto h-fit text-center font-secondary text-[18vw] font-black text-white sm:top-0 sm:z-0 sm:text-[22vw]"
                 >
                   HARDIN
                 </motion.h1>
@@ -222,7 +222,7 @@ const Hero = () => {
                       duration: 0.3,
                     },
                   }}
-                  className="text-outline absolute bottom-0 left-0 right-0 top-0 mx-auto my-auto h-fit text-center font-secondary text-[20vw] font-black text-white/0 sm:top-0 sm:text-[22vw] z-10 sm:block hidden"
+                  className="text-outline absolute bottom-0 left-0 right-0 top-0 z-10 mx-auto my-auto hidden h-fit text-center font-secondary text-[20vw] font-black text-white/0 sm:top-0 sm:block sm:text-[22vw]"
                 >
                   HARDIN
                 </motion.h1>
@@ -241,7 +241,7 @@ const Hero = () => {
                   }}
                   transition={ANIM_TRANSITION}
                   id="image-animate-div"
-                  className="absolute left-0 top-0 h-full w-full items-center justify-center flex"
+                  className="absolute left-0 top-0 flex h-full w-full items-center justify-center"
                   style={{
                     x: springX,
                     y: springY,
@@ -254,7 +254,7 @@ const Hero = () => {
                     alt="coffee_image"
                     onLoad={() => setImage2Loaded(true)}
                     src={LANDING_PROFILES[profile - 1]?.coffee ?? ""}
-                    className="sm:h-full w-[90%] h-[90%] sm:w-full object-cover"
+                    className="h-[90%] w-[90%] object-cover sm:h-full sm:w-full"
                   />
                 </motion.div>
 
@@ -268,19 +268,19 @@ const Hero = () => {
                 ></motion.div>
               </div>
 
-              <div className="absolute px-4 bottom-10 left-0 right-0 z-10 mx-auto flex w-full flex-col items-center  justify-center gap-4">
+              <div className="absolute bottom-10 left-0 right-0 z-10 mx-auto flex w-full flex-col items-center justify-center  gap-4 px-4">
                 <div className="flex flex-col gap-4 sm:flex-row">
-                  <Button className="gap-2">
+                  <CustomButton className="gap-2">
                     <p>See Menu</p>
                     <ArrowRight strokeWidth={1} className="opacity-60" />
-                  </Button>
-                  <Button className="group relative gap-2">
+                  </CustomButton>
+                  <CustomButton className="group relative gap-2">
                     <p>Directions</p>
                     <MapPin strokeWidth={1} className="opacity-60" />
-                  </Button>
+                  </CustomButton>
                 </div>
 
-                <p className="font-sans lg:text-lg font-medium text-white text-center">
+                <p className="text-center font-sans font-medium text-white lg:text-lg">
                   {LANDING_PROFILES[profile - 1]?.text ?? ""}
                 </p>
               </div>

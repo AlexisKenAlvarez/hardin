@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
@@ -5,9 +6,8 @@
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
-import { IoMdClose } from "react-icons/io";
 const NAV_ITEMS = [
   {
     label: "Home",
@@ -92,17 +92,20 @@ const Nav = () => {
               <NavElements setIsOpen={setIsOpen} isOpen={isOpen} />
             </div>
 
-            <ul className="flex space-y-5 flex-col gap-4 absolute top-28 mx-auto text-center w-fit left-0 right-0">
+            <ul className="absolute left-0 right-0 top-28 mx-auto flex w-fit flex-col gap-4 space-y-5 text-center">
               <AnimatePresence>
                 {NAV_ITEMS.map((item, index) => (
-                  <motion.li initial={{opacity: 0, y: -10}}
-                   animate={{opacity: 100, y: 0}}
-                   transition={{
-                    duration: 0.4,
+                  <motion.li
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 100, y: 0 }}
+                    transition={{
+                      duration: 0.4,
 
-                    delay: index * 0.05
-                   }}
-                   key={index} className="">
+                      delay: index * 0.05,
+                    }}
+                    key={index}
+                    className=""
+                  >
                     <a href={`#${item.slug}`}>
                       <p className="px-4 text-xl">{item.label}</p>
                     </a>

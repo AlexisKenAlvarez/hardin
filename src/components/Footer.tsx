@@ -26,7 +26,7 @@ const Footer = () => {
 
   return (
     <div className="relative z-10 min-h-[25rem] md:min-h-[30rem] w-full font-sans text-white">
-      <div className="fixed bottom-0 left-0 h-[25rem] md:h-[30rem] w-full  overflow-hidden bg-gradient-to-b from-[#B67E30] to-[#8F6324] p-10 pt-14">
+      <div className="fixed bottom-0 left-0 h-[25rem] md:h-[30rem] w-full  overflow-hidden bg-gradient-to-b from-[#B67E30] to-[#815921] p-10 pt-14">
         <div className="max-w-screen-lg mx-auto md:space-y-0 space-y-4">
           <div className="flex gap-3 lg:gap-10 justify-center items-center lg:justify-between lg:flex-row flex-col-reverse">
             <div className="gap-6 lg:w-1/2">
@@ -37,7 +37,7 @@ const Footer = () => {
             </div>
             <div className="gap-3 flex justify-end">
               {FOOTER_SOCIALS.map((items) => (
-                <a href={items.url} key={items.label} className="rounded-full border border-white h-8 w-8 grid place-content-center">
+                <a href={items.url} key={items.label} className="hover:bg-white hover:text-[#B67E30] transition-all duration-300 rounded-full border border-white h-8 w-8 grid place-content-center">
                   <items.icon />
                 </a>
               ))}

@@ -2,7 +2,7 @@
 "use client";
 
 import Container from "@/components/Container";
-import Button from "@/components/ui/button";
+import CustomButton from "@/components/ui/CustomButton";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -21,7 +21,6 @@ const About = () => {
     const targets: HTMLElement[] = gsap.utils.toArray(".about-containers");
     const imageTargets1: HTMLElement[] = gsap.utils.toArray(".about-images-1");
     const imageTargets2: HTMLElement[] = gsap.utils.toArray(".about-images-2");
-
 
     mm.add("(min-width: 1024px)", () => {
       const scrollTween = gsap.to(targets, {
@@ -149,13 +148,13 @@ const About = () => {
     <div
       className="relative flex flex-col justify-between overflow-hidden bg-white "
       ref={wrapperRef}
-      style={ matches ? { height: "unset" } : {}}
+      style={matches ? { height: "unset" } : {}}
     >
       <div className=" flex w-full flex-col lg:flex-row">
         <Container className="about-containers w-full p-5 py-20 pt-24 lg:h-screen lg:shrink-0">
           <div className="mx-auto w-full max-w-screen-2xl">
-            <div className="w-fit space-y-2">
-              <div className="text-4xl md:text-6xl lg:text-8xl">
+            <div className="mx-auto w-fit space-y-2 md:mx-0">
+              <div className="flex flex-col items-center text-4xl md:items-start md:text-6xl lg:text-8xl">
                 <div className="relative h-fit w-fit overflow-hidden">
                   <h1 className="about-header-1 max-w-3xl pb-2 font-primary">
                     Selfies with your
@@ -168,20 +167,20 @@ const About = () => {
                 </div>
               </div>
 
-              <div className="ml-auto mr-9 w-fit">
+              <div className="mx-auto ml-auto mr-9 flex w-fit flex-col items-center md:mx-0 md:items-start">
                 <div className="relative h-fit w-fit overflow-hidden">
                   <p className="about-header-1 text-right font-sans text-lg text-black-secondary md:text-xl">
                     Awaken your senses, one sip at a time
                   </p>
                 </div>
                 <div className="relative h-fit w-fit overflow-hidden">
-                  <Button
+                  <CustomButton
                     className="about-header-1 relative mt-10"
                     variant="black"
                   >
                     <ArrowUpRight className="inline" size={21} />
                     <h1 className="">Message us</h1>
-                  </Button>
+                  </CustomButton>
                 </div>
               </div>
             </div>
