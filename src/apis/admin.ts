@@ -1,11 +1,11 @@
 "use server";
-import { OrderArray } from "@/app/admin/(authenticated)/menu/_menu";
+import { MenuItem } from "@/app/admin/(authenticated)/menu/_menu";
 import { createAdminClient } from "@/supabase/server";
 import { decode } from "base64-arraybuffer";
 
 const supabase = await createAdminClient();
 
-interface MenuItem {
+interface MenuUploadItem {
   image: string;
   name: string;
   uploaded_by: string;
@@ -16,6 +16,26 @@ interface DeleteMenuItem {
   image: string;
 }
 
+export const getHours = async () => {
+  const { data } = await supabase.from("open_hours").select("*");
+  return data;
+};
+
+export const uploadHours = async (menu: MenuUploadItem) => {
+  const { error: uploadError } = await supabase.from("open_hours").insert({
+    image: menu.name ?? "",
+    uploaded_by: menu.uploaded_by ?? "",
+  });
+
+  if (uploadError) {
+    throw new Error("Failed to upload menu");
+  }
+
+  await uploadImage(menu.image, menu.name);
+
+  return true;
+};
+
 export const getMenu = async () => {
   const { data } = await supabase
     .from("menu")
@@ -24,12 +44,12 @@ export const getMenu = async () => {
   return data;
 };
 
-export const updateMenuOrder = async (orderArray: OrderArray[]) => {
-  const promises = orderArray.map((item) => {
+export const updateMenuOrder = async (orderArray: MenuItem[]) => {
+  const promises = orderArray.map((item, index) => {
     return supabase
       .from("menu")
-      .update({ order: item.slot })
-      .eq("image", item.item);
+      .update({ order: index + 1 })
+      .eq("image", item.image);
   });
 
   await Promise.all(promises);
@@ -37,22 +57,8 @@ export const updateMenuOrder = async (orderArray: OrderArray[]) => {
   return true;
 };
 
-export const uploadMenu = async (menu: MenuItem) => {
-  const { count } = await supabase
-    .from("menu")
-    .select("*", { count: "exact", head: true });
-
-  const { error: uploadError } = await supabase.from("menu").insert({
-    image: menu.name ?? "",
-    uploaded_by: menu.uploaded_by ?? "",
-    order: count ? count + 1 : 0,
-  });
-
-  if (uploadError) {
-    throw new Error("Failed to upload menu");
-  }
-
-  const base64 = menu.image.split("base64,")[1];
+export const uploadImage = async (image: string, name: string) => {
+  const base64 = image.split("base64,")[1];
   if (!base64) {
     throw new Error("Invalid file");
   }
@@ -60,13 +66,34 @@ export const uploadMenu = async (menu: MenuItem) => {
   const newBase64 = decode(base64);
   const { data, error } = await supabase.storage
     .from("admin")
-    .upload(`admin/${menu.name}`, newBase64, {
+    .upload(`admin/${name}`, newBase64, {
       contentType: "image/jpeg",
     });
   if (error) {
     throw new Error("Failed to upload image");
   }
+
   return data;
+};
+
+export const uploadMenu = async (menu: MenuUploadItem) => {
+  const { count } = await supabase
+    .from("menu")
+    .select("*", { count: "exact", head: true });
+
+  const { error: uploadError } = await supabase.from("menu").insert({
+    image: menu.name ?? "",
+    uploaded_by: menu.uploaded_by ?? "",
+    order: count ? count + 1 : 1,
+  });
+
+  if (uploadError) {
+    throw new Error("Failed to upload menu");
+  }
+
+  await uploadImage(menu.image, menu.name);
+
+  return true;
 };
 
 export const deleteMenu = async (data: DeleteMenuItem) => {

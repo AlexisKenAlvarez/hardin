@@ -1,5 +1,7 @@
+import HoursView from "./_hours"
+
 const page = () => {
-  return <div>Hours</div>;
+  return <HoursView />;
 };
 
 export default page;

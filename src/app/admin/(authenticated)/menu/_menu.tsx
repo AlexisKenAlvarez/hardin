@@ -1,35 +1,39 @@
 "use client";
 
-import { deleteMenu, getMenu, updateMenuOrder, uploadMenu } from "@/apis/admin";
+import { getMenu, updateMenuOrder, uploadMenu } from "@/apis/admin";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Grab, Info, Plus, Trash, View, X } from "lucide-react";
+import { Plus, X } from "lucide-react";
 
+import MenuNode from "@/components/admin/MenuNode";
 import { queryClient } from "@/components/providers/ReactQueryProvider";
 import { useSession } from "@/components/providers/SupabaseSessionProvider";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from "@/components/ui/dialog";
 import UploadButton from "@/components/UploadButton";
+import type { Database } from "@/lib/database.types";
 import { cn } from "@/lib/utils";
+import { closestCorners, DndContext, type DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arraySwap, rectSwappingStrategy, SortableContext } from "@dnd-kit/sortable";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { createSwapy } from "swapy";
+
 
 export interface OrderArray {
   slot: number;
   item: string
 }
+
+export type MenuItem = Database["public"]["Tables"]["menu"]["Row"]
+
 
 const MenuView = () => {
   const session = useSession();
@@ -39,10 +43,20 @@ const MenuView = () => {
   const [isImageMissing, setIsImageMissing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isChangingOrder, setIsChangingOrder] = useState(false);
-  const [orderArray, setOrderArray] = useState<OrderArray[]>([]);
-  console.log(orderArray);
+  const [menuArray, setMenuArray] = useState<MenuItem[] | null | undefined>([]);
+  const mouseSensor = useSensor(MouseSensor);
+  const touchSensor = useSensor(TouchSensor);
+  const keyboardSensor = useSensor(KeyboardSensor);
 
-  const { data: menuData, isPending: isMenuPending } = useQuery({
+  const sensors = useSensors(
+    mouseSensor,
+    touchSensor,
+    keyboardSensor,
+  );
+
+  console.log("MENU ARRAY", menuArray);
+
+  const { data: menuData, isPending: isMenuPending, isFetched: isMenuFetched } = useQuery({
     queryKey: ["menuData"],
     queryFn: () => getMenu(),
   });
@@ -61,29 +75,6 @@ const MenuView = () => {
     },
   });
 
-  const { mutate: deleteMenuMutation } = useMutation({
-    mutationFn: deleteMenu,
-    onError: (error) => {
-      console.log(error);
-      toast.dismiss("delete-menu"); // Also dismiss on error
-      toast.error("Failed to delete menu", {
-        id: "delete-menu",
-      });
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["menuData"] });
-      toast.dismiss("delete-menu");
-      toast.success("Menu deleted successfully", {
-        id: "delete-menu",
-      });
-    },
-    onMutate: async () => {
-      toast.loading("Deleting menu...", {
-        id: "delete-menu",
-      });
-    },
-  });
-
   const { mutate: updateMenuOrderMutation, isPending: isUpdatingOrder } = useMutation({
     mutationFn: updateMenuOrder,
     onError: (error) => {
@@ -95,18 +86,30 @@ const MenuView = () => {
     },
   });
 
-  useEffect(() => {
-    if (menuData && menuData?.length > 0) {
-      const container = document.querySelector(".container");
-      const swapy = createSwapy(container as HTMLElement, {
-        autoScrollOnDrag: true,
-        enabled: isChangingOrder,
-      });
-      swapy.onSwapEnd((items) => {
-        setOrderArray(items.slotItemMap.asArray as unknown as OrderArray[])
+  const getItemIndex = (id: number) => menuArray?.findIndex(item => item.id === id)
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+
+      const oldIndex = getItemIndex(Number(active.id));
+      const newIndex = getItemIndex(Number(over?.id));
+
+      console.log("OLD INDEX", oldIndex);
+      console.log("NEW INDEX", newIndex);
+
+      setMenuArray((items) => {
+        return arraySwap(items ?? [], oldIndex ?? 0, newIndex ?? 0);
       });
     }
-  }, [menuData, isChangingOrder]);
+  }
+
+  useEffect(() => {
+    if (isMenuFetched) {
+      setMenuArray(menuData)
+    }
+  }, [isMenuFetched, menuData])
 
   return (
     <div className="flex flex-1 flex-col items-start gap-4 font-sans">
@@ -121,18 +124,31 @@ const MenuView = () => {
               transition={{ duration: 0.2 }}
               key={"changing-order"}
             >
-              <p className="sub-header">Drag to change the order of the menu</p>
-              <Button
-                disabled={isUpdatingOrder}
-                onClick={() => {
-                  updateMenuOrderMutation(orderArray);
-                  if (!shouldInitial) {
-                    setShouldInitial(true);
-                  }
-                }}
-              >
-                {isUpdatingOrder ? "Saving..." : "Save changes"}
-              </Button>
+              <p className="sub-header text-xs sm:text-base">Drag to change the order of the menu</p>
+              <div className="flex gap-2">
+                <Button
+                  variant={"outline"}
+                  disabled={isUpdatingOrder}
+                  onClick={() => {
+                    setMenuArray(menuData);
+                    setIsChangingOrder(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  disabled={isUpdatingOrder}
+                  onClick={() => {
+                    setIsChangingOrder(false);
+                    if (!shouldInitial) {
+                      setShouldInitial(true);
+                    }
+                    updateMenuOrderMutation(menuArray ?? []);
+                  }}
+                >
+                  {isUpdatingOrder ? "Saving..." : "Save changes"}
+                </Button>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -238,100 +254,16 @@ const MenuView = () => {
               </div>
             ) : (
               <div
-                className={cn("container flex select-none flex-wrap gap-4", {
-                  "cursor-grab": isChangingOrder,
-                })}
+                className={cn("flex select-none flex-wrap gap-4")}
               >
-                {menuData?.map((item) => (
-                  <div
-                    className=""
-                    key={item.image}
-                    data-swapy-slot={item.order}
-                  >
-                    <div
-                      key={item.id}
-                      className="group relative h-96 w-72"
-                      data-swapy-item={item.image}
-                    >
-                      <Image
-                        src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/${item.image}`}
-                        alt={item.image}
-                        width={500}
-                        height={500}
-                        className="h-full w-full object-cover"
-                      />
+                <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners} sensors={sensors}>
+                  <SortableContext items={menuArray ?? []} strategy={rectSwappingStrategy} disabled={!isChangingOrder}>
+                    {menuArray?.map((item) => (
+                      <MenuNode key={item?.id} isOrderChanging={isChangingOrder} item={item} />
+                    ))}
+                  </SortableContext>
+                </DndContext>
 
-                      <div className="absolute left-0 top-0 flex h-full w-full flex-col items-center justify-center gap-2 bg-white/70 opacity-0 backdrop-blur-sm transition-all duration-300 ease-in-out group-hover:opacity-100">
-                        {isChangingOrder ? (
-                          <div className="flex items-center gap-2 flex-col">
-                            <Grab />
-                            <p>Drag to change the order</p>
-                          </div>
-                        ) : (
-
-                          <><Dialog>
-                            <DialogTrigger asChild>
-                              <Button variant={"destructive"}>
-                                <Trash className="icon" />
-                                Delete
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                              <DialogHeader>
-                                <DialogTitle>
-                                  Are you absolutely sure?
-                                </DialogTitle>
-                                <DialogDescription>
-                                  This will permanently delete the image from the
-                                  menu.
-                                </DialogDescription>
-                              </DialogHeader>
-                              <DialogFooter>
-                                <DialogClose asChild>
-                                  <Button
-                                    variant={"destructive"}
-                                    onClick={() => {
-                                      deleteMenuMutation({
-                                        id: item.id,
-                                        image: item.image,
-                                      });
-                                    }}
-                                  >
-                                    Delete
-                                  </Button>
-                                </DialogClose>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
-                            <Button variant={"outline"}>
-                              <Info className="icon" />
-                              View info
-                            </Button>
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button variant={"outline"}>
-                                  <View className="icon" />
-                                  View image
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogTitle className="hidden">
-                                  {item.image}
-                                </DialogTitle>
-                                <Image
-                                  src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/${item.image}`}
-                                  alt={item.image}
-                                  width={500}
-                                  height={500}
-                                />
-                              </DialogContent>
-                            </Dialog></>
-                        )}
-                      </div>
-
-                    </div>
-                  </div>
-                ))}
               </div>
             )}
           </div>

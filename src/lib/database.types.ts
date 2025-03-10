@@ -66,6 +66,35 @@ export type Database = {
           },
         ]
       }
+      open_hours: {
+        Row: {
+          created_at: string
+          id: number
+          image: string
+          uploaded_by: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          image: string
+          uploaded_by: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          image?: string
+          uploaded_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "open_hours_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["email"]
+          },
+        ]
+      }
       users: {
         Row: {
           created_at: string
