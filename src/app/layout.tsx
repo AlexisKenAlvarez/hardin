@@ -7,9 +7,69 @@ import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "@/components/providers/SupabaseSessionProvider";
 
 export const metadata = {
-  title: "HardinCafe",
-  description: "Welcome to HardinCafe",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL ?? "https://hardincafe.com",
+  ),
+  title: {
+    default: "Hardin Cafe | Premium Coffee Shop in Taal, Batangas",
+    template: "%s | Hardin Cafe",
+  },
+  description:
+    "Experience premium coffee and outdoor dining at Hardin Cafe in Taal, Batangas. Enjoy our signature recipes, peaceful ambiance, and mobile coffee cart rental services.",
+  keywords: [
+    "Hardin Cafe",
+    "coffee shop Taal",
+    "Batangas coffee shop",
+    "outdoor dining Batangas",
+    "mobile coffee cart rental",
+    "premium coffee Taal",
+    "cafe Batangas",
+  ],
+  authors: [{ name: "Hardin Cafe" }],
+  creator: "Hardin Cafe",
+  publisher: "Hardin Cafe",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    siteName: "Hardin Cafe",
+    title: "Hardin Cafe | Premium Coffee Shop in Taal, Batangas",
+    description:
+      "Experience premium coffee and outdoor dining at Hardin Cafe in Taal, Batangas. Enjoy our signature recipes, peaceful ambiance, and mobile coffee cart rental services.",
+    images: [
+      {
+        url: "/og-image.jpg", // Make sure to add this image to your public folder
+        width: 1200,
+        height: 630,
+        alt: "Hardin Cafe - Premium Coffee Shop",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hardin Cafe | Premium Coffee Shop in Taal, Batangas",
+    description:
+      "Experience premium coffee and outdoor dining at Hardin Cafe in Taal, Batangas",
+    images: ["/og-image.jpg"],
+    creator: "@hardincafe",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: "/",
+    languages: {
+      "en-US": "/en-US",
+    },
+  },
 };
 
 const fontSpring = localFont({

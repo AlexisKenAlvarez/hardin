@@ -1,4 +1,4 @@
-import { deleteMenu } from "@/apis/admin";
+import { deleteHours, deleteMenu } from "@/apis/admin";
 import type { MenuItem } from "@/app/admin/(authenticated)/menu/_menu";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,9 +32,8 @@ const HoursNode = ({ item, isOrderChanging }: { item: HoursItem, isOrderChanging
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-
   const { mutate: deleteMenuMutation } = useMutation({
-    mutationFn: deleteMenu,
+    mutationFn: deleteHours,
     onError: (error) => {
       console.log(error);
       toast.dismiss("delete-menu"); // Also dismiss on error
@@ -43,7 +42,7 @@ const HoursNode = ({ item, isOrderChanging }: { item: HoursItem, isOrderChanging
       });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["menuData"] });
+      await queryClient.invalidateQueries({ queryKey: ["hoursData"] });
       toast.dismiss("delete-menu");
       toast.success("Menu deleted successfully", {
         id: "delete-menu",

@@ -14,26 +14,37 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
 import UploadButton from "@/components/UploadButton";
 import type { Database } from "@/lib/database.types";
 import { cn } from "@/lib/utils";
-import { closestCorners, DndContext, type DragEndEvent, KeyboardSensor, MouseSensor, TouchSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { arraySwap, rectSwappingStrategy, SortableContext } from "@dnd-kit/sortable";
+import {
+  closestCorners,
+  DndContext,
+  type DragEndEvent,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arraySwap,
+  rectSwappingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-
 export interface OrderArray {
   slot: number;
-  item: string
+  item: string;
 }
 
-export type MenuItem = Database["public"]["Tables"]["menu"]["Row"]
-
+export type MenuItem = Database["public"]["Tables"]["menu"]["Row"];
 
 const MenuView = () => {
   const session = useSession();
@@ -48,15 +59,15 @@ const MenuView = () => {
   const touchSensor = useSensor(TouchSensor);
   const keyboardSensor = useSensor(KeyboardSensor);
 
-  const sensors = useSensors(
-    mouseSensor,
-    touchSensor,
-    keyboardSensor,
-  );
+  const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor);
 
   console.log("MENU ARRAY", menuArray);
 
-  const { data: menuData, isPending: isMenuPending, isFetched: isMenuFetched } = useQuery({
+  const {
+    data: menuData,
+    isPending: isMenuPending,
+    isFetched: isMenuFetched,
+  } = useQuery({
     queryKey: ["menuData"],
     queryFn: () => getMenu(),
   });
@@ -75,24 +86,25 @@ const MenuView = () => {
     },
   });
 
-  const { mutate: updateMenuOrderMutation, isPending: isUpdatingOrder } = useMutation({
-    mutationFn: updateMenuOrder,
-    onError: (error) => {
-      console.log(error);
-    },
-    onSuccess: async () => {
-      setIsChangingOrder(false);
-      toast.success("Menu order updated successfully");
-    },
-  });
+  const { mutate: updateMenuOrderMutation, isPending: isUpdatingOrder } =
+    useMutation({
+      mutationFn: updateMenuOrder,
+      onError: (error) => {
+        console.log(error);
+      },
+      onSuccess: async () => {
+        setIsChangingOrder(false);
+        toast.success("Menu order updated successfully");
+      },
+    });
 
-  const getItemIndex = (id: number) => menuArray?.findIndex(item => item.id === id)
+  const getItemIndex = (id: number) =>
+    menuArray?.findIndex((item) => item.id === id);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
     if (active.id !== over?.id) {
-
       const oldIndex = getItemIndex(Number(active.id));
       const newIndex = getItemIndex(Number(over?.id));
 
@@ -107,9 +119,9 @@ const MenuView = () => {
 
   useEffect(() => {
     if (isMenuFetched) {
-      setMenuArray(menuData)
+      setMenuArray(menuData);
     }
-  }, [isMenuFetched, menuData])
+  }, [isMenuFetched, menuData]);
 
   return (
     <div className="flex flex-1 flex-col items-start gap-4 font-sans">
@@ -124,7 +136,9 @@ const MenuView = () => {
               transition={{ duration: 0.2 }}
               key={"changing-order"}
             >
-              <p className="sub-header text-xs sm:text-base">Drag to change the order of the menu</p>
+              <p className="sub-header text-xs sm:text-base">
+                Drag to change the order of the menu
+              </p>
               <div className="flex gap-2">
                 <Button
                   variant={"outline"}
@@ -253,17 +267,26 @@ const MenuView = () => {
                 <h1 className="text-center text-black-secondary">No result.</h1>
               </div>
             ) : (
-              <div
-                className={cn("flex select-none flex-wrap gap-4")}
-              >
-                <DndContext onDragEnd={handleDragEnd} collisionDetection={closestCorners} sensors={sensors}>
-                  <SortableContext items={menuArray ?? []} strategy={rectSwappingStrategy} disabled={!isChangingOrder}>
+              <div className={cn("flex select-none flex-wrap gap-4")}>
+                <DndContext
+                  onDragEnd={handleDragEnd}
+                  collisionDetection={closestCorners}
+                  sensors={sensors}
+                >
+                  <SortableContext
+                    items={menuArray ?? []}
+                    strategy={rectSwappingStrategy}
+                    disabled={!isChangingOrder}
+                  >
                     {menuArray?.map((item) => (
-                      <MenuNode key={item?.id} isOrderChanging={isChangingOrder} item={item} />
+                      <MenuNode
+                        key={item?.id}
+                        isOrderChanging={isChangingOrder}
+                        item={item}
+                      />
                     ))}
                   </SortableContext>
                 </DndContext>
-
               </div>
             )}
           </div>

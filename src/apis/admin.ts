@@ -1,5 +1,5 @@
 "use server";
-import { MenuItem } from "@/app/admin/(authenticated)/menu/_menu";
+import type { MenuItem } from "@/app/admin/(authenticated)/menu/_menu";
 import { createAdminClient } from "@/supabase/server";
 import { decode } from "base64-arraybuffer";
 
@@ -17,7 +17,7 @@ interface DeleteMenuItem {
 }
 
 export const getHours = async () => {
-  const { data } = await supabase.from("open_hours").select("*");
+  const { data } = await supabase.from("open_hours").select("*").single();
   return data;
 };
 
@@ -34,6 +34,27 @@ export const uploadHours = async (menu: MenuUploadItem) => {
   await uploadImage(menu.image, menu.name);
 
   return true;
+};
+
+export const deleteHours = async (data: DeleteMenuItem) => {
+  const { error } = await supabase
+    .from("open_hours")
+    .delete()
+    .eq("id", data.id);
+
+  if (error) {
+    throw new Error("Failed to delete hours");
+  }
+
+  const { error: deleteError } = await supabase.storage
+    .from("admin")
+    .remove([`admin/${data.image}`]);
+
+  if (deleteError) {
+    throw new Error("Failed to delete image");
+  }
+
+  return { message: "Hours deleted successfully" };
 };
 
 export const getMenu = async () => {
@@ -112,4 +133,10 @@ export const deleteMenu = async (data: DeleteMenuItem) => {
   }
 
   return { message: "Menu deleted successfully" };
+};
+
+export const getHoursImage = async () => {
+  const { data } = await supabase.from("open_hours").select("*").single();
+  const formattedUrl = `${process.env.NEXT_PUBLIC_STORAGE_URL}${data?.image}`;
+  return formattedUrl;
 };

@@ -3,3 +3,8 @@ declare module "locomotive-scroll" {
   const LocomotiveScroll: any;
   export default LocomotiveScroll;
 }
+
+declare module '*.mp4' {
+  const src: string;
+  export default src;
+}

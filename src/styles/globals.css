@@ -168,6 +168,10 @@
 
   }
 
+  .container {
+    @apply max-w-screen-md mx-auto px-4;
+  }
+
   .clamped-text-footer {
     font-size: clamp(4rem, 20vw, 17rem);
   }

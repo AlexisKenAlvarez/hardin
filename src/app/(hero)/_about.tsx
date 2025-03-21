@@ -174,10 +174,7 @@ const About = () => {
                   </p>
                 </div>
                 <div className="relative h-fit w-fit overflow-hidden">
-                  <CustomButton
-                    className="about-header-1 relative mt-10"
-                    variant="black"
-                  >
+                  <CustomButton className="about-header-1 relative mt-10">
                     <ArrowUpRight className="inline" size={21} />
                     <h1 className="">Message us</h1>
                   </CustomButton>
@@ -198,7 +195,7 @@ const About = () => {
           </div>
         </Container>
 
-        <Container className="about-containers flex h-auto w-full items-end py-14 sm:py-20  lg:h-screen lg:shrink-0 lg:py-0">
+        <Container className="about-containers relative flex h-auto w-full items-end py-14 sm:py-20  lg:h-screen lg:shrink-0 lg:py-0">
           <div className="mx-auto flex w-full max-w-screen-2xl sm:justify-end lg:pb-24">
             <div className="mx-auto w-fit space-y-2 md:mx-0">
               <div className="text-4xl md:text-6xl lg:text-8xl">

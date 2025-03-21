@@ -39,7 +39,7 @@ const HoursView = () => {
   const [isImageMissing, setIsImageMissing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { data: menuData, isPending: isMenuPending } = useQuery({
+  const { data: hoursData, isPending: isMenuPending } = useQuery({
     queryKey: ["hoursData"],
     queryFn: () => getHours(),
   });
@@ -51,7 +51,7 @@ const HoursView = () => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["hoursData"] });
-      toast.success("Menu uploaded successfully");
+      toast.success("Hours uploaded successfully");
       setUploadedImage("");
       setImageName("");
       setDialogOpen(false);
@@ -116,7 +116,7 @@ const HoursView = () => {
               )}
               <Button
                 className="w-full"
-                disabled={isUploading}
+                disabled={isUploading || hoursData !== null}
                 onClick={() => {
                   if (uploadedImage === "" || imageName === "") {
                     setIsImageMissing(true);
@@ -129,7 +129,7 @@ const HoursView = () => {
                   });
                 }}
               >
-                {isUploading ? "Uploading..." : "Add to Menu"}
+                {isUploading ? "Uploading..." : "Add to Hours"}
               </Button>
             </DialogContent>
           </Dialog>
@@ -144,7 +144,7 @@ const HoursView = () => {
           </div>
         ) : (
           <div className="h-full flex-1">
-            {menuData?.length === 0 ? (
+            {!hoursData ? (
               <div className="grid h-full flex-1 place-content-center">
                 <h1 className="text-center text-black-secondary">No result.</h1>
               </div>
@@ -152,9 +152,7 @@ const HoursView = () => {
               <div
                 className={cn("flex select-none flex-wrap gap-4")}
               >
-                {menuData?.map((item) => (
-                  <HoursNode key={item?.id} item={item} />
-                ))}
+                <HoursNode key={hoursData.id} item={hoursData} />
 
               </div>
             )}

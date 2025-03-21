@@ -18,6 +18,7 @@ import Package6 from "../../../public/rental/6.jpg";
 import Package7 from "../../../public/rental/7.jpg";
 import Package8 from "../../../public/rental/8.jpg";
 import { useMediaQuery } from "usehooks-ts";
+import BotTop from "@/anim/BotTop";
 
 export const rental_data = [
   {
@@ -100,35 +101,36 @@ const Rental = () => {
 
   return (
     <div className="relative flex  w-full items-center justify-center bg-[#FFF3E2] px-10 py-16 !pb-24 sm:py-20">
+      <div className="absolute top-0 z-10 h-20 w-full bg-[url(/overlay.png)] bg-repeat-x brightness-200"></div>
+      <div className="absolute bottom-0 z-10 h-20 w-full rotate-180 bg-[url(/overlay.png)] bg-repeat-x brightness-200"></div>
+
       <div className="absolute left-0 top-0 h-full w-full  bg-[url(/rental_noise.webp)] opacity-30"></div>
       <div className="items- z-10 mx-auto flex max-w-screen-lg flex-col items-center justify-center gap-20 md:gap-14 lg:flex-row">
         <div className="w-full px-10 text-center lg:text-left">
           <div className="space-y-2">
-            <h1 className="font-sans text-lg font-bold uppercase text-orange">
-              Coffee Cart
-            </h1>
-            <h1 className="header font-primary">Mobile Coffee Cart Rental</h1>
+            <BotTop>
+              <h1 className="font-sans text-lg font-bold uppercase text-orange">
+                Coffee Cart
+              </h1>
+            </BotTop>
+            <BotTop>
+              <h1 className="header font-primary">Mobile Coffee Cart Rental</h1>
+            </BotTop>
           </div>
 
-          <p className="sub-header">
-            Make your event extra special with our Mobile Coffee Cart Rental!
-            Perfect for serving 100+ guests, we provide premium coffee and
-            refreshing drinks to keep everyone energized.
-          </p>
+          <BotTop>
+            <p className="sub-header mt-4">
+              Make your event extra special with our Mobile Coffee Cart Rental!
+              Perfect for serving 100+ guests, we provide premium coffee and
+              refreshing drinks to keep everyone energized.
+            </p>
+          </BotTop>
           <div className="relative h-fit w-full">
-            <Image
-              className="pointer-events-none absolute -right-4 bottom-0 top-0 my-auto w-32 sm:-right-10 sm:w-44"
-              alt="Tropical leave"
-              src="/tropical-leave.png"
-              width={300}
-              height={300}
-            />
-            <CustomButton
-              variant="black"
-              className="mx-auto mt-10 lg:mx-0 lg:w-full "
-            >
-              Book now!
-            </CustomButton>
+            <BotTop>
+              <CustomButton className="mx-auto mt-10 lg:mx-0 lg:w-full ">
+                Book now!
+              </CustomButton>
+            </BotTop>
           </div>
         </div>
         <div className="flex w-[22rem] flex-col items-center justify-center sm:w-[34rem] md:mx-0 md:w-full ">

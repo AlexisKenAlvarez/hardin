@@ -6,8 +6,9 @@
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
+import Image from "next/image";
 const NAV_ITEMS = [
   {
     label: "Home",
@@ -27,7 +28,7 @@ const NAV_ITEMS = [
   },
 ];
 
-const SOCIALS = [
+export const SOCIALS = [
   {
     label: "Instagram",
     icon: FaInstagram,
@@ -41,36 +42,13 @@ const SOCIALS = [
 ];
 
 const Nav = () => {
-  let isScrolling: string | number | NodeJS.Timeout | undefined;
   const [isOpen, setIsOpen] = useState(false);
-
-  function onScroll() {
-    const iframe = document.getElementById("myIframe");
-
-    iframe?.classList.add("no-pointer-events");
-    // Clear timeout if it exists
-    clearTimeout(isScrolling);
-
-    isScrolling = setTimeout(() => {
-      iframe?.classList.remove("no-pointer-events");
-    }, 200); // Adjust the timeout delay if necessary
-  }
-
-  useEffect(() => {
-    void (async () => {
-      const LocomotiveScroll = (await import("locomotive-scroll")).default;
-
-      new LocomotiveScroll({
-        scrollCallback: onScroll,
-      });
-    })();
-  }, []);
 
   return (
     <>
       <nav
         className={cn(
-          "fixed left-0 top-0 z-50 flex w-full items-center justify-between bg-white/80  p-3 py-3 font-sans backdrop-blur-sm transition-all duration-500 ease-in-out lg:py-4",
+          "relative left-0 top-0 z-50 flex w-full items-center justify-between p-5 font-sans",
         )}
       >
         <NavElements setIsOpen={setIsOpen} isOpen={isOpen} />
@@ -137,15 +115,36 @@ const NavElements = ({
           onClick={() => setIsOpen((current) => !current)}
         >
           {!isOpen ? (
-            <Menu className="text-orange" />
+            <Menu className="text-white" />
           ) : (
             <X className="text-orange" />
           )}
         </button>
       </div>
-
+      <div className="flex w-full flex-row items-center">
+        <Image
+          src={"/logo-white.png"}
+          width={500}
+          height={500}
+          alt="nav_logo"
+          className="w-14"
+        />
+        <h1
+          className={cn(
+            "flex flex-col text-left font-secondary text-xl font-normal uppercase leading-none text-white",
+            {
+              "text-orange": isOpen,
+            },
+          )}
+        >
+          Hardin <br />
+          Cafe
+        </h1>
+      </div>
       <ul
-        className={cn("hidden w-full items-center gap-4  text-orange lg:flex")}
+        className={cn("hidden w-full items-center gap-4 text-white lg:flex", {
+          "text-orange": isOpen,
+        })}
       >
         {NAV_ITEMS.map((item, index) => (
           <li key={index} className="">
@@ -155,11 +154,7 @@ const NavElements = ({
           </li>
         ))}
       </ul>
-      <div className="flex w-full justify-center">
-        <h1 className="flex flex-col text-center font-secondary text-xl font-bold uppercase leading-none text-orange">
-          Hardin <span className="font-normal">Cafe</span>
-        </h1>
-      </div>
+
       <ul className={cn("flex w-full items-center justify-end lg:gap-4")}>
         {SOCIALS.map((item, index) => (
           <a
@@ -168,9 +163,12 @@ const NavElements = ({
             target="_blank"
             key={index}
           >
-            <li className="flex items-center  gap-2 rounded-full px-2 py-2 text-orange lg:px-4">
-              <item.icon className="text-xl lg:text-base" />
-              <p className="hidden lg:block">{item.label}</p>
+            <li
+              className={cn("flex items-center  rounded-full py-2 text-white", {
+                "text-orange": isOpen,
+              })}
+            >
+              <item.icon className="text-xl lg:text-base" size={24} />
             </li>
           </a>
         ))}
