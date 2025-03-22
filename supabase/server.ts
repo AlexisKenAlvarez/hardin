@@ -1,4 +1,4 @@
-"use server"
+
 
 import type { Database } from "@/lib/database.types";
 import { createServerClient } from "@supabase/ssr";
