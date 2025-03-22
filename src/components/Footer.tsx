@@ -58,8 +58,8 @@ const Footer = () => {
               Reserved {CURRENT_YEAR}
             </h1>
 
-            <Link href="https://www.alexisalvarez.com" target="_blank">
-              <p>www.alexisalvarez.com</p>
+            <Link href="https://www.akialvarez.com" target="_blank">
+              <p>www.akialvarez.com</p>
             </Link>
           </div>
         </div>
