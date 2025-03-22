@@ -8,6 +8,7 @@ import ClientOnly from "@/components/ClientOnly";
 import Footer from "@/components/Footer";
 import Spill from "./_spill";
 import { tryCatch } from "@/utils";
+import JumpToTop from "@/components/JumpToTop";
 
 const page = async () => {
   const { data: formattedUrl, error } = await tryCatch(getHoursImage());
@@ -16,7 +17,7 @@ const page = async () => {
   }
   return (
     <ClientOnly>
-      <div className="relative">
+      <div className="relative overflow-hidden">
         <Hero />
         <div className="relative z-20">
           <Spill />
@@ -29,6 +30,8 @@ const page = async () => {
           <SocialFeed />
         </div>
         <Footer />
+
+        <JumpToTop />
       </div>
     </ClientOnly>
   );

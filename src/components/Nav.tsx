@@ -11,20 +11,16 @@ import { FaFacebook, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 const NAV_ITEMS = [
   {
-    label: "Home",
-    slug: "home",
-  },
-  {
-    label: "Menu",
-    slug: "",
+    label: "About",
+    slug: "about",
   },
   {
     label: "Hours",
     slug: "hours",
   },
   {
-    label: "Location",
-    slug: "location",
+    label: "Gallery",
+    slug: "gallery",
   },
 ];
 
@@ -131,7 +127,7 @@ const NavElements = ({
         />
         <h1
           className={cn(
-            "flex flex-col text-center lg:text-left font-secondary text-xl font-normal uppercase leading-none text-white",
+            "flex flex-col text-center font-secondary text-xl font-normal uppercase leading-none text-white lg:text-left",
             {
               "text-orange": isOpen,
             },
@@ -142,12 +138,23 @@ const NavElements = ({
         </h1>
       </div>
       <ul
-        className={cn("hidden w-full items-center gap-4 text-white lg:flex", {
+        className={cn("hidden w-full items-center justify-center gap-4 text-white lg:flex", {
           "text-orange": isOpen,
         })}
       >
         {NAV_ITEMS.map((item, index) => (
-          <li key={index} className="">
+          <li
+            key={index}
+            className=""
+            onClick={() => {
+              const html = document.documentElement; // <html> element
+              html.classList.add("page-active");
+
+              setTimeout(() => {
+                html.classList.remove("page-active");
+              }, 500);
+            }}
+          >
             <a href={`#${item.slug}`}>
               <p className="px-4">{item.label}</p>
             </a>

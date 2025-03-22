@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const Hours2 = ({ formattedUrl }: { formattedUrl: string }) => {
   return (
-    <div className="relative flex w-full items-center overflow-hidden bg-white px-10 py-20">
+    <div className="relative flex w-full items-center overflow-hidden bg-white px-10 py-20" id="hours">
       <Image
         alt="Sketch"
         width={500}

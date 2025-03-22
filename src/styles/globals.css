@@ -168,6 +168,11 @@
 
   }
 
+  .page-active {
+    scroll-behavior: smooth;
+
+  }
+
   .container {
     @apply max-w-screen-md mx-auto px-4;
   }
