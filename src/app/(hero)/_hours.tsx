@@ -1,7 +1,8 @@
-'use client'
+"use client";
 
 import BotTop from "@/anim/BotTop";
 import Image from "next/image";
+import Link from "next/link";
 
 const Hours2 = ({ formattedUrl }: { formattedUrl: string }) => {
   return (
@@ -35,12 +36,20 @@ const Hours2 = ({ formattedUrl }: { formattedUrl: string }) => {
             </h1>
           </BotTop>
           <BotTop>
-            <p className="sub-header mx-auto max-w-xl">
-              We are open everyday except Monday. Come and enjoy our coffee. We
-              are located at{" "}
-              <span className="font-bold underline">📌Taal Batangas</span>,
-              beside Taal fire station.
-            </p>
+            <div className="sub-header mx-auto max-w-xl">
+              <p>
+                We are open everyday except Monday. Come and enjoy our coffee.
+                We are located at{" "}
+                <Link
+                  href="https://maps.app.goo.gl/ETzQCiE9RUgGT932A"
+                  target="_blank"
+                  className="font-bold underline"
+                >
+                  📌Taal Batangas
+                </Link>
+                , beside Taal fire station.
+              </p>
+            </div>
           </BotTop>
         </div>
       </div>

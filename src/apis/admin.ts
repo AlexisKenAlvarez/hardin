@@ -1,14 +1,9 @@
 "use server";
 import type { MenuItem } from "@/app/admin/(authenticated)/menu/_menu";
+import { createAdminClient } from "@/supabase/server";
 import { decode } from "base64-arraybuffer";
 
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from "@/lib/database.types";
-
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+const supabase = await createAdminClient();
 
 interface MenuUploadItem {
   image: string;

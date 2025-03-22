@@ -100,7 +100,7 @@ const Hero = () => {
           className="relative"
         >
           <div className="relative min-h-screen w-full">
-            <div className="from-coffee-light to-coffee-dark fixed left-0 top-0 h-full w-full  bg-gradient-to-b sm:bg-coffee-light">
+            <div className="fixed left-0 top-0 h-full w-full bg-gradient-to-b from-coffee-light  to-coffee-dark sm:bg-coffee-light">
               <Nav />
 
               {matches && (
@@ -250,9 +250,16 @@ const Hero = () => {
                 </p>
                 <div className="mt-4 flex w-full flex-col items-center justify-center space-y-2">
                   <CustomButton asChild>
-                    <Link href={"/menu"}>View Our Menu</Link>
+                    <Link href={"/menu"}>View Menu</Link>
                   </CustomButton>
-                  <CustomButton variant="outline">Visit Facebook</CustomButton>
+                  <CustomButton variant="outline" asChild>
+                    <Link
+                      href="https://www.facebook.com/profile.php?id=61553926187351"
+                      target="_blank"
+                    >
+                      Visit Our Facebook
+                    </Link>
+                  </CustomButton>
                 </div>
               </motion.div>
             </div>
