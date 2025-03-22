@@ -1,6 +1,6 @@
 "use server";
 import type { MenuItem } from "@/app/admin/(authenticated)/menu/_menu";
-import { createAdminClient } from "@/supabase/server";
+import { createAdminClient, createClient } from "@/supabase/server";
 import { decode } from "base64-arraybuffer";
 
 const supabase = await createAdminClient();
@@ -136,7 +136,7 @@ export const deleteMenu = async (data: DeleteMenuItem) => {
 };
 
 export const getHoursImage = async () => {
-  const supabase = await createAdminClient();
+  const supabase = await createClient();
 
   const { data, error } = await supabase
     .from("open_hours")

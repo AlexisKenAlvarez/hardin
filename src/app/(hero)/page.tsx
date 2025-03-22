@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic';
-
 import { getHoursImage } from "@/apis/admin";
 import BrewingSince from "@/app/(hero)/_brewing_since";
 import Hero from "@/app/(hero)/_hero";
@@ -11,7 +9,7 @@ import Footer from "@/components/Footer";
 import Spill from "./_spill";
 
 const page = async () => {
-  const formattedUrl = await getHoursImage()
+  const formattedUrl = await getHoursImage();
 
   return (
     <ClientOnly>
