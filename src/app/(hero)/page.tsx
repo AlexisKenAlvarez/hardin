@@ -1,5 +1,3 @@
-export const dynamic = 'force-dynamic';
-
 import { getHoursImage } from "@/apis/admin";
 import BrewingSince from "@/app/(hero)/_brewing_since";
 import Hero from "@/app/(hero)/_hero";
@@ -9,11 +7,11 @@ import SocialFeed from "@/app/(hero)/_socialfeed";
 import ClientOnly from "@/components/ClientOnly";
 import Footer from "@/components/Footer";
 import Spill from "./_spill";
-import { tryCatch } from "@/utils";
+import { connection } from "next/server";
 
 const page = async () => {
-  const formattedUrl = await getHoursImage()
-
+  const formattedUrl = await getHoursImage();
+  await connection();
   return (
     <ClientOnly>
       <div className="relative">

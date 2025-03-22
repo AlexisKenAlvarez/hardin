@@ -136,15 +136,19 @@ export const deleteMenu = async (data: DeleteMenuItem) => {
 };
 
 export const getHoursImage = async () => {
-  const { data, error } = await supabase
-    .from("open_hours")
-    .select("*")
-    .single();
-  console.log("DATA", data);
-  if (error) {
+  try {
+    const { data, error } = await supabase
+      .from("open_hours")
+      .select("*")
+      .single();
+
+    if (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
+    const formattedUrl = `${process.env.NEXT_PUBLIC_STORAGE_URL}${data?.image}`;
+    return formattedUrl;
+  } catch (error) {
     console.log(error);
-    throw new Error(error.message);
   }
-  const formattedUrl = `${process.env.NEXT_PUBLIC_STORAGE_URL}${data?.image}`;
-  return formattedUrl;
 };
