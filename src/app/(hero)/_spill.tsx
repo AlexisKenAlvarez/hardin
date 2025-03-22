@@ -1,7 +1,6 @@
 "use client";
 
 import BotTop from "@/anim/BotTop";
-import CustomButton from "@/components/ui/CustomButton";
 import Image from "next/image";
 import { useRef } from "react";
 

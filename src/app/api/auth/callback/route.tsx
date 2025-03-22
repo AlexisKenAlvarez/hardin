@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 // The client you created from the Server-Side Auth instructions
-import { createClient, createAdminClient } from "@/supabase/server";
+import { createClient } from "@/supabase/server";
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -10,10 +10,9 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    const supabaseAdmin = await createAdminClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
-    const { data: isExisting, error: existingError } = await supabaseAdmin
+    const { data: isExisting, error: existingError } = await supabase
       .from("users")
       .select("id")
       .eq("email", data.user?.email ?? "")
@@ -24,7 +23,7 @@ export async function GET(request: Request) {
     }
 
     if (!isExisting) {
-      const { error: insertError } = await supabaseAdmin.from("users").insert({
+      const { error: insertError } = await supabase.from("users").insert({
         email: data.user?.email ?? "",
         name: (data.user?.user_metadata.name as string) ?? "",
       });
