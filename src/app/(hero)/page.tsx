@@ -6,15 +6,10 @@ import Rental from "@/app/(hero)/_rental";
 import SocialFeed from "@/app/(hero)/_socialfeed";
 import ClientOnly from "@/components/ClientOnly";
 import Footer from "@/components/Footer";
-import { tryCatch } from "@/utils";
 import Spill from "./_spill";
 
 const page = async () => {
-  const { data: formattedUrl, error } = await tryCatch(getHoursImage());
-
-  if (error) {
-    console.log(error);
-  }
+  const formattedUrl = await getHoursImage()
 
   return (
     <ClientOnly>
