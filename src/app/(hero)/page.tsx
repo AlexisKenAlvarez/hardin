@@ -7,10 +7,13 @@ import SocialFeed from "@/app/(hero)/_socialfeed";
 import ClientOnly from "@/components/ClientOnly";
 import Footer from "@/components/Footer";
 import Spill from "./_spill";
+import { tryCatch } from "@/utils";
 
 const page = async () => {
-  const formattedUrl = await getHoursImage();
-
+  const { data: formattedUrl, error } = await tryCatch(getHoursImage());
+  if (error) {
+    console.log(error);
+  }
   return (
     <ClientOnly>
       <div className="relative">

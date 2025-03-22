@@ -1,3 +1,5 @@
+'use client'
+
 import BotTop from "@/anim/BotTop";
 import Image from "next/image";
 
