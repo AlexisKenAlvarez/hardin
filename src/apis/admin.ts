@@ -140,7 +140,7 @@ export const getHoursImage = async () => {
   console.log("DATA", data)
   if (error) {
     console.log(error);
-    throw new Error("Failed to get hours image");
+    throw new Error(error.message);
   }
   const formattedUrl = `${process.env.NEXT_PUBLIC_STORAGE_URL}${data?.image}`;
   return formattedUrl;
