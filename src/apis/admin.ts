@@ -136,8 +136,13 @@ export const deleteMenu = async (data: DeleteMenuItem) => {
 };
 
 export const getHoursImage = async () => {
-  const { data, error } = await supabase.from("open_hours").select("*").single();
-  console.log("DATA", data)
+  const supabase = await createAdminClient();
+
+  const { data, error } = await supabase
+    .from("open_hours")
+    .select("*")
+    .single();
+  console.log("DATA", data);
   if (error) {
     console.log(error);
     throw new Error(error.message);
