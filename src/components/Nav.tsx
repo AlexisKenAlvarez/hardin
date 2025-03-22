@@ -63,7 +63,7 @@ const Nav = () => {
             transition={{ duration: 0.2 }}
             id="nav_mobile"
             className={cn(
-              "fixed left-0 top-0 z-50 flex h-screen w-full flex-row items-start bg-white/80 p-3 py-3 font-sans backdrop-blur-sm transition-all duration-500 ease-in-out lg:py-4",
+              "fixed left-0 top-0 z-50 flex h-screen w-full flex-row items-start bg-white/80 p-5 font-sans backdrop-blur-sm transition-all duration-500 ease-in-out lg:py-4",
             )}
           >
             <div className="flex h-full w-full flex-row items-start">
@@ -121,17 +121,17 @@ const NavElements = ({
           )}
         </button>
       </div>
-      <div className="flex w-full flex-row items-center">
+      <div className="flex w-full flex-row items-center justify-center lg:justify-start">
         <Image
           src={"/logo-white.png"}
           width={500}
           height={500}
           alt="nav_logo"
-          className="w-14"
+          className="hidden w-14 lg:block"
         />
         <h1
           className={cn(
-            "flex flex-col text-left font-secondary text-xl font-normal uppercase leading-none text-white",
+            "flex flex-col text-center lg:text-left font-secondary text-xl font-normal uppercase leading-none text-white",
             {
               "text-orange": isOpen,
             },
@@ -164,9 +164,12 @@ const NavElements = ({
             key={index}
           >
             <li
-              className={cn("flex items-center px-1 sm:px-2 rounded-full py-2 text-white", {
-                "text-orange": isOpen,
-              })}
+              className={cn(
+                "flex items-center rounded-full px-1 py-2 text-white sm:px-2",
+                {
+                  "text-orange": isOpen,
+                },
+              )}
             >
               <item.icon className="text-xl lg:text-base" size={24} />
             </li>
