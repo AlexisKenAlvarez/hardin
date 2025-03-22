@@ -1,3 +1,5 @@
+"use server"
+
 import type { Database } from "@/lib/database.types";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
@@ -31,6 +33,8 @@ export async function createClient() {
 }
 
 export async function createAdminClient() {
+  console.log("supabase url", process.env.NEXT_PUBLIC_SUPABASE_URL);
+  console.log("supabase service role key", process.env.SUPABASE_SERVICE_ROLE_KEY);
   return createSuperAdminClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
