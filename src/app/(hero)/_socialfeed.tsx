@@ -7,7 +7,7 @@ import Image from "next/image";
 const SocialFeed = () => {
   return (
     <div className="relative min-h-screen bg-white py-20">
-      <div className="absolute bottom-0 z-10 h-20 w-full translate-y-full bg-[url(/overlay.png)] bg-repeat-x brightness-200"></div>
+      <div className="absolute bottom-0 z-10 h-20 w-full translate-y-full bg-[url(/overlay.png)] bg-repeat-x "></div>
 
       <div className="mx-auto max-w-screen-lg px-4">
         <div className="space-y-2 text-center">

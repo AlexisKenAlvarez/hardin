@@ -29,7 +29,7 @@ const Spill = () => {
 
   return (
     <div className="relative mt-4 bg-white py-10 md:py-20" ref={ref}>
-      <div className="absolute top-0 z-10 h-20 w-full -translate-y-full rotate-180 bg-[url(/overlay.png)] bg-repeat-x brightness-200"></div>
+      <div className="absolute top-0 z-10 h-20 w-full -translate-y-full rotate-180 bg-[url(/overlay.png)] bg-repeat-x "></div>
 
       <div className="absolute bottom-0 left-0 right-0 top-0 m-auto h-32 w-full bg-coffee-light opacity-50 blur-[13rem]" />
       <Image

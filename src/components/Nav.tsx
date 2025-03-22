@@ -164,7 +164,7 @@ const NavElements = ({
             key={index}
           >
             <li
-              className={cn("flex items-center  rounded-full py-2 text-white", {
+              className={cn("flex items-center px-1 sm:px-2 rounded-full py-2 text-white", {
                 "text-orange": isOpen,
               })}
             >

@@ -25,28 +25,34 @@ const Footer = () => {
   const CURRENT_YEAR = new Date().getFullYear();
 
   return (
-    <div className="relative z-10 min-h-[25rem] md:min-h-[30rem] w-full font-sans text-white">
-      <div className="fixed bottom-0 left-0 h-[25rem] md:h-[30rem] w-full  overflow-hidden bg-gradient-to-b from-[#B67E30] to-[#815921] p-10 pt-14">
-        <div className="max-w-screen-lg mx-auto md:space-y-0 space-y-4">
-          <div className="flex gap-3 lg:gap-10 justify-center items-center lg:justify-between lg:flex-row flex-col-reverse">
+    <div className="relative z-10 min-h-[25rem] bg-[#B67E30] w-full font-sans text-white md:min-h-[30rem]">
+      <div className="fixed bottom-0 left-0 h-[25rem] w-full overflow-hidden  bg-gradient-to-b from-[#B67E30] to-[#815921] p-10 pt-14 md:h-[30rem]">
+        <div className="mx-auto max-w-screen-lg space-y-4 md:space-y-0">
+          <div className="flex flex-col-reverse items-center justify-center gap-3 lg:flex-row lg:justify-between lg:gap-10">
             <div className="gap-6 lg:w-1/2">
-              <p className="text-center lg:text-left md:text-base text-sm">
+              <p className="text-center text-sm md:text-base lg:text-left">
                 A hidden gem where coffee and nature intertwine, creating the
                 perfect blend of peace and flavor.
               </p>
             </div>
-            <div className="gap-3 flex justify-end">
+            <div className="flex justify-end gap-3">
               {FOOTER_SOCIALS.map((items) => (
-                <a href={items.url} key={items.label} className="hover:bg-white hover:text-[#B67E30] transition-all duration-300 rounded-full border border-white h-8 w-8 grid place-content-center">
+                <a
+                  href={items.url}
+                  key={items.label}
+                  className="grid h-8 w-8 place-content-center rounded-full border border-white transition-all duration-300 hover:bg-white hover:text-[#B67E30]"
+                >
                   <items.icon />
                 </a>
               ))}
             </div>
           </div>
           <div className="">
-            <h1 className="font-primary lg:text-[17rem] clamped-text-footer text-center leading-none mt-6">HARDIN</h1>
+            <h1 className="clamped-text-footer mt-6 text-center font-primary leading-none lg:text-[17rem]">
+              HARDIN
+            </h1>
           </div>
-          <div className="flex md:text-base text-sm justify-between text-center lg:text-left gap-3 lg:gap-10 lg:flex-row flex-col">
+          <div className="flex flex-col justify-between gap-3 text-center text-sm md:text-base lg:flex-row lg:gap-10 lg:text-left">
             <h1 className="">
               <span className="font-bold">@ Hardin Cafe</span> | All Rights
               Reserved {CURRENT_YEAR}

@@ -101,8 +101,8 @@ const Rental = () => {
 
   return (
     <div className="relative flex  w-full items-center justify-center bg-[#FFF3E2] px-10 py-16 !pb-24 sm:py-20">
-      <div className="absolute top-0 z-10 h-20 w-full bg-[url(/overlay.png)] bg-repeat-x brightness-200"></div>
-      <div className="absolute bottom-0 z-10 h-20 w-full rotate-180 bg-[url(/overlay.png)] bg-repeat-x brightness-200"></div>
+      <div className="absolute top-0 z-10 h-20 w-full bg-[url(/overlay.png)] bg-repeat-x "></div>
+      <div className="absolute bottom-0 z-10 h-20 w-full rotate-180 bg-[url(/overlay.png)] bg-repeat-x "></div>
 
       <div className="absolute left-0 top-0 h-full w-full  bg-[url(/rental_noise.webp)] opacity-30"></div>
       <div className="items- z-10 mx-auto flex max-w-screen-lg flex-col items-center justify-center gap-20 md:gap-14 lg:flex-row">

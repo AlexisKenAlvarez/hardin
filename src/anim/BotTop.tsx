@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import type { FunctionComponent, JSX } from "react";
 import { useInView } from "react-intersection-observer";
+import { useMediaQuery } from "usehooks-ts";
 
 interface Children {
   children: JSX.Element;
@@ -17,8 +18,9 @@ const LeftRight: FunctionComponent<Children> = ({ children, delay = 0.2 }) => {
   };
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const [ref, inView] = useInView(options);
+  const matches = useMediaQuery("(min-width: 640px)");
 
-  return (
+  return matches ? (
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     <div className="" ref={ref}>
       <motion.div
@@ -29,6 +31,8 @@ const LeftRight: FunctionComponent<Children> = ({ children, delay = 0.2 }) => {
         {children}
       </motion.div>
     </div>
+  ) : (
+    <>{children}</>
   );
 };
 

@@ -25,8 +25,8 @@ const page = async () => {
       <div className="space-y-14">
         {data?.map((item) => (
           <div key={item.id} className="relative h-fit max-w-lg">
-            <div className="absolute bottom-0 z-10 h-20 w-full translate-y-full bg-[url(/overlay.png)] bg-repeat-x brightness-200"></div>
-            <div className="absolute top-0 z-10 h-20 w-full -translate-y-full rotate-180 bg-[url(/overlay.png)] bg-repeat-x brightness-200"></div>
+            <div className="absolute bottom-0 z-10 h-20 w-full translate-y-full bg-[url(/overlay.png)] bg-repeat-x "></div>
+            <div className="absolute top-0 z-10 h-20 w-full -translate-y-full rotate-180 bg-[url(/overlay.png)] bg-repeat-x "></div>
             <Image
               src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${item.image}`}
               alt={item.image}

@@ -13,12 +13,14 @@ import {
 } from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import Link from 'next/link';
+import Link from "next/link";
+import { useMediaQuery } from "usehooks-ts";
 
 const QUINT_IN = [1, -0.02, 0.58, 0.94];
 
 const Hero = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const matches = useMediaQuery("(min-width: 640px)");
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -71,12 +73,16 @@ const Hero = () => {
       mouseY.set(-(clientY / window.innerWidth - 0.5) * 10);
     };
 
-    window?.addEventListener("mousemove", handleMouseMove);
+    if (matches) {
+      window?.addEventListener("mousemove", handleMouseMove);
+    } else {
+      window?.removeEventListener("mousemove", handleMouseMove);
+    }
 
     return () => {
       window?.removeEventListener("mousemove", handleMouseMove);
     };
-  }, []);
+  }, [matches]);
 
   return (
     <motion.div
@@ -94,13 +100,18 @@ const Hero = () => {
           className="relative"
         >
           <div className="relative min-h-screen w-full">
-            <div className="fixed left-0 top-0 h-full w-full bg-coffee-light">
+            <div className="from-coffee-light to-coffee-dark fixed left-0 top-0 h-full w-full  bg-gradient-to-b sm:bg-coffee-light">
               <Nav />
-              <div className="absolute left-0 top-0 h-screen w-44 bg-coffee-dark blur-[10rem]" />
-              <div className="absolute right-0 top-0 h-screen w-44 bg-coffee-dark blur-[10rem]" />
-              <div className="absolute top-0  h-44 w-full bg-coffee-dark blur-[10rem]" />
-              <div className="absolute bottom-0  h-44 w-full bg-coffee-dark blur-[10rem]" />
-              <div className="absolute left-0 top-0 h-full w-full bg-[url(/noise.png)] bg-repeat" />
+
+              {matches && (
+                <>
+                  <div className="absolute left-0 top-0 h-screen w-44 bg-coffee-dark blur-[10rem]" />
+                  <div className="absolute right-0 top-0 h-screen w-44 bg-coffee-dark blur-[10rem]" />
+                  <div className="absolute top-0  h-44 w-full bg-coffee-dark blur-[10rem]" />
+                  <div className="absolute bottom-0  h-44 w-full bg-coffee-dark blur-[10rem]" />
+                  <div className="absolute left-0 top-0 h-full w-full bg-[url(/noise.png)] bg-repeat" />
+                </>
+              )}
               <div className="absolute bottom-3 left-0 right-0 mx-auto flex w-fit flex-col items-center justify-center">
                 <h1 className="text-white">Learn More</h1>
                 <motion.div
@@ -127,7 +138,7 @@ const Hero = () => {
 
               <motion.div
                 animate={
-                  imageLoaded
+                  imageLoaded && matches
                     ? {
                         opacity: 1,
                         scale: 1.1,
@@ -141,9 +152,13 @@ const Hero = () => {
                 transition={ANIM_TRANSITION}
                 id="image-animate-div"
                 className="h-full"
-                style={{
-                  translateY,
-                }}
+                style={
+                  matches
+                    ? {
+                        translateY,
+                      }
+                    : {}
+                }
               >
                 <Image
                   alt="background_image"
@@ -171,11 +186,15 @@ const Hero = () => {
                 transition={ANIM_TRANSITION}
                 id="image-animate-div"
                 className="absolute left-0 top-0 flex h-full w-full items-center justify-center"
-                style={{
-                  x: springX,
-                  y: springY,
-                  translateY: coffee_translateY,
-                }}
+                style={
+                  !matches
+                    ? {}
+                    : {
+                        x: springX,
+                        y: springY,
+                        translateY: coffee_translateY,
+                      }
+                }
               >
                 <Image
                   width={1500}
@@ -188,9 +207,13 @@ const Hero = () => {
               </motion.div>
 
               <motion.div
-                style={{
-                  ...text_animation,
-                }}
+                style={
+                  matches
+                    ? {
+                        ...text_animation,
+                      }
+                    : {}
+                }
                 className="absolute bottom-0 left-0 right-0 top-0 z-10 m-auto h-fit w-fit"
               >
                 <motion.h1
@@ -222,7 +245,7 @@ const Hero = () => {
                   HARDIN CAFE
                 </motion.h1>
                 {/* Generate a quote for coffee shop hero section below */}
-                <p className="text-center text-white">
+                <p className="px-4 text-center text-white sm:px-0">
                   Good coffee is a pleasure. Good friends are a treasure.
                 </p>
                 <div className="mt-4 flex w-full flex-col items-center justify-center space-y-2">
