@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getHoursImage } from "@/apis/admin";
 import BrewingSince from "@/app/(hero)/_brewing_since";
 import Hero from "@/app/(hero)/_hero";
@@ -10,10 +12,8 @@ import Spill from "./_spill";
 import { tryCatch } from "@/utils";
 
 const page = async () => {
-  const { data: formattedUrl, error } = await tryCatch(getHoursImage());
-  if (error) {
-    console.log(error);
-  }
+  const formattedUrl = await getHoursImage()
+
   return (
     <ClientOnly>
       <div className="relative">
