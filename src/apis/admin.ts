@@ -136,7 +136,11 @@ export const deleteMenu = async (data: DeleteMenuItem) => {
 };
 
 export const getHoursImage = async () => {
-  const { data } = await supabase.from("open_hours").select("*").single();
+  const { data, error } = await supabase.from("open_hours").select("*").single();
+  if (error) {
+    console.log(error);
+    throw new Error("Failed to get hours image");
+  }
   const formattedUrl = `${process.env.NEXT_PUBLIC_STORAGE_URL}${data?.image}`;
   return formattedUrl;
 };
