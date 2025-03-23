@@ -38,7 +38,7 @@ const Hours2 = ({ formattedUrl }: { formattedUrl: string }) => {
           <BotTop>
             <div className="sub-header mx-auto max-w-xl">
               <p>
-                We are open everyday except Monday. Come and enjoy our coffee.
+                We are open everyday! Come by and have a cup of coffee with us.
                 We are located at{" "}
                 <Link
                   href="https://maps.app.goo.gl/ETzQCiE9RUgGT932A"

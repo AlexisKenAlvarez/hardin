@@ -2,6 +2,12 @@ import { LoaderCircle } from "lucide-react";
 import Image from "next/image";
 
 const loading = () => {
+  return <LoadingPage />;
+};
+
+export default loading;
+
+export const LoadingPage = () => {
   return (
     <div className="grid h-screen w-full place-content-center bg-white">
       <div className="flex h-fit w-fit flex-col items-center justify-center gap-2">
@@ -17,5 +23,3 @@ const loading = () => {
     </div>
   );
 };
-
-export default loading;

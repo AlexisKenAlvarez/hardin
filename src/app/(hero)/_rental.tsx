@@ -19,6 +19,7 @@ import Package7 from "../../../public/rental/7.jpg";
 import Package8 from "../../../public/rental/8.jpg";
 import { useMediaQuery } from "usehooks-ts";
 import BotTop from "@/anim/BotTop";
+import Link from "next/link";
 
 export const rental_data = [
   {
@@ -127,8 +128,8 @@ const Rental = () => {
           </BotTop>
           <div className="relative h-fit w-full">
             <BotTop>
-              <CustomButton className="mx-auto mt-10 lg:mx-0 lg:w-full ">
-                Book now!
+              <CustomButton className="mx-auto mt-10 lg:mx-0 lg:w-full " asChild>
+                <Link href={'https://www.facebook.com/profile.php?id=61553926187351'} target="_blank">Message Us</Link>
               </CustomButton>
             </BotTop>
           </div>

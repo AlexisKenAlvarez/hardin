@@ -53,7 +53,7 @@ const SocialFeed = () => {
         </BotTop>
 
         <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {[...Array.from({ length: 6 })].map((_, index) => (
+          {[...Array.from({ length: 9 })].map((_, index) => (
             <li key={`feed-${index}`}>
               <Image
                 src={`/social_feed/${index + 1}.webp`}

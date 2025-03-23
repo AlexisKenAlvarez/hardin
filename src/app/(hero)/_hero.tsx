@@ -2,7 +2,6 @@
 
 import Nav from "@/components/Nav";
 import CustomButton from "@/components/ui/CustomButton";
-import { ArrowRight, MapPin } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -12,8 +11,8 @@ import {
   useTransform,
 } from "motion/react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 
 const QUINT_IN = [1, -0.02, 0.58, 0.94];

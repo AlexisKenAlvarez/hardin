@@ -10,7 +10,7 @@ export const metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_BASE_URL ?? "https://hardincafe.com",
   ),
-  title: {
+  title: {  
     default: "Hardin Cafe | Premium Coffee Shop in Taal, Batangas",
     template: "%s | Hardin Cafe",
   },

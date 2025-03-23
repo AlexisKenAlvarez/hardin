@@ -25,7 +25,7 @@ const Footer = () => {
   const CURRENT_YEAR = new Date().getFullYear();
 
   return (
-    <div className="relative z-10 min-h-[25rem] bg-[#B67E30] w-full font-sans text-white md:min-h-[30rem]">
+    <div className="relative z-10 min-h-[25rem] w-full bg-[#B67E30] font-sans text-white md:min-h-[30rem]">
       <div className="fixed bottom-0 left-0 h-[25rem] w-full overflow-hidden  bg-gradient-to-b from-[#B67E30] to-[#815921] p-10 pt-14 md:h-[30rem]">
         <div className="mx-auto max-w-screen-lg space-y-4 md:space-y-0">
           <div className="flex flex-col-reverse items-center justify-center gap-3 lg:flex-row lg:justify-between lg:gap-10">
@@ -58,9 +58,7 @@ const Footer = () => {
               Reserved {CURRENT_YEAR}
             </h1>
 
-            <Link href="https://www.akialvarez.com" target="_blank">
-              <p>www.akialvarez.com</p>
-            </Link>
+            <p>hardincafe2024@gmail.com</p>
           </div>
         </div>
       </div>
