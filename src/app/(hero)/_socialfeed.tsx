@@ -1,6 +1,7 @@
 "use client";
 
 import BotTop from "@/anim/BotTop";
+import Container from "@/components/Container";
 import { SOCIALS } from "@/components/Nav";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -9,10 +10,10 @@ const SocialFeed = () => {
     <div className="relative min-h-screen bg-white py-20" id="gallery">
       <div className="absolute bottom-0 z-10 h-20 w-full translate-y-full bg-[url(/overlay.png)] bg-repeat-x "></div>
 
-      <div className="mx-auto max-w-screen-lg px-4">
+      <Container>
         <div className="space-y-2 text-center">
           <BotTop>
-            <p className="font-sans text-lg font-bold text-orange">
+            <p className="font-secondary text-lg font-bold text-orange">
               STAY UPDATED
             </p>
           </BotTop>
@@ -27,9 +28,7 @@ const SocialFeed = () => {
         </div>
 
         <BotTop>
-          <ul
-            className={cn("flex w-full items-center justify-center gap-4")}
-          >
+          <ul className={cn("flex w-full items-center justify-center gap-4")}>
             {SOCIALS.map((item, index) => (
               <a
                 href={`${item.url}`}
@@ -49,10 +48,10 @@ const SocialFeed = () => {
           </ul>
         </BotTop>
         <BotTop>
-          <p className="text-center font-sans font-medium">@hardincafe</p>
+          <p className="text-center font-secondary font-medium">@hardincafe</p>
         </BotTop>
 
-        <ul className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+        <ul className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
           {[...Array.from({ length: 9 })].map((_, index) => (
             <li key={`feed-${index}`}>
               <Image
@@ -65,7 +64,7 @@ const SocialFeed = () => {
             </li>
           ))}
         </ul>
-      </div>
+      </Container>
     </div>
   );
 };

@@ -169,7 +169,7 @@ const About = () => {
 
               <div className="mx-auto ml-auto mr-9 flex w-fit flex-col items-center md:mx-0 md:items-start">
                 <div className="relative h-fit w-fit overflow-hidden">
-                  <p className="about-header-1 text-right font-sans text-lg text-black-secondary md:text-xl">
+                  <p className="about-header-1 text-right font-secondary text-lg text-black-secondary md:text-xl">
                     Awaken your senses, one sip at a time
                   </p>
                 </div>
@@ -212,7 +212,7 @@ const About = () => {
               </div>
 
               <div className="ml-auto mr-1 h-fit w-fit overflow-hidden">
-                <p className="about-subheader-2 font-sans text-lg text-black-secondary sm:text-right md:text-xl">
+                <p className="about-subheader-2 font-secondary text-lg text-black-secondary sm:text-right md:text-xl">
                   Let the great outdoors do all the talking
                 </p>
               </div>

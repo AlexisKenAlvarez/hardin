@@ -79,8 +79,8 @@ const Menu = ({ data }: { data: MenuData[] | null }) => {
                   className="w-20"
                 />
               </Link>
-              <div className=" max-w-[28rem]">
-                <Carousel setApi={setApi} className="">
+              <div className=" max-w-[28rem] border-8 border-white">
+                <Carousel setApi={setApi} className="select-none">
                   <CarouselContent className="">
                     {data?.map((item) => (
                       <CarouselItem key={item.id}>
@@ -100,9 +100,11 @@ const Menu = ({ data }: { data: MenuData[] | null }) => {
               </div>
             </motion.div>
           ) : (
-            <motion.div key={"menu-loader"} 
-            exit={{ opacity: 0 }}
-            className="fixed left-0 top-0 h-screen w-full">
+            <motion.div
+              key={"menu-loader"}
+              exit={{ opacity: 0 }}
+              className="fixed left-0 top-0 h-screen w-full"
+            >
               <LoadingPage />
             </motion.div>
           )}

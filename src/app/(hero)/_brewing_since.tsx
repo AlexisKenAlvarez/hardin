@@ -1,9 +1,11 @@
 "use client";
 import { motion, useScroll, useTransform } from "motion/react";
+import { useTheme } from "next-themes";
 import { useRef } from "react";
 
 const BrewingSince = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -28,13 +30,17 @@ const BrewingSince = () => {
       >
         <video
           preload="none"
+          key={theme}
           autoPlay
           loop
           muted
           playsInline
           className="h-screen w-full object-cover opacity-90 brightness-75"
         >
-          <source src="/circle.mp4" type="video/mp4" />
+          <source
+            src={theme === "light" ? "/circle.mp4" : "/circle_green.mp4"}
+            type="video/mp4"
+          />
           <track
             src="/path/to/captions.vtt"
             kind="subtitles"

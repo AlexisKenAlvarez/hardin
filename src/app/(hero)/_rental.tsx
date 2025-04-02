@@ -20,6 +20,7 @@ import Package8 from "../../../public/rental/8.jpg";
 import { useMediaQuery } from "usehooks-ts";
 import BotTop from "@/anim/BotTop";
 import Link from "next/link";
+import Container from "@/components/Container";
 
 export const rental_data = [
   {
@@ -106,11 +107,12 @@ const Rental = () => {
       <div className="absolute bottom-0 z-10 h-20 w-full rotate-180 bg-[url(/overlay.png)] bg-repeat-x "></div>
 
       <div className="absolute left-0 top-0 h-full w-full  bg-[url(/rental_noise.webp)] opacity-30"></div>
-      <div className="items- z-10 mx-auto flex max-w-screen-lg flex-col items-center justify-center gap-20 md:gap-14 lg:flex-row">
-        <div className="w-full px-10 text-center lg:text-left">
+
+      <Container className="z-10 flex flex-col items-center justify-center gap-10 lg:flex-row  lg:gap-20">
+        <div className="w-full text-center lg:text-left">
           <div className="space-y-2">
             <BotTop>
-              <h1 className="font-sans text-lg font-bold uppercase text-orange">
+              <h1 className="font-secondary text-lg font-bold uppercase text-orange">
                 Coffee Cart
               </h1>
             </BotTop>
@@ -126,73 +128,31 @@ const Rental = () => {
               refreshing drinks to keep everyone energized.
             </p>
           </BotTop>
-          <div className="relative h-fit w-full">
-            <BotTop>
-              <CustomButton className="mx-auto mt-10 lg:mx-0 lg:w-full " asChild>
-                <Link href={'https://www.facebook.com/profile.php?id=61553926187351'} target="_blank">Message Us</Link>
-              </CustomButton>
-            </BotTop>
-          </div>
+          <BotTop>
+            <CustomButton className="mx-auto mt-10 w-fit lg:mx-0" asChild>
+              <Link
+                href={"https://www.facebook.com/profile.php?id=61553926187351"}
+                target="_blank"
+                className="block"
+              >
+                View All Package
+              </Link>
+            </CustomButton>
+          </BotTop>
         </div>
-        <div className="flex w-[22rem] flex-col items-center justify-center sm:w-[34rem] md:mx-0 md:w-full ">
-          <ResponsiveContainer
-            carouselRef={ref}
-            render={(parentWidth, carouselRef) => {
-              let maxVisibleSlide = 5;
-              if (matches) {
-                maxVisibleSlide = 1;
-              }
-              return (
-                <StackedCarousel
-                  ref={carouselRef}
-                  slideComponent={Card}
-                  slideWidth={350}
-                  carouselWidth={parentWidth}
-                  data={rental_data}
-                  maxVisibleSlide={maxVisibleSlide}
-                  useGrabCursor
-                  onActiveSlideChange={onCenterSlideDataIndexChange}
-                />
-              );
-            }}
+        <div className="flex  flex-col items-center justify-center md:mx-0 md:w-full ">
+          <Image
+            alt="Rental"
+            width={1200}
+            height={1200}
+            src="/rental/cart.jpg"
+            className="w-[80vw]  max-w-[30rem] sm:w-auto"
           />
-          <ul className="mt-4 flex items-center gap-1">
-            {[...Array.from({ length: 8 })].map((_, index) => (
-              <li
-                className={cn(
-                  "h-1 w-2 shrink-0 rounded-full bg-black/10 transition-all duration-300 ease-in-out",
-                  {
-                    "h-1 w-6 bg-black/40": index === centerSlideDataIndex,
-                  },
-                )}
-                key={index}
-              ></li>
-            ))}
-          </ul>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };
 ``;
 
 export default Rental;
-
-const Card = React.memo(function (props: CardProps) {
-  const { data, dataIndex } = props;
-  const { cover } = data[dataIndex]!;
-  return (
-    <Image
-      style={{
-        objectFit: "cover",
-        borderRadius: 0,
-      }}
-      draggable={false}
-      src={cover}
-      className="w-[25rem] lg:h-[20rem]"
-      alt=""
-    />
-  );
-});
-
-Card.displayName = "Card";

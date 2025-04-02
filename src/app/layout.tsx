@@ -1,16 +1,22 @@
 import "@/styles/globals.css";
-import { Albert_Sans, Montserrat, STIX_Two_Text } from "next/font/google";
+import {
+  Albert_Sans,
+  Montserrat,
+  Passion_One,
+  STIX_Two_Text,
+} from "next/font/google";
 import localFont from "next/font/local";
 
 import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { SessionProvider } from "@/components/providers/SupabaseSessionProvider";
+import Theme from "@/components/ThemeProvider";
 
 export const metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_BASE_URL ?? "https://hardincafe.com",
   ),
-  title: {  
+  title: {
     default: "Hardin Cafe | Premium Coffee Shop in Taal, Batangas",
     template: "%s | Hardin Cafe",
   },
@@ -83,19 +89,20 @@ const fontSpring = localFont({
   variable: "--fontSpring",
 });
 
-const Albert = Albert_Sans({
-  subsets: ["latin"],
-  variable: "--font-title",
-});
-
 const Mont = Montserrat({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-secondary",
 });
 
 const Stix = STIX_Two_Text({
   subsets: ["latin"],
   variable: "--font-serif",
+});
+
+const PassionOne = Passion_One({
+  subsets: ["latin"],
+  variable: "--font-button",
+  weight: ["400", "700", "900"],
 });
 
 export default function RootLayout({
@@ -104,14 +111,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${Albert.variable} ${Mont.variable} ${Stix.variable} ${fontSpring.variable}`}
+        className={` ${Mont.variable} ${Stix.variable} ${fontSpring.variable} ${PassionOne.variable}`}
       >
         <SessionProvider>
           <ReactQueryProvider>
             <Toaster closeButton position="top-center" />
-            <div className="font-sans">{children}</div>
+            <Theme>
+              <div className="font-secondary dark:text-black">{children}</div>
+            </Theme>
           </ReactQueryProvider>
         </SessionProvider>
       </body>

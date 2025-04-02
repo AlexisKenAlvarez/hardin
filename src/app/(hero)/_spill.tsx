@@ -1,11 +1,14 @@
 "use client";
 
 import BotTop from "@/anim/BotTop";
+import Container from "@/components/Container";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useRef } from "react";
 
 const Spill = () => {
   const ref = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   const traits = [
     {
@@ -45,9 +48,9 @@ const Spill = () => {
         height={1000}
         className="absolute bottom-0 right-0 top-10 my-auto w-80 opacity-30"
       />
-      <div className="mx-auto max-w-screen-lg">
+      <Container>
         <div className="space-y-2 text-center">
-          <p className="font-sans text-lg font-bold text-orange">
+          <p className="font-secondary text-lg font-bold text-orange">
             JUST FOR YOU
           </p>
           <h1 className="header mx-auto">SPECIAL COFFEE</h1>
@@ -57,7 +60,7 @@ const Spill = () => {
           </p>
         </div>
         <div className="mt-10 flex flex-row items-start justify-center px-10">
-          <div className="mt-14 hidden space-y-20 md:block">
+          <div className="mt-14 hidden space-y-32 md:block">
             {traits.slice(0, 2).map((trait, index) => (
               <div className="space-y-2" key={index}>
                 <BotTop>
@@ -71,14 +74,25 @@ const Spill = () => {
               </div>
             ))}
           </div>
-          <Image
-            alt="spill"
-            src="/spill/coffee_spill.png"
-            className="w-[30rem]"
-            width={1000}
-            height={1000}
-          />
-          <div className="mt-14 hidden space-y-20 text-right md:block">
+          {theme === "light" ? (
+            <Image
+              alt="spill"
+              src="/spill/coffee_spill.webp"
+              className="w-[30rem]"
+              width={1000}
+              height={1000}
+            />
+          ) : (
+            <Image
+              alt="spill"
+              src="/spill/coffee_spill_green.webp"
+              className="w-[30rem]"
+              width={1000}
+              height={1000}
+            />
+          )}
+
+          <div className="mt-14 hidden space-y-32 text-right md:block">
             {traits.slice(2, 4).map((trait, index) => (
               <div className="space-y-2" key={index}>
                 <BotTop>
@@ -93,7 +107,7 @@ const Spill = () => {
             ))}
           </div>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

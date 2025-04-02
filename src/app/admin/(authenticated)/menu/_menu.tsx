@@ -124,7 +124,7 @@ const MenuView = () => {
   }, [isMenuFetched, menuData]);
 
   return (
-    <div className="flex flex-1 flex-col items-start gap-4 font-sans">
+    <div className="flex flex-1 flex-col items-start gap-4 font-secondary">
       <div className="flex w-full gap-2">
         <AnimatePresence mode="wait">
           {isChangingOrder ? (

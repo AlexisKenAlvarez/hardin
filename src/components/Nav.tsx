@@ -44,7 +44,7 @@ const Nav = () => {
     <>
       <nav
         className={cn(
-          "relative left-0 top-0 z-50 flex w-full items-center justify-between p-5 font-sans",
+          "fixed left-0 top-0 z-50 flex w-full items-center justify-between p-5 font-secondary",
         )}
       >
         <NavElements setIsOpen={setIsOpen} isOpen={isOpen} />
@@ -59,7 +59,7 @@ const Nav = () => {
             transition={{ duration: 0.2 }}
             id="nav_mobile"
             className={cn(
-              "fixed left-0 top-0 z-50 flex h-screen w-full flex-row items-start bg-white/80 p-5 font-sans backdrop-blur-sm transition-all duration-500 ease-in-out lg:py-4",
+              "fixed left-0 top-0 z-50 flex h-screen w-full flex-row items-start bg-white/80 p-5 font-secondary backdrop-blur-sm transition-all duration-500 ease-in-out lg:py-4",
             )}
           >
             <div className="flex h-full w-full flex-row items-start">
@@ -110,11 +110,7 @@ const NavElements = ({
           className="rounded-md border border-orange/10 p-2"
           onClick={() => setIsOpen((current) => !current)}
         >
-          {!isOpen ? (
-            <Menu className="text-white" />
-          ) : (
-            <X className="text-orange" />
-          )}
+          {!isOpen ? <Menu className="" /> : <X className="text-orange" />}
         </button>
       </div>
       <div className="flex w-full flex-row items-center justify-center lg:justify-start">
@@ -123,11 +119,11 @@ const NavElements = ({
           width={500}
           height={500}
           alt="nav_logo"
-          className="hidden w-14 lg:block"
+          className="hidden w-14 invert lg:block"
         />
         <h1
           className={cn(
-            "flex flex-col text-center font-secondary text-xl font-normal uppercase leading-none text-white lg:text-left",
+            "font-hardin flex flex-col text-center text-xl font-normal uppercase leading-none  lg:text-left",
             {
               "text-orange": isOpen,
             },
@@ -138,14 +134,17 @@ const NavElements = ({
         </h1>
       </div>
       <ul
-        className={cn("hidden w-full items-center justify-center gap-4 text-white lg:flex", {
-          "text-orange": isOpen,
-        })}
+        className={cn(
+          "hidden w-full items-center justify-center gap-4  lg:flex",
+          {
+            "text-orange": isOpen,
+          },
+        )}
       >
         {NAV_ITEMS.map((item, index) => (
           <li
             key={index}
-            className=""
+            className="uppercase font-medium"
             onClick={() => {
               const html = document.documentElement; // <html> element
               html.classList.add("page-active");
@@ -162,7 +161,7 @@ const NavElements = ({
         ))}
       </ul>
 
-      <ul className={cn("flex w-full items-center justify-end lg:gap-4")}>
+      <ul className={cn("flex w-full items-center justify-end gap-2 lg:gap-4")}>
         {SOCIALS.map((item, index) => (
           <a
             href={`${item.url}`}
@@ -172,13 +171,16 @@ const NavElements = ({
           >
             <li
               className={cn(
-                "flex items-center rounded-full px-1 py-2 text-white sm:px-2",
+                "flex items-center rounded-full border border-black bg-orange dark:bg-green-primary py-2 px-2",
                 {
                   "text-orange": isOpen,
                 },
               )}
             >
-              <item.icon className="text-xl lg:text-base" size={24} />
+              <item.icon
+                className="text-xl text-white lg:text-base "
+                size={24}
+              />
             </li>
           </a>
         ))}

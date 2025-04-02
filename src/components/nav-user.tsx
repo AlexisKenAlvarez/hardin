@@ -36,7 +36,7 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground font-sans"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground font-secondary"
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
@@ -68,7 +68,7 @@ export function NavUser() {
               }}
             >
               <LogOut />
-              <p className="font-sans">Log out</p>
+              <p className="font-secondary">Log out</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

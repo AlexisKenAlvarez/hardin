@@ -18,7 +18,7 @@ export const LoadingPage = () => {
           height={400}
           className="w-24"
         />
-        <LoaderCircle className="animate-spin text-orange" />
+        <LoaderCircle className="animate-spin text-[#EE792A]" />
       </div>
     </div>
   );

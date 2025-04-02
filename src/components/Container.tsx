@@ -9,7 +9,7 @@ const Container = ({
   className?: string;
 }) => {
   return (
-    <section className={cn("relative w-full px-5", className)}>
+    <section className={cn("relative mx-auto w-full px-4 2xl:max-w-screen-xl max-w-screen-lg", className)}>
       {children}
     </section>
   );

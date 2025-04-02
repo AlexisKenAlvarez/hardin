@@ -5,12 +5,10 @@ import { Slot } from "@radix-ui/react-slot";
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   children?: React.ReactNode;
-  variant?: "default" | "outline";
   asChild?: boolean;
 }
 
 const CustomButton = forwardRef<HTMLButtonElement, ButtonProps>(({
-  variant = "default",
   className,
   children,
   asChild = false,
@@ -22,11 +20,8 @@ const CustomButton = forwardRef<HTMLButtonElement, ButtonProps>(({
     <Comp
       ref={ref}
       className={cn(
-        "flex items-center justify-center bg-orange hover:bg-orange-hover px-24 py-4 font-sans text-sm font-medium text-white transition-colors duration-300 ease-in-out",
+        "px-16 py-3 border dark:border-green-shadow  dark:hover:bg-green-primary/80 dark:bg-green-primary border-button-shadow shadow-button dark:shadow-green-button hover:bg-orange/80 transition-colors ease-in-out duration-300 bg-orange font-button text-xl text-white",
         className,
-        {
-          "bg-transparent border-2 border-white hover:bg-white hover:text-orange": variant === "outline" 
-        }
       )}
       {...props}
     >

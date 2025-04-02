@@ -20,9 +20,20 @@ module.exports = {
     },
     extend: {
       colors: {
+        green: {
+          bg: "#F9EFD8",
+          shadow: "#9B9130",
+          primary: "#C3B94F"
+        },
         coffee: {
           light: "hsl(33, 58%, 69%)",
           dark: "hsl(27, 40%, 44%)",
+        },
+        hero: {
+          bg: "#F9ECDC",
+        },
+        button: {
+          shadow: "#76422C",
         },
         "bg-secondary": "#FFF3E2",
         "black-primary": "#2E2E2E",
@@ -76,10 +87,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
-        title: ["var(--font-title)", ...fontFamily.sans],
         primary: "var(--fontSpring)",
-        secondary: "var(--font-serif)",
+        secondary: ["var(--font-secondary)", ...fontFamily.sans],
+        hardin: ["var(--font-serif)", ...fontFamily.sans],
+        button: "var(--font-button)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -88,6 +99,8 @@ module.exports = {
       },
       boxShadow: {
         whiteBorder: "0px 0px 0px 2px rgba(237,237,237,0.5) inset",
+        button: "6px 6px 0px 0px #76422C",
+        "green-button": "6px 6px 0px 0px #9B9130"
       },
       keyframes: {
         "accordion-down": {

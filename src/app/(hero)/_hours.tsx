@@ -1,12 +1,16 @@
 "use client";
 
 import BotTop from "@/anim/BotTop";
+import Container from "@/components/Container";
 import Image from "next/image";
 import Link from "next/link";
 
 const Hours2 = ({ formattedUrl }: { formattedUrl: string }) => {
   return (
-    <div className="relative flex w-full items-center overflow-hidden bg-white px-10 py-20" id="hours">
+    <div
+      className="relative flex w-full items-center overflow-hidden bg-white py-20"
+      id="hours"
+    >
       <Image
         alt="Sketch"
         width={500}
@@ -14,19 +18,19 @@ const Hours2 = ({ formattedUrl }: { formattedUrl: string }) => {
         src="/sketch.png"
         className="absolute right-0 hidden h-full translate-x-1/4 lg:block "
       />
-      <div className="mx-auto flex w-full max-w-screen-lg flex-col-reverse items-center justify-center gap-10 lg:flex-row">
+      <Container className="mx-auto flex w-full flex-col-reverse items-center justify-center gap-10 lg:flex-row lg:gap-20">
         <div className=" w-full">
           <Image
             alt="Hours"
-            width="500"
-            height="500"
+            width={1200}
+            height={1200}
             src={formattedUrl}
-            className="mx-auto block w-96"
+            className="mx-auto sm:mx-0 max-w-[30rem] sm:w-auto w-[80vw]"
           />
         </div>
         <div className="w-full space-y-2 text-center lg:text-left">
           <BotTop>
-            <p className="font-sans text-lg font-bold text-orange">
+            <p className="font-secondary text-lg font-bold text-orange">
               OPEN HOURS
             </p>
           </BotTop>
@@ -52,7 +56,7 @@ const Hours2 = ({ formattedUrl }: { formattedUrl: string }) => {
             </div>
           </BotTop>
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

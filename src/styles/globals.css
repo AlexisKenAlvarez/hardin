@@ -154,7 +154,7 @@
   }
 
   .sub-header {
-    @apply text-sm md:text-base font-sans text-black-secondary leading-relaxed;
+    @apply text-sm md:text-base font-secondary text-black-secondary leading-relaxed;
   }
 
   .icon {
@@ -179,11 +179,20 @@
 
   .no-scroll {
     overflow-y: hidden;
-    
+
   }
 
   .clamped-text-footer {
     font-size: clamp(4rem, 20vw, 17rem);
   }
 
+  .button-shadow {
+    box-shadow: 6px 6px 0px 0px #76422C;
+    -webkit-box-shadow: 6px 6px 0px 0px #76422C;
+    -moz-box-shadow: 6px 6px 0px 0px #76422C;
+  }
+
+  .text-orange {
+    @apply dark:text-green-shadow
+  }
 }
