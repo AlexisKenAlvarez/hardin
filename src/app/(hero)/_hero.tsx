@@ -9,6 +9,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -46,24 +47,26 @@ const Hero = () => {
     <div className="min-h-screen w-full overflow-hidden" ref={containerRef}>
       <div className="hero-container fixed flex min-h-screen w-full items-center  justify-center bg-hero-bg dark:bg-green-bg">
         <Nav />
-        <Container className="z-10 md:text-left text-center flex justify-center md:justify-start">
+        <Container className="z-10 flex justify-center text-center md:justify-start md:text-left">
           <div className="max-w-xl space-y-2">
             <h1 className="font-bold uppercase text-orange">Hardin Cafe</h1>
-            <h1 className="font-primary text-3xl sm:text-4xl md:text-5xl leading-tight xl:text-6xl">
+            <h1 className="font-primary text-3xl leading-tight sm:text-4xl md:text-5xl xl:text-6xl">
               Explore a drink, made just for you.
             </h1>
-            <p className="max-w-md opacity-70 md:mx-0 mx-auto sm:text-base text-sm">
+            <p className="mx-auto max-w-md text-sm opacity-70 sm:text-base md:mx-0">
               Whether you prefer your espresso smooth or bold, discover your
               perfect drink today!
             </p>
-            <CustomButton className="!mt-10">View Menu</CustomButton>
-            <div className="!mt-24 flex gap-3 w-full flex-row md:justify-start justify-center">
+            <CustomButton className="!mt-10"  asChild>
+              <Link href="/menu" className="block w-fit">View Menu</Link>
+            </CustomButton>
+            <div className="!mt-24 flex w-full flex-row justify-center gap-3 md:justify-start">
               <button
-                className="h-14 w-14 rounded-full bg-button-shadow border border-black hover:scale-[1.1] transition-all ease-in-out duration-300"
+                className="h-14 w-14 rounded-full border border-black bg-button-shadow transition-all duration-300 ease-in-out hover:scale-[1.1]"
                 onClick={() => handleTheme("light")}
               />
               <button
-                className="h-14 w-14 rounded-full bg-green-primary border border-black hover:scale-[1.1] transition-all ease-in-out duration-300"
+                className="h-14 w-14 rounded-full border border-black bg-green-primary transition-all duration-300 ease-in-out hover:scale-[1.1]"
                 onClick={() => handleTheme("dark")}
               />
             </div>
@@ -97,7 +100,7 @@ const Hero = () => {
                 alt="Coffee_hero"
                 width={1300}
                 height={1300}
-                className=" w-[20rem]  md:w-[24rem] xl:w-[34rem] mx-auto"
+                className=" mx-auto  w-[20rem] md:w-[24rem] xl:w-[34rem]"
               />
             </motion.div>
           ) : (
@@ -113,7 +116,7 @@ const Hero = () => {
                 alt="Coffee_hero"
                 width={1300}
                 height={1300}
-                className=" w-[20rem]  md:w-[24rem] xl:w-[34rem] mx-auto"
+                className=" mx-auto  w-[20rem] md:w-[24rem] xl:w-[34rem]"
               />
             </motion.div>
           )}

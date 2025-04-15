@@ -29,7 +29,9 @@ export interface MenuData {
   uploaded_by: string;
 }
 
-const Menu = ({ data }: { data: MenuData[] | null }) => {
+const LENGTH = 8;
+
+const Cart = () => {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -62,27 +64,24 @@ const Menu = ({ data }: { data: MenuData[] | null }) => {
                 align: "center",
               }}
             >
-              <CarouselContent className="flex pt-24">
-                {data?.map((item, i) => {
+              <CarouselContent className="flex pt-24" containerStyle="h-[64vh]">
+                {[...Array.from({ length: LENGTH })]?.map((_, i) => {
                   const bigger = i + 1 > current;
                   let rotateY = current === i + 1 ? 0 : bigger ? -30 : 30;
                   const scale = current === i + 1 ? 1.2 : 0.9;
                   const opacity = current === i + 1 ? 1 : 0.7;
 
-                  if ([1, 2].includes(current) && i === data.length - 1) {
+                  if ([1, 2].includes(current) && i === LENGTH - 1) {
                     rotateY = 30;
                   }
 
-                  if (
-                    [data.length, data.length - 1].includes(current) &&
-                    i === 0
-                  ) {
+                  if ([LENGTH, LENGTH - 1].includes(current) && i === 0) {
                     rotateY = -30;
                   }
 
                   return (
                     <CarouselItem
-                      key={item.id}
+                      key={i}
                       className="shrink-0 !overflow-visible sm:basis-1/3"
                     >
                       {/* Apply perspective & rotation on the same element */}
@@ -96,8 +95,8 @@ const Menu = ({ data }: { data: MenuData[] | null }) => {
                         }}
                       >
                         <Image
-                          alt={item.id.toString()}
-                          src={`${process.env.NEXT_PUBLIC_STORAGE_URL}${item.image}`}
+                          alt={`${i}_cart`}
+                          src={`/rental/${i + 1}.jpg`}
                           width={1000}
                           height={1000}
                           className="w-full"
@@ -112,11 +111,11 @@ const Menu = ({ data }: { data: MenuData[] | null }) => {
             </Carousel>
           </div>
         </div>
-        <div className="h-[50vh] w-full absolute bg-hero-bg bottom-0"></div>
+        <div className="absolute bottom-0 h-[50vh] w-full bg-hero-bg"></div>
       </div>
       <Footer />
     </>
   );
 };
 
-export default Menu;
+export default Cart;

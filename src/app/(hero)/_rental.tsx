@@ -131,8 +131,7 @@ const Rental = () => {
           <BotTop>
             <CustomButton className="mx-auto mt-10 w-fit lg:mx-0" asChild>
               <Link
-                href={"https://www.facebook.com/profile.php?id=61553926187351"}
-                target="_blank"
+                href={"/cart"}
                 className="block"
               >
                 View All Package

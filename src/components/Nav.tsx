@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { type Dispatch, type SetStateAction, useState } from "react";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
+import Link from "next/link";
 const NAV_ITEMS = [
   {
     label: "About",
@@ -113,25 +114,27 @@ const NavElements = ({
           {!isOpen ? <Menu className="" /> : <X className="text-orange" />}
         </button>
       </div>
-      <div className="flex w-full flex-row items-center justify-center lg:justify-start">
-        <Image
-          src={"/logo-white.png"}
-          width={500}
-          height={500}
-          alt="nav_logo"
-          className="hidden w-14 invert lg:block"
-        />
-        <h1
-          className={cn(
-            "font-hardin flex flex-col text-center text-xl font-normal uppercase leading-none  lg:text-left",
-            {
-              "text-orange": isOpen,
-            },
-          )}
-        >
-          Hardin <br />
-          Cafe
-        </h1>
+      <div className="w-full ">
+        <Link href="/" className="flex-row items-center justify-center lg:justify-start flex w-fit">
+          <Image
+            src={"/logo-white.png"}
+            width={500}
+            height={500}
+            alt="nav_logo"
+            className="hidden w-14 invert lg:block"
+          />
+          <h1
+            className={cn(
+              "flex flex-col text-center font-hardin text-xl font-normal uppercase leading-none  lg:text-left",
+              {
+                "text-orange": isOpen,
+              },
+            )}
+          >
+            Hardin <br />
+            Cafe
+          </h1>
+        </Link>
       </div>
       <ul
         className={cn(
@@ -144,7 +147,7 @@ const NavElements = ({
         {NAV_ITEMS.map((item, index) => (
           <li
             key={index}
-            className="uppercase font-medium"
+            className="font-medium uppercase"
             onClick={() => {
               const html = document.documentElement; // <html> element
               html.classList.add("page-active");
@@ -171,7 +174,7 @@ const NavElements = ({
           >
             <li
               className={cn(
-                "flex items-center rounded-full border border-black bg-orange dark:bg-green-primary py-2 px-2",
+                "flex items-center rounded-full border border-black bg-orange px-2 py-2 dark:bg-green-primary",
                 {
                   "text-orange": isOpen,
                 },
